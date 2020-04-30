@@ -1,0 +1,15 @@
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\bin\Debug\netcoreapp3.1\ClientUdp.exe
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\bin\Debug\netcoreapp3.1\ClientUdp.deps.json
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\bin\Debug\netcoreapp3.1\ClientUdp.runtimeconfig.json
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\bin\Debug\netcoreapp3.1\ClientUdp.runtimeconfig.dev.json
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\bin\Debug\netcoreapp3.1\ClientUdp.dll
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\bin\Debug\netcoreapp3.1\ClientUdp.pdb
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.AssemblyInfoInputs.cache
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.AssemblyInfo.cs
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.dll
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.pdb
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.genruntimeconfig.cache
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.csprojAssemblyReference.cache
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.csproj.CoreCompileInputs.cache
+C:\Users\Steven\source\repos\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.csproj.CopyComplete

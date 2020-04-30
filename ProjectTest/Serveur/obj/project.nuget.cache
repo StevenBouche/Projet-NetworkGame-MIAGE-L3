@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "bOAuzrKIjY25vapvPEUT24VCbZwFihSsW7mOYMJqFfjtb/nuV0c6/b9Vor9G6Q9RImPVP8T1/Atv+oz915zoQA==",
+  "success": true,
+  "projectFilePath": "A:\\-WheelOfFortune\\ProjectTest\\Serveur\\Serveur.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Steven\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\Steven\\.nuget\\packages\\newtonsoft.json.schema\\3.0.13\\newtonsoft.json.schema.3.0.13.nupkg.sha512"
+  ],
+  "logs": []
+}

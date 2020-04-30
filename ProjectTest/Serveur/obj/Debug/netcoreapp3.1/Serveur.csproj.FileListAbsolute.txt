@@ -1,0 +1,16 @@
+C:\Users\Steven\source\repos\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Serveur.exe
+C:\Users\Steven\source\repos\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Serveur.deps.json
+C:\Users\Steven\source\repos\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Serveur.runtimeconfig.json
+C:\Users\Steven\source\repos\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Serveur.runtimeconfig.dev.json
+C:\Users\Steven\source\repos\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Serveur.dll
+C:\Users\Steven\source\repos\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Serveur.pdb
+C:\Users\Steven\source\repos\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.csprojAssemblyReference.cache
+C:\Users\Steven\source\repos\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.AssemblyInfoInputs.cache
+C:\Users\Steven\source\repos\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.AssemblyInfo.cs
+C:\Users\Steven\source\repos\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.dll
+C:\Users\Steven\source\repos\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.pdb
+C:\Users\Steven\source\repos\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.genruntimeconfig.cache
+C:\Users\Steven\source\repos\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\Steven\source\repos\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.csproj.CopyComplete
+C:\Users\Steven\source\repos\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Schema.dll
+C:\Users\Steven\source\repos\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.csproj.CoreCompileInputs.cache
