@@ -20,11 +20,11 @@ namespace ClientUdp
             Boolean running = true;
             try
             {
-                udpClient.Connect("51.210.12.245", 11000);
+                udpClient.Connect("127.0.0.1", 11000);
                 int cpt = 0;
 
                 ProtocolMessage<String> pm = new ProtocolMessage<String>();
-                pm.evt = ProtocolEvents.SUBSCRIBE;
+                pm.evt = ProtocolEvents.SUBSCRIPTION;
 
                 while (running)
                 {
@@ -53,7 +53,7 @@ namespace ClientUdp
 
                     ProtocolNetwork pn = JsonConvert.DeserializeObject<ProtocolNetwork>(returnData);
 
-                    if(pn.evt == ProtocolEvents.SUBSCRIBE)
+                    if(pn.evt.eventName == ProtocolEvents.SUBSCRIPTION.eventName)
                     {
                         pm = JsonConvert.DeserializeObject <ProtocolMessage<String>>(returnData);
                     }

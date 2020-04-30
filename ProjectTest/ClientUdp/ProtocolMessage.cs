@@ -5,10 +5,22 @@ using System.Text;
 
 namespace Serveur.Network
 {
-    public enum ProtocolEvents
+    public class ProtocolEvents
     {
-        SUBSCRIBE,
-        UNSUBSCRIBE
+        public static ProtocolEvents SUBSCRIPTION = new ProtocolEvents("SUBSCRIPTION");
+
+        public string eventName;
+
+        private ProtocolEvents(String name)
+        {
+            eventName = name;
+        }
+
+        public ProtocolEvents()
+        {
+        
+        }
+
     }
 
     public class ProtocolNetwork

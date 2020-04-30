@@ -47,7 +47,7 @@ namespace Serveur.Network
 
         public void OnReceivedData(String obj)
         {
-            Console.WriteLine("SERVER : "+ obj);
+           // Console.WriteLine("SERVER : "+ obj);
         }
 
         private void AddListenerReceivedData(IReceiverNetwork irn)
@@ -137,7 +137,7 @@ namespace Serveur.Network
                 content = state.sb.ToString();
                 delegates(content);
                 totReceive++;
-                Console.WriteLine($"Received  from {ep} : {content}  TOT {totReceive}");
+          //      Console.WriteLine($"Received  from {ep} : {content}  TOT {totReceive}");
     
                 Send(listener, content, ep);
           
