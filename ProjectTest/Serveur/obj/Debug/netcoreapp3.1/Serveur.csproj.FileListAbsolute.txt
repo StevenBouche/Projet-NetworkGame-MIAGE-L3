@@ -30,3 +30,5 @@ A:\-WheelOfFortune\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Newtonsoft.Json.d
 A:\-WheelOfFortune\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Schema.dll
 A:\-WheelOfFortune\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.csproj.CopyComplete
 A:\-WheelOfFortune\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.genruntimeconfig.cache
+A:\-WheelOfFortune\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\share.dll
+A:\-WheelOfFortune\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\share.pdb

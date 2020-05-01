@@ -28,3 +28,5 @@ A:\-WheelOfFortune\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.cspro
 A:\-WheelOfFortune\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.dll
 A:\-WheelOfFortune\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.pdb
 A:\-WheelOfFortune\ProjectTest\ClientUdp\obj\Debug\netcoreapp3.1\ClientUdp.genruntimeconfig.cache
+A:\-WheelOfFortune\ProjectTest\ClientUdp\bin\Debug\netcoreapp3.1\share.dll
+A:\-WheelOfFortune\ProjectTest\ClientUdp\bin\Debug\netcoreapp3.1\share.pdb

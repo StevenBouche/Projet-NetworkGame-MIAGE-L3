@@ -10,6 +10,19 @@
         "runtime": {
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
+      },
+      "share/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        },
+        "compile": {
+          "bin/placeholder/share.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/share.dll": {}
+        }
       }
     }
   },
@@ -44,11 +57,17 @@
         "newtonsoft.json.nuspec",
         "packageIcon.png"
       ]
+    },
+    "share/1.0.0": {
+      "type": "project",
+      "path": "../share/share.csproj",
+      "msbuildProject": "../share/share.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "Newtonsoft.Json >= 12.0.3"
+      "Newtonsoft.Json >= 12.0.3",
+      "share >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -76,7 +95,11 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj": {
+              "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

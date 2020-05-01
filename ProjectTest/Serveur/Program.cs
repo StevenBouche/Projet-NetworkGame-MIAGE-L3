@@ -13,7 +13,7 @@ namespace Serveur
 
             // Create a thread to execute the task, and then
             // start the thread.
-            Thread t = new Thread(new ThreadStart(tws.StartListening));
+            Thread t = new Thread(new ThreadStart(tws.Run));
             t.Start();
             Console.WriteLine("Main thread does some work, then waits.");
             t.Join();

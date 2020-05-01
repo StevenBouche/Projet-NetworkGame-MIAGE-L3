@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Serveur.Network;
+using Serveur.Network.Message;
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ClientUdp
 {
@@ -23,13 +22,14 @@ namespace ClientUdp
                 udpClient.Connect("127.0.0.1", 11000);
                 int cpt = 0;
 
-                ProtocolMessage<String> pm = new ProtocolMessage<String>();
-                pm.evt = ProtocolEvents.SUBSCRIPTION;
+                PacketMessage<String> pm = new PacketMessage<String>();
+                pm.evt = ProtocolEvents.SUBSCRIPTION.eventName;
 
                 while (running)
                 {
                     
                     pm.data = "HI " + cpt;
+                    pm.typeData = pm.data.GetType();
 
                     string json = JsonConvert.SerializeObject(pm, Formatting.Indented);
 
@@ -53,10 +53,9 @@ namespace ClientUdp
 
                     ProtocolNetwork pn = JsonConvert.DeserializeObject<ProtocolNetwork>(returnData);
 
-                    if(pn.evt.eventName == ProtocolEvents.SUBSCRIPTION.eventName)
-                    {
-                        pm = JsonConvert.DeserializeObject <ProtocolMessage<String>>(returnData);
-                    }
+
+                   pm = JsonConvert.DeserializeObject <PacketMessage<String>>(returnData);
+
 
                     // Uses the IPEndPoint object to determine which of these two hosts responded.
                     Console.WriteLine("This is the message you received " +

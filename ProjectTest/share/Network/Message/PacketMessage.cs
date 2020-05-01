@@ -4,8 +4,10 @@ using System.Text;
 
 namespace Serveur.Network.Message
 {
-    class Message<T>
+    public class PacketMessage<T> : Packet
     {
         public T data;
+        public Type typeData;
     }
+
 }

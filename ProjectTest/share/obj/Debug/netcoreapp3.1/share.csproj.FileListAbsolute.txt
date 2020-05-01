@@ -1,0 +1,9 @@
+A:\-WheelOfFortune\ProjectTest\share\bin\Debug\netcoreapp3.1\share.deps.json
+A:\-WheelOfFortune\ProjectTest\share\bin\Debug\netcoreapp3.1\share.dll
+A:\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\share.csprojAssemblyReference.cache
+A:\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\share.AssemblyInfoInputs.cache
+A:\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\share.AssemblyInfo.cs
+A:\-WheelOfFortune\ProjectTest\share\bin\Debug\netcoreapp3.1\share.pdb
+A:\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\share.csproj.CoreCompileInputs.cache
+A:\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\share.dll
+A:\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\share.pdb
