@@ -1,6 +1,7 @@
 ﻿
 using share;
-using share.Network.NetworkManager;
+using Share.Network.NetworkManager;
+using Share.Network.Protocol;
 using System;
 using System.Net;
 using System.Threading;
@@ -16,8 +17,7 @@ namespace Serveur.Network
         public UDPServer()
         {
             manager = new NetworkManagerUDP();
-            manager.evtNetManager.OnEvent<String>(ProtocolEvents<String>.SUBSCRIPTION, OnSubscription);
-            manager.evtNetManager.OnEvent<Choice>(ProtocolEvents<Choice>.TEST, OnTest);
+            manager.evtNetManager.OnEvent<Choice>(ProtocolEventsUDP<Choice>.SUBSCRIPTION, OnSubscription);
         }
 
         public void Run()
@@ -27,14 +27,10 @@ namespace Serveur.Network
             t.Join();
         }
 
-        private void OnSubscription(String content, EndPoint ep)
+        private void OnSubscription(Choice content, EndPoint ep)
         {
             Console.WriteLine("On sub receive " + content + " from " + ep.ToString());
         }
 
-        private void OnTest(Choice content, EndPoint ep)
-        {
-            Console.WriteLine("On sub receive " + content + " from " + ep.ToString());
-        }
     }
 }

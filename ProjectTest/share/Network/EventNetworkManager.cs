@@ -1,11 +1,14 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Share.Network.Protocol;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Threading;
 
-namespace Serveur.Network
+namespace Share.Network
 {
 
     public class EventNetworkManager : IReceiverNetwork
@@ -20,12 +23,6 @@ namespace Serveur.Network
         {
             packets = new ConcurrentQueue<JObject>();
             mapEvents = new Dictionary<String, ProtocolNetwork>();
-            OnEvent<String>(ProtocolEvents<String>.SUBSCRIPTION, Test); // test
-        }
-
-        public void Test(String str, EndPoint ep)
-        {
-            Console.WriteLine("ON SUBSCRIPTION " + str); //todo delete
         }
 
         public void Run()
@@ -37,7 +34,7 @@ namespace Serveur.Network
             }
         }
 
-        public void OnEvent<T>(ProtocolEvents<T> proto, ProtocolUDP<T>.OnReceiveEvent callback)
+        public void OnEvent<T>(ProtocolEventsUDP<T> proto, Protocol<T>.OnReceiveEvent callback)
         {
 
             if (!mapEvents.ContainsKey(proto.eventName))
@@ -68,7 +65,15 @@ namespace Serveur.Network
                     EndPoint ep = new IPEndPoint(ip, port);
                     String str = p["evt"].ToString();
                     dynamic callbacks = mapEvents[str];
-                    callbacks.OnReceive(p["data"].ToObject(callbacks.GetTypeDataEvent()), ep);
+                    try
+                    {
+                        callbacks.OnReceive(p["data"].ToObject(callbacks.GetTypeDataEvent()), ep);
+                    }
+                    catch (JsonSerializationException e)
+                    {
+                        Debug.WriteLine(e);
+                    }
+                    
                 }
             }
 

@@ -10,7 +10,7 @@
         "dependencies": {
           "Newtonsoft.Json": "12.0.3",
           "Newtonsoft.Json.Schema": "3.0.13",
-          "share": "1.0.0"
+          "Share": "1.0.0"
         },
         "runtime": {
           "Serveur.dll": {}
@@ -35,12 +35,12 @@
           }
         }
       },
-      "share/1.0.0": {
+      "Share/1.0.0": {
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         },
         "runtime": {
-          "share.dll": {}
+          "Share.dll": {}
         }
       }
     }
@@ -65,7 +65,7 @@
       "path": "newtonsoft.json.schema/3.0.13",
       "hashPath": "newtonsoft.json.schema.3.0.13.nupkg.sha512"
     },
-    "share/1.0.0": {
+    "Share/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

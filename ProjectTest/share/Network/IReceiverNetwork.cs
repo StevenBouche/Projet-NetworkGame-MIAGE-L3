@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace Serveur.Network
+namespace Share.Network
 {
     public interface IReceiverNetwork
     {

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Serveur.Network.Message
+namespace Share.Network.Message
 {
     public class PacketMessage<T> : Packet
     {

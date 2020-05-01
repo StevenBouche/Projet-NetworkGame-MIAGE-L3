@@ -27,8 +27,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj": {
-                "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj"
+              "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
+                "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj"
               }
             }
           }
@@ -70,12 +70,12 @@
         }
       }
     },
-    "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj": {
+    "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj",
-        "projectName": "share",
-        "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj",
+        "projectUniqueName": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
+        "projectName": "Share",
+        "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
         "packagesPath": "C:\\Users\\Steven\\.nuget\\packages\\",
         "outputPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\obj\\",
         "projectStyle": "PackageReference",

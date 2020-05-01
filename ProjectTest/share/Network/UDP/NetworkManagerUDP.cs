@@ -1,12 +1,11 @@
-﻿using Serveur.Network;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-namespace share.Network.NetworkManager
+namespace Share.Network.NetworkManager
 {
     public class StateObject
     {
@@ -132,6 +131,11 @@ namespace share.Network.NetworkManager
                 // Console.WriteLine($"Received  from {ep} : {content}  TOT {totReceive}");
                 Send(listener, content, ep);
             }
+        }
+
+        public void Send(String data, EndPoint ep)
+        {
+            Send(listener, data, ep);
         }
 
         private void Send(Socket handler, String data, EndPoint ep)

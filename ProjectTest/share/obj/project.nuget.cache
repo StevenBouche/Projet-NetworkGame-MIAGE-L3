@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WL9WyAcdsAQLNFsBhft6ZzRe5lrNzM7hjXctPX9fYG37l0iycT8oKyLqsr++TA/N67BGqyNPcZQSFHusRF4fUQ==",
+  "dgSpecHash": "8zx0pPUea4rvuQaUS9RhL+lAbezenq5McvMRDtgWJsw/8+PaoAZ1ESeaQMqzJJ9st6pPAAKeZr3AgwW+8AUeVw==",
   "success": true,
-  "projectFilePath": "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj",
+  "projectFilePath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Steven\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
   ],

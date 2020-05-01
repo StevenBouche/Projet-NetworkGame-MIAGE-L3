@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj": {}
+    "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {}
   },
   "projects": {
-    "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj": {
+    "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj",
-        "projectName": "share",
-        "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\share.csproj",
+        "projectUniqueName": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
+        "projectName": "Share",
+        "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
         "packagesPath": "C:\\Users\\Steven\\.nuget\\packages\\",
         "outputPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\obj\\",
         "projectStyle": "PackageReference",
