@@ -30,7 +30,7 @@ namespace ClientUdp
                 while (running)
                 {
                     pm.data.message = "HI " + cpt;
-                    pm.typeData = pm.data.GetType();
+
 
                     string json = JsonConvert.SerializeObject(pm, Formatting.Indented);
 

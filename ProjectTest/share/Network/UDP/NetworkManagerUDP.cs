@@ -127,8 +127,8 @@ namespace Share.Network.NetworkManager
             {
                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
                 content = state.sb.ToString();
+                Console.WriteLine($" Network Manager Received  from {ep} : {content}");
                 _delegates(content, ep); // notify receive
-                // Console.WriteLine($"Received  from {ep} : {content}  TOT {totReceive}");
                 Send(listener, content, ep);
             }
         }

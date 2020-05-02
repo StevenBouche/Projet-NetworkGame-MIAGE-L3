@@ -7,9 +7,6 @@ namespace Share.Network.Protocol
     public class ProtocolEventsTCP<T> : ProtocolEvents<T>
     {
 
-
-
-
         private ProtocolEventsTCP(String name) : base(name)
         {
 

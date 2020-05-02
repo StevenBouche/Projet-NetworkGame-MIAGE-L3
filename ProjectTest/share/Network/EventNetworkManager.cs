@@ -34,7 +34,7 @@ namespace Share.Network
             }
         }
 
-        public void OnEvent<T>(ProtocolEventsUDP<T> proto, Protocol<T>.OnReceiveEvent callback)
+        public void OnEvent<T>(ProtocolEvents<T> proto, Protocol<T>.OnReceiveEvent callback)
         {
 
             if (!mapEvents.ContainsKey(proto.eventName))
@@ -42,10 +42,9 @@ namespace Share.Network
                 mapEvents.Add(proto.eventName, proto.GetProtocol());
             }
 
-            dynamic evt = mapEvents[proto.eventName];
-            if (evt.GetTypeDataEvent() == typeof(T))
+            if (mapEvents[proto.eventName].GetTypeDataEvent() == typeof(T))
             {
-                evt.AddDelegate(callback);
+                ((dynamic)mapEvents[proto.eventName]).AddDelegate(callback);
             }
 
         }
@@ -53,41 +52,38 @@ namespace Share.Network
         private void HandleQueue()
         {
             allDone.Reset();
-
             while (!packets.IsEmpty)
             {
                 packets.TryDequeue(out JObject p);
                 
-                if (p.Count == 4 && p["evt"] != null && p["data"] != null && p["typeData"] != null && p["endpoint"] != null)
+                if (p.Count == 3 && p["evt"] != null && p["data"] != null  && p["endpoint"] != null)
                 {
-                    IPAddress ip = IPAddress.Parse(p["endpoint"]["ip"].ToString());
-                    int port = p["endpoint"]["port"].ToObject<int>();
-                    EndPoint ep = new IPEndPoint(ip, port);
-                    String str = p["evt"].ToString();
-                    dynamic callbacks = mapEvents[str];
-                    try
-                    {
-                        callbacks.OnReceive(p["data"].ToObject(callbacks.GetTypeDataEvent()), ep);
-                    }
-                    catch (JsonSerializationException e)
-                    {
-                        Debug.WriteLine(e);
-                    }
-                    
+                    mapEvents[p["evt"].ToString()].OnReceive(p["data"], GetEndPointFromJObject(p));
                 }
             }
-
             allDone.WaitOne();
         }
 
         public void OnReceivedData(String obj, EndPoint endPoint)
         {
-            JObject data = JObject.Parse(obj);
-            IPEndPoint ip = (IPEndPoint)endPoint;
-            JObject jobj = new JObject(new JProperty("ip", ip.Address.ToString()), new JProperty("port", ip.Port));
-            data.Add("endpoint", jobj);
+            BuildJObjectBeforeQueue(obj, endPoint, out JObject data);
             packets.Enqueue(data);
             allDone.Set();
+        }
+
+        private void BuildJObjectBeforeQueue(String obj, EndPoint endPoint, out JObject o )
+        {
+            o = JObject.Parse(obj);
+            IPEndPoint ip = (IPEndPoint)endPoint;
+            JObject jobj = new JObject(new JProperty("ip", ip.Address.ToString()), new JProperty("port", ip.Port));
+            o.Add("endpoint", jobj);
+        }
+
+        private EndPoint GetEndPointFromJObject(JObject p)
+        {
+            IPAddress ip = IPAddress.Parse(p["endpoint"]["ip"].ToString());
+            int port = p["endpoint"]["port"].ToObject<int>();
+            return new IPEndPoint(ip, port);
         }
     }
 

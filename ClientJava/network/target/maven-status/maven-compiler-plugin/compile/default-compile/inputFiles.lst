@@ -1,0 +1,13 @@
+A:\-WheelOfFortune\ClientJava\network\src\main\java\share\IPEndPoint.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\share\DataListener.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\protocol\ProtocolNetwork.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\main\Test.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\share\Choice.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\protocol\ProtocolEvents.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\udp\ProtocolEventsUDP.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\protocol\Protocol.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\message\Packet.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\message\PacketMessage.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\share\EventNetworkManager.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\udp\NetworkManagerUDP.java
+A:\-WheelOfFortune\ClientJava\network\src\main\java\udp\ServerUDP.java
