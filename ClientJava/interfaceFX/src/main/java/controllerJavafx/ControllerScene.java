@@ -13,8 +13,6 @@ public class ControllerScene implements Initializable {
 
     @FXML
     public TextArea textareaid;
-    @FXML
-    public Button button;
 
     private boolean debug;
 
@@ -22,7 +20,7 @@ public class ControllerScene implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Init controller");
         debug = false;
-        button.setVisible(debug);
+
      //   textArea.append("hello");
     }
 
@@ -30,7 +28,6 @@ public class ControllerScene implements Initializable {
         Platform.runLater(() -> {
             textareaid.appendText(s+"\n");
         });
-
     }
 
 }
