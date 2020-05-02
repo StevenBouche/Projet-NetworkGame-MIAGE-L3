@@ -18,18 +18,17 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-  //      loadPrimaryScene();
+        loadPrimaryScene();
         primaryStage.setTitle("Hello World");
-    //    primaryStage.setScene(new Scene());
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
     private void loadPrimaryScene() throws IOException {
-//        URL fxmlURL = getClass().getResource("/sample.fxml");
-    //    URL fxmlURL = getClass().getResource("sample.fxml");
-  //      final FXMLLoader fxmlLoader = new FXMLLoader(fxmlURL);
-   //     manager = fxmlLoader.getController();
-   //     root = FXMLLoader.load(fxmlURL);
+        URL fxmlURL = getClass().getClassLoader().getResource("sample.fxml");
+        final FXMLLoader fxmlLoader = new FXMLLoader(fxmlURL);
+        manager = fxmlLoader.getController();
+        root = FXMLLoader.load(fxmlURL);
     }
 
     public static void main(String[] args) {
