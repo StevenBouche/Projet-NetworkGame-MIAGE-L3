@@ -1,4 +1,4 @@
-package network.share;
+package network.message.obj;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

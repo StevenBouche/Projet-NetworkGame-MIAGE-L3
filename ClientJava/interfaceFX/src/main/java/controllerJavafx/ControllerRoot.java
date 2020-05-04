@@ -20,20 +20,17 @@ public class ControllerRoot implements Initializable {
     public SubScene subscene;
     @FXML
     public MenuBar menu;
-    @FXML
-    public Label state;
 
-    ControllerScene manager;
+    ControllerLobbies manager;
 
     Parent root;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("showData.fxml"));
-        manager = new ControllerScene();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("lobbie.fxml"));
+        manager = new ControllerLobbies();
         fxmlLoader.setController(manager);
         try {
-
             root = fxmlLoader.load();
             root.maxWidth(subscene.getWidth());
             root.maxHeight(subscene.getHeight());
@@ -43,13 +40,4 @@ public class ControllerRoot implements Initializable {
         }
     }
 
-    public void setState(String str){
-        Platform.runLater(() -> {
-            state.setText(str);
-        });
-    }
-
-    public void appendText(String s) {
-        manager.appendText(s);
-    }
 }

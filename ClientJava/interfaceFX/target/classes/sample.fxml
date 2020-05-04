@@ -25,11 +25,10 @@
           </Menu>
         </menus>
       </MenuBar>
-      <SubScene fx:id="subscene" height="342.0" layoutY="58.0" width="600.0">
+      <SubScene fx:id="subscene" height="376.0" layoutY="24.0" width="600.0">
         <root>
           <Region />
         </root>
       </SubScene>
-      <Label fx:id="state" layoutX="14.0" layoutY="33.0" text="Label" />
    </children>
 </Pane>

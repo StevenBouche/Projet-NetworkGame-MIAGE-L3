@@ -1,10 +1,12 @@
 package network.udp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import network.share.Choice;
+import network.message.obj.Choice;
 import network.share.EventNetworkManager;
 import network.share.IPEndPoint;
 import network.message.PacketMessage;
+import network.share.ListenerState;
 
 import java.io.IOException;
 import java.net.*;
@@ -19,8 +21,10 @@ public class NetworkManagerUDP {
     boolean running;
     public EventNetworkManager evtManager;
     ObjectMapper mapper = new ObjectMapper();
+    ListenerState listener;
 
-    public NetworkManagerUDP() throws SocketException, UnknownHostException {
+    public NetworkManagerUDP(ListenerState listener) throws SocketException, UnknownHostException {
+        this.listener = listener;
         addr = InetAddress.getByName("127.0.0.1");
         portClient = new Random().nextInt(11100 - 11001 + 1) + 11001;
         client = new DatagramSocket();
@@ -31,15 +35,14 @@ public class NetworkManagerUDP {
 
         running = true;
         int cpt = 0;
-        PacketMessage<Choice> packet = new PacketMessage<>();
-        packet.evt = ProtocolEventsUDP.SUBSCRIPTION.eventName;
-        packet.data = new Choice();
+
+        listener.onRunning("Running on "+addr.toString()+":"+portClient);
 
         while(running && !Thread.currentThread().isInterrupted()){
 
-            packet.data.message = "hello "+cpt;
+         /*   packet.data.message = "hello "+cpt;
             String str = mapper.writeValueAsString(packet);
-            sendMessage(str);
+            sendMessage(str);*/
 
             //Et on récupère la réponse du serveur
             byte[] buffer2 = new byte[8196];
@@ -51,23 +54,24 @@ public class NetworkManagerUDP {
             ipep.port = packet2.getPort();
             evtManager.OnReceivedData(new String(packet2.getData()),ipep);
             cpt++;
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-                break;
-            }
         }
+
+        listener.onShutdown();
+
     }
 
-    public void sendMessage(String str) throws IOException {
+    private void sendMessage(String str) throws IOException {
         byte[] buffer = str.getBytes();
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length, addr, portServer);
         //On lui affecte les données à envoyer
         packet.setData(buffer);
         //On envoie au serveur
         client.send(packet);
+    }
+
+    public void sendMessage(PacketMessage<?> proto) throws IOException {
+        String str = mapper.writeValueAsString(proto);
+        sendMessage(str);
     }
 
     public void print(String str){

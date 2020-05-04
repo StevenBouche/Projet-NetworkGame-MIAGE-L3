@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Share.Network.Message;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -129,13 +131,19 @@ namespace Share.Network.NetworkManager
                 content = state.sb.ToString();
                 Console.WriteLine($" Network Manager Received  from {ep} : {content}");
                 _delegates(content, ep); // notify receive
-                Send(listener, content, ep);
+              //  Send(listener, content, ep);
             }
         }
 
-        public void Send(String data, EndPoint ep)
+        private void Send(String data, EndPoint ep)
         {
             Send(listener, data, ep);
+        }
+
+        public void Send<T>(PacketMessage<T> data, EndPoint ep)
+        {
+            String jsonString = JsonConvert.SerializeObject(data);
+            Send(listener, jsonString, ep);
         }
 
         private void Send(Socket handler, String data, EndPoint ep)

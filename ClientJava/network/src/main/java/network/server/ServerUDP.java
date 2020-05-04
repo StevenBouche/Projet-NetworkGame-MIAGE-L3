@@ -1,8 +1,8 @@
 package network.server;
 
-import network.share.Choice;
+import network.message.PacketMessage;
 import network.share.DataListener;
-import network.share.IPEndPoint;
+import network.share.ListenerState;
 import network.udp.NetworkManagerUDP;
 import network.udp.ProtocolEventsUDP;
 
@@ -14,12 +14,16 @@ public class ServerUDP implements Runnable {
 
     NetworkManagerUDP manager;
 
-    public ServerUDP() throws SocketException, UnknownHostException {
-        manager = new NetworkManagerUDP();
+    public ServerUDP(ListenerState listener) throws SocketException, UnknownHostException {
+        manager = new NetworkManagerUDP(listener);
     }
 
     public <T> void OnEvent(Class<T> co, ProtocolEventsUDP<T> proto, DataListener<T> listener){
         manager.evtManager.OnEvent(co,proto,listener);
+    }
+
+    public void send(PacketMessage<?> obj) throws IOException {
+        manager.sendMessage(obj);
     }
 
     @Override

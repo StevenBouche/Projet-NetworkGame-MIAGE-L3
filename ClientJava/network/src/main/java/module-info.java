@@ -5,4 +5,5 @@ module org.miage.network {
     exports network.share;
     exports network.message;
     exports network.udp;
+    exports network.message.obj;
 }
