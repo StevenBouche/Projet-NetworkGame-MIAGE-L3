@@ -3,6 +3,7 @@
   <PropertyGroup>
     <_LastSelectedProfileId>C:\Users\Steven\source\repos\ProjectTest\Serveur\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
     <ActiveDebugProfile>Serveur</ActiveDebugProfile>
+    <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
