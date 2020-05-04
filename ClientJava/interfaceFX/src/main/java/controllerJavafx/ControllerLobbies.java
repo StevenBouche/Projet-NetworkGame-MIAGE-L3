@@ -3,12 +3,16 @@ package controllerJavafx;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import network.message.PacketMessage;
@@ -37,11 +41,16 @@ public class ControllerLobbies implements Initializable {
     public Label labelRunning;
     @FXML
     public TableView<ServerGame> tableView;
+    @FXML
+    public Button buttonConnect;
+
+    private ServerGame srcGame;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         stateDisconnected();
         initTable();
+        initPane();
         try {
             loadServerUDP();
         } catch (SocketException | UnknownHostException e) {
@@ -49,8 +58,18 @@ public class ControllerLobbies implements Initializable {
         }
     }
 
+    private void initPane() {
+
+    }
+
     private void initTable() {
-     //   tableView.getSelectionModel().getSelectedIndices().addListener();
+        tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                setServerGame();
+                mouseEvent.consume();
+            }
+        });
         tableView.setEditable(false);
         TableColumn<ServerGame,String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -63,6 +82,23 @@ public class ControllerLobbies implements Initializable {
         TableColumn<ServerGame,Integer> maxColumn = new TableColumn<>("Max player");
         maxColumn.setCellValueFactory(new PropertyValueFactory<>("nbPlayerMax"));
         tableView.getColumns().addAll(nameColumn, addrColumn, portColumn, currentColumn,maxColumn);
+    }
+
+    private void setServerGame() {
+        ServerGame srcGame = tableView.getSelectionModel().getSelectedItem();
+        int index = tableView.getSelectionModel().getFocusedIndex();
+
+
+
+        if(this.srcGame != null && this.srcGame == srcGame) //todo comparable
+        {
+            tableView.getSelectionModel().clearSelection(index);
+            this.srcGame= null;
+        }
+        else {
+            this.srcGame = srcGame;
+        }
+        buttonConnect.setDisable(this.srcGame == null);
     }
 
     private void loadServerUDP() throws SocketException, UnknownHostException {

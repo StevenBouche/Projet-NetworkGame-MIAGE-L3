@@ -13,6 +13,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button fx:id="buttonConnect" layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="Connect Server" />
+      <Button fx:id="buttonConnect" disable="true" layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="Connect Server" />
+      <Button disable="true" layoutX="118.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Refresh" />
    </children>
 </AnchorPane>

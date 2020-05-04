@@ -1,4 +1,5 @@
 package network.client;
+<<<<<<< HEAD
 
 import network.message.PacketMessage;
 import network.share.DataListener;
@@ -52,4 +53,9 @@ public class ClientTCP implements Runnable, INotifyState {
     @Override
     public void onDisconnect() {
     }
+=======
+
+public class ClientTCP {
+
+>>>>>>> e573dfc667bd1f7b321bf00544190aa20d05122a
 }
