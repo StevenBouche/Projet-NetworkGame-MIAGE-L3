@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "A:\\-WheelOfFortune\\ProjectTest\\ClientUdp\\ClientUdp.csproj": {}
+    "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\ClientUdp\\ClientUdp.csproj": {}
   },
   "projects": {
-    "A:\\-WheelOfFortune\\ProjectTest\\ClientUdp\\ClientUdp.csproj": {
+    "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\ClientUdp\\ClientUdp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "A:\\-WheelOfFortune\\ProjectTest\\ClientUdp\\ClientUdp.csproj",
+        "projectUniqueName": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\ClientUdp\\ClientUdp.csproj",
         "projectName": "ClientUdp",
-        "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\ClientUdp\\ClientUdp.csproj",
-        "packagesPath": "C:\\Users\\Steven\\.nuget\\packages\\",
-        "outputPath": "A:\\-WheelOfFortune\\ProjectTest\\ClientUdp\\obj\\",
+        "projectPath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\ClientUdp\\ClientUdp.csproj",
+        "packagesPath": "C:\\Users\\arman\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\ClientUdp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Steven\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\arman\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -27,8 +27,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
-                "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj"
+              "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
+                "projectPath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj"
               }
             }
           }
@@ -66,17 +66,17 @@
         }
       }
     },
-    "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
+    "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
+        "projectUniqueName": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
         "projectName": "Share",
-        "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
-        "packagesPath": "C:\\Users\\Steven\\.nuget\\packages\\",
-        "outputPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\obj\\",
+        "projectPath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
+        "packagesPath": "C:\\Users\\arman\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\share\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Steven\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\arman\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -103,6 +103,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[12.0.3, )"
+            },
+            "shortid": {
+              "target": "Package",
+              "version": "[2.0.1, )"
             }
           },
           "imports": [

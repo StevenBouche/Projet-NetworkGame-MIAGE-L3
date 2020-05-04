@@ -23,11 +23,21 @@
           "lib/netstandard2.0/Newtonsoft.Json.Schema.dll": {}
         }
       },
+      "shortid/2.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/shortid.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/shortid.dll": {}
+        }
+      },
       "Share/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
         "dependencies": {
-          "Newtonsoft.Json": "12.0.3"
+          "Newtonsoft.Json": "12.0.3",
+          "shortid": "2.0.1"
         },
         "compile": {
           "bin/placeholder/Share.dll": {}
@@ -92,6 +102,21 @@
         "newtonsoft.json.schema.nuspec"
       ]
     },
+    "shortid/2.0.1": {
+      "sha512": "2gZYTRsx3YXkhAXD0LlsmOxpVPCjF63VHoxDwsV2XTAX8LHUagRNasHieWlpHwhu8Ez3Dk039GXh2vHFcHbW2A==",
+      "type": "package",
+      "path": "shortid/2.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard1.1/shortid.dll",
+        "lib/netstandard1.3/shortid.dll",
+        "lib/netstandard1.6/shortid.dll",
+        "lib/netstandard2.0/shortid.dll",
+        "shortid.2.0.1.nupkg.sha512",
+        "shortid.nuspec"
+      ]
+    },
     "Share/1.0.0": {
       "type": "project",
       "path": "../share/Share.csproj",
@@ -106,19 +131,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Steven\\.nuget\\packages\\": {}
+    "C:\\Users\\arman\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "A:\\-WheelOfFortune\\ProjectTest\\Serveur\\Serveur.csproj",
+      "projectUniqueName": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\Serveur\\Serveur.csproj",
       "projectName": "Serveur",
-      "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\Serveur\\Serveur.csproj",
-      "packagesPath": "C:\\Users\\Steven\\.nuget\\packages\\",
-      "outputPath": "A:\\-WheelOfFortune\\ProjectTest\\Serveur\\obj\\",
+      "projectPath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\Serveur\\Serveur.csproj",
+      "packagesPath": "C:\\Users\\arman\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\Serveur\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Steven\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\arman\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -131,8 +156,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
-              "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj"
+            "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
+              "projectPath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj"
             }
           }
         }

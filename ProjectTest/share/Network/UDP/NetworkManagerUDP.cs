@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Share.Network.Message;
+using Share.Network.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -9,16 +10,6 @@ using System.Threading;
 
 namespace Share.Network.NetworkManager
 {
-    public class StateObject
-    {
-        // Size of receive buffer.  
-        public const int BufferSize = 1024;
-        // Receive buffer.  
-        public byte[] buffer = new byte[BufferSize];
-        // Received data string.  
-        public StringBuilder sb = new StringBuilder();
-
-    }
 
     public class NetworkManagerUDP : IReceiverNetwork
     {
