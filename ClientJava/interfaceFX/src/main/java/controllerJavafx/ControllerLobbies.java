@@ -3,12 +3,15 @@ package controllerJavafx;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import network.message.PacketMessage;
@@ -38,6 +41,8 @@ public class ControllerLobbies implements Initializable {
     @FXML
     public TableView<ServerGame> tableView;
 
+    private ServerGame srcGame;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         stateDisconnected();
@@ -50,7 +55,12 @@ public class ControllerLobbies implements Initializable {
     }
 
     private void initTable() {
-     //   tableView.getSelectionModel().getSelectedIndices().addListener();
+        tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                ServerGame srv = tableView.getSelectionModel().getSelectedItem();
+            }
+        });
         tableView.setEditable(false);
         TableColumn<ServerGame,String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
