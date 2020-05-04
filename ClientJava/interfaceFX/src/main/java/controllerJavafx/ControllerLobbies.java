@@ -14,7 +14,7 @@ import javafx.scene.shape.Rectangle;
 import network.message.PacketMessage;
 import network.message.obj.DataServerGame;
 import network.message.obj.ServerGame;
-import network.server.ServerUDP;
+import network.client.ClientUDP;
 import network.share.DataListener;
 import network.share.IPEndPoint;
 import network.share.ListenerState;
@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 
 public class ControllerLobbies implements Initializable {
 
-    ServerUDP server;
+    ClientUDP server;
     Thread threadServer;
 
     @FXML
@@ -66,7 +66,7 @@ public class ControllerLobbies implements Initializable {
     }
 
     private void loadServerUDP() throws SocketException, UnknownHostException {
-        server = new ServerUDP(new ListenerState() {
+        server = new ClientUDP(new ListenerState() {
             @Override
             public void onRunning(String str) {
                 stateConnected(str);

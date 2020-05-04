@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Share.Network.Event;
 using Share.Network.Message;
 using Share.Network.Protocol;
 using System;
@@ -13,7 +14,7 @@ namespace Share.Network.NetworkManager
 
     public class NetworkManagerUDP : IReceiverNetwork
     {
-        public EventNetworkManager evtNetManager;
+        public EventNetworkManagerUDP evtNetManager;
 
         private ManualResetEvent allDone = new ManualResetEvent(false);
         private EndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 11000);
@@ -27,7 +28,7 @@ namespace Share.Network.NetworkManager
         public NetworkManagerUDP()
         {
             _listDelegates = new Dictionary<IReceiverNetwork, OnReceivedDataDel>();
-            evtNetManager = new EventNetworkManager();
+            evtNetManager = new EventNetworkManagerUDP();
             AddListenerReceivedData(this);
             AddListenerReceivedData(evtNetManager);
             Thread t = new Thread(new ThreadStart(evtNetManager.Run));
@@ -163,5 +164,9 @@ namespace Share.Network.NetworkManager
 
         }
 
+        public void OnReceivedData(string obj, StateObjectTCP state)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

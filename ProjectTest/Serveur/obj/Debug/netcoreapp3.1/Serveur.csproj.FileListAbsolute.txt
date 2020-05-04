@@ -50,3 +50,4 @@ C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\Serveur\ob
 C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.dll
 C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.pdb
 C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\Serveur\obj\Debug\netcoreapp3.1\Serveur.genruntimeconfig.cache
+C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\Serveur\bin\Debug\netcoreapp3.1\shortid.dll

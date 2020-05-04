@@ -15,3 +15,4 @@ C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\share\obj\
 C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\Share.AssemblyInfo.cs
 C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\Share.dll
 C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\Share.pdb
+C:\Users\arman\OneDrive\Documents\MIAGE\C\-WheelOfFortune\ProjectTest\share\obj\Debug\netcoreapp3.1\Share.csproj.CoreCompileInputs.cache

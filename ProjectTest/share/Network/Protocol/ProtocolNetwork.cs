@@ -22,5 +22,7 @@ namespace Share.Network.Protocol
         {
             return this.type;
         }
+
+        public abstract void OnReceive(JToken jToken, JToken id);
     }
 }
