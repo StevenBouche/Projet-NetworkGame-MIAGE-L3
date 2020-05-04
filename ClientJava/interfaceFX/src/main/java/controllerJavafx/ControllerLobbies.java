@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -17,7 +18,7 @@ import javafx.scene.shape.Rectangle;
 import network.message.PacketMessage;
 import network.message.obj.DataServerGame;
 import network.message.obj.ServerGame;
-import network.server.ServerUDP;
+import network.client.ClientUDP;
 import network.share.DataListener;
 import network.share.IPEndPoint;
 import network.share.ListenerState;
@@ -31,7 +32,7 @@ import java.util.ResourceBundle;
 
 public class ControllerLobbies implements Initializable {
 
-    ServerUDP server;
+    ClientUDP server;
     Thread threadServer;
 
     @FXML
@@ -40,6 +41,8 @@ public class ControllerLobbies implements Initializable {
     public Label labelRunning;
     @FXML
     public TableView<ServerGame> tableView;
+    @FXML
+    public Button buttonConnect;
 
     private ServerGame srcGame;
 
@@ -47,6 +50,7 @@ public class ControllerLobbies implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         stateDisconnected();
         initTable();
+        initPane();
         try {
             loadServerUDP();
         } catch (SocketException | UnknownHostException e) {
@@ -54,11 +58,16 @@ public class ControllerLobbies implements Initializable {
         }
     }
 
+    private void initPane() {
+
+    }
+
     private void initTable() {
         tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                ServerGame srv = tableView.getSelectionModel().getSelectedItem();
+                setServerGame();
+                mouseEvent.consume();
             }
         });
         tableView.setEditable(false);
@@ -75,8 +84,25 @@ public class ControllerLobbies implements Initializable {
         tableView.getColumns().addAll(nameColumn, addrColumn, portColumn, currentColumn,maxColumn);
     }
 
+    private void setServerGame() {
+        ServerGame srcGame = tableView.getSelectionModel().getSelectedItem();
+        int index = tableView.getSelectionModel().getFocusedIndex();
+
+
+
+        if(this.srcGame != null && this.srcGame == srcGame) //todo comparable
+        {
+            tableView.getSelectionModel().clearSelection(index);
+            this.srcGame= null;
+        }
+        else {
+            this.srcGame = srcGame;
+        }
+        buttonConnect.setDisable(this.srcGame == null);
+    }
+
     private void loadServerUDP() throws SocketException, UnknownHostException {
-        server = new ServerUDP(new ListenerState() {
+        server = new ClientUDP(new ListenerState() {
             @Override
             public void onRunning(String str) {
                 stateConnected(str);

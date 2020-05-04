@@ -1,4 +1,5 @@
-package network.server;
+package network.client;
 
-public class ServerTCP {
+public class ClientTCP {
+
 }

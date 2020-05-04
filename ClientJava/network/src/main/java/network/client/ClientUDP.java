@@ -1,4 +1,4 @@
-package network.server;
+package network.client;
 
 import network.message.PacketMessage;
 import network.share.DataListener;
@@ -10,11 +10,11 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class ServerUDP implements Runnable {
+public class ClientUDP implements Runnable {
 
     NetworkManagerUDP manager;
 
-    public ServerUDP(ListenerState listener) throws SocketException, UnknownHostException {
+    public ClientUDP(ListenerState listener) throws SocketException, UnknownHostException {
         manager = new NetworkManagerUDP(listener);
     }
 
