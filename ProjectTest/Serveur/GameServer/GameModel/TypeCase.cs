@@ -1,7 +1,7 @@
 namespace Serveur.GameServer.GameModel
 {
 
-    enum TypeCase {
+    public enum TypeCase {
         CASH,
         PASSE,
         BANQUEROUTE,

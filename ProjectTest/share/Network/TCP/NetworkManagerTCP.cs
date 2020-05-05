@@ -40,12 +40,15 @@ namespace Share.Network.NetworkManager
 
         Boolean running;
 
-        public NetworkManagerTCP(int port)
+        INotifyStateSocket observerStateSocket;
+
+        public NetworkManagerTCP(int port, INotifyStateSocket observerStateSocket)
         {
             this.myClients = new Dictionary<string, StateObjectTCP>();
             this.eventManager = new EventNetworkManagerTCP();
             this.allDone = new ManualResetEvent(false);
             this.port = port;
+            this.observerStateSocket = observerStateSocket;
         }
 
         public void stop()
@@ -186,6 +189,7 @@ namespace Share.Network.NetworkManager
         private void OnDisconnectWhileListening(StateObjectTCP state)
         {
             myClients.Remove(state.id);
+            observerStateSocket.OnDisconnect(state.id);
         }
 
         private void OnConnect(out StateObjectTCP state, ref Socket handler)
@@ -197,6 +201,7 @@ namespace Share.Network.NetworkManager
             };
             state.workSocket.NoDelay = true;
             myClients.Add(state.id, state);
+            observerStateSocket.OnConnect(state.id);
         }
 
         private void Send(Socket handler, String data)

@@ -7,7 +7,7 @@ namespace Serveur.GameServer.CommandPack
 {
     class CommandPass : Command<GameEngine>
     {
-        public CommandPass(GameEngine context) : base(context) { }
+        public CommandPass(GameEngine context, CommandManager manager) : base(context,manager) { }
         public override void onExecute()
         {
             Console.WriteLine("Case : " + this.Context.CurrentCase.ToString());

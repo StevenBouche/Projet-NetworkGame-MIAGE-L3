@@ -6,7 +6,7 @@ using System.Text;
 namespace Serveur.GameServer.GameModel
 
 {
-    class Joueur : IComparable<Joueur>
+    public class Joueur : IComparable<Joueur>
     {
         public String nom;
 

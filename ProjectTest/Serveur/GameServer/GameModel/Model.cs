@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Serveur.GameServer.GameModel
 {
 
-    class Model 
+    public class Model 
     {
 
         public Dictionary<Joueur, Cagnotte> ListJoueur { get; set; }

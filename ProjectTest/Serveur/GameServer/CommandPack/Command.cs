@@ -7,9 +7,11 @@ namespace Serveur.GameServer.CommandPack
     public abstract class Command<GameEngine>
     {
         private GameEngine context;
+        private CommandManager commandManager;
 
-        public Command(GameEngine context) {
+        public Command(GameEngine context, CommandManager manager) {
             this.context = context;
+            this.commandManager = manager;
         }
 
         public void Trigger()

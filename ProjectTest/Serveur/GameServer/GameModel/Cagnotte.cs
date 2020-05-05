@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Serveur.GameServer.GameModel
 {
-    class Cagnotte : IComparable
+    public class Cagnotte : IComparable
     {
         int _montant_Total;
         int _montant_Manche;

@@ -1,6 +1,7 @@
 ﻿using Share.Network.Message;
 using Share.Network.NetworkManager;
 using Share.Network.Protocol;
+using Share.Network.Protocol.TCP;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,16 +13,18 @@ namespace Share.Network.Server
     {
         NetworkManagerTCP managerTCP;
 
-        public ServerTCP(int port) { 
-            managerTCP = new NetworkManagerTCP(port);
-            managerTCP.eventManager.OnEvent<String>(ProtocolEventsTCP<String>.CONNECTION, OnConnection);
+        public ServerTCP(int port, INotifyStateSocket observer) { 
+            managerTCP = new NetworkManagerTCP(port, observer);
         }
 
-        public void OnConnection(String obj, String id)
+       public void OnEvent<T>(ProtocolEvents<T> proto, ProtocolTCP<T>.OnReceiveEventTCP callback)
         {
-            Console.WriteLine("Client " + id + "have sent " + obj);
-            PacketMessage<String> msg = new PacketMessage<string>() {evt = ProtocolEventsTCP<String>.CONNECTION.eventName, data = obj};
-            managerTCP.Send(msg, id);
+            managerTCP.eventManager.OnEvent<T>(proto, callback);
+        }
+
+        public void Send<T>(PacketMessage<T> data, String id)
+        {
+            managerTCP.Send(data, id);
         }
 
         public void Run()

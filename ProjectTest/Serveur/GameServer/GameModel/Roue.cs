@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Serveur.GameServer.GameModel
 {
 
-    class Roue {
+    public class Roue {
         List<Case> Cases;
 
 

@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Serveur.GameServer.GameModel
 {
-    class Case{
+    public class Case{
         public int valeur { get; set; }
         public TypeCase t { get; set; }
 

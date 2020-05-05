@@ -9,7 +9,7 @@ namespace Serveur.GameServer.CommandPack
 {
     class CommandCash : Command<GameEngine>
     {
-        public CommandCash(GameEngine context) : base(context) { }
+        public CommandCash(GameEngine context, CommandManager manager) : base(context,manager) { }
         public override void onExecute()
         {
             Console.WriteLine("Case : " + this.Context.CurrentCase.ToString());

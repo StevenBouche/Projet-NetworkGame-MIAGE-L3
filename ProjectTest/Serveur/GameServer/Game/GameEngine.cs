@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Serveur.GameServer.Game
 {
-    class GameEngine
+    public class GameEngine
     {
         //Hold On
 
@@ -94,6 +94,16 @@ namespace Serveur.GameServer.Game
 
             Console.WriteLine(m.ToString());
 
+        }
+
+        public void AddPlayer(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemovePlayer(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public void GameFinish()

@@ -6,7 +6,7 @@ using System.Text;
 namespace Serveur.GameServer.GameModel
 
 {
-    class Voyage
+    public class Voyage
     {
         string _pays_Destination;
 
