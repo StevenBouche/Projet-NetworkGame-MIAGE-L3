@@ -102,7 +102,7 @@ public class ControllerLobbies implements Initializable {
             buttonRefresh.setDisable(true);
         });*/
     }
-    
+
     private void initTable() {
         tableView.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override

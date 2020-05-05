@@ -18,7 +18,7 @@ namespace Share.Network.NetworkManager
         // Client  socket.  
         public Socket workSocket = null;
         // Size of receive buffer.  
-        public const int BufferSize = 4096;
+        public const int BufferSize = 8192;
         // Receive buffer.  
         public byte[] buffer = new byte[BufferSize];
         // Received data string.  
@@ -44,13 +44,14 @@ namespace Share.Network.NetworkManager
 
         public void StartListening()
         {
-            // Establish the local endpoint for the socket.  
-            // The DNS name of the computer  
-            // running the listener is "host.contoso.com".  
+            // Service Event redirection
             Thread t = new Thread(new ThreadStart(eventManager.Run));
             t.Start();
+
+            // Establish the local endpoint for the socket. 
             IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 10001);
+
             // Create a TCP/IP socket.  
             Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 
@@ -91,7 +92,25 @@ namespace Share.Network.NetworkManager
 
         }
 
-        public void AcceptCallback(IAsyncResult ar)
+        public void Send<T>(PacketMessage<T> data, String id)
+        {
+            if (myClients.ContainsKey(id))
+            {
+                StateObjectTCP state = myClients[id];
+                String JSON = JsonConvert.SerializeObject(data);
+
+                if (state.workSocket.Connected)
+                {
+                    Send(state.workSocket, JSON);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error in sending");
+            }
+        }
+
+        private void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.  
             allDone.Set();
@@ -112,7 +131,7 @@ namespace Share.Network.NetworkManager
             state.workSocket.BeginReceive(state.buffer, 0, StateObjectTCP.BufferSize, 0, new AsyncCallback(ReadCallback), state);
         }
 
-        public void ReadCallback(IAsyncResult ar)
+        private void ReadCallback(IAsyncResult ar)
         {
             // Retrieve the state object and the handler socket  
             // from the asynchronous state object.  
@@ -155,24 +174,6 @@ namespace Share.Network.NetworkManager
             };
             state.workSocket.NoDelay = true;
             myClients.Add(state.id, state);
-        }
-
-        public void Send<T>(PacketMessage<T> data, String id)
-        {
-            if (myClients.ContainsKey(id))
-            {
-                StateObjectTCP state = myClients[id];
-                String JSON = JsonConvert.SerializeObject(data);
-
-                if (state.workSocket.Connected)
-                {
-                    Send(state.workSocket, JSON);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Error in sending");
-            }
         }
 
         private void Send(Socket handler, String data)

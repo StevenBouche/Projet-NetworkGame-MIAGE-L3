@@ -7,7 +7,7 @@ namespace Share.Network.Protocol
     class StateObjectUDP
     {
         // Size of receive buffer.  
-        public const int BufferSize = 1024;
+        public const int BufferSize = 8192;
         // Receive buffer.  
         public byte[] buffer = new byte[BufferSize];
         // Received data string.  

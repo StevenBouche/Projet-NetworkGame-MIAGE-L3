@@ -12,7 +12,7 @@ using System.Threading;
 namespace Share.Network.NetworkManager
 {
 
-    public class NetworkManagerUDP : IReceiverNetwork
+    public class NetworkManagerUDP
     {
         public EventNetworkManagerUDP evtNetManager;
 
@@ -24,20 +24,13 @@ namespace Share.Network.NetworkManager
         private OnReceivedDataDel _delegates;
         private Dictionary<IReceiverNetwork, OnReceivedDataDel> _listDelegates;
 
-
         public NetworkManagerUDP()
         {
             _listDelegates = new Dictionary<IReceiverNetwork, OnReceivedDataDel>();
             evtNetManager = new EventNetworkManagerUDP();
-            AddListenerReceivedData(this);
             AddListenerReceivedData(evtNetManager);
             Thread t = new Thread(new ThreadStart(evtNetManager.Run));
             t.Start();
-        }
-
-        public void OnReceivedData(String obj, EndPoint endpoint)
-        {
-            // Console.WriteLine("SERVER : "+ obj);
         }
 
         private void AddListenerReceivedData(IReceiverNetwork irn)
@@ -57,7 +50,6 @@ namespace Share.Network.NetworkManager
                 _listDelegates.Remove(irn);
             }
         }
-
 
         public void StartListening()
         {
@@ -97,8 +89,13 @@ namespace Share.Network.NetworkManager
 
         }
 
+        public void Send<T>(PacketMessage<T> data, EndPoint ep)
+        {
+            String jsonString = JsonConvert.SerializeObject(data);
+            Send(listener, jsonString, ep);
+        }
 
-        public void ReadCallback(IAsyncResult ar)
+        private void ReadCallback(IAsyncResult ar)
         {
 
             allDone.Set();
@@ -111,8 +108,8 @@ namespace Share.Network.NetworkManager
             // Retrieve the state object and the handler socket  
             // from the asynchronous state object.  
             StateObjectUDP state = (StateObjectUDP)ar.AsyncState;
-
             EndPoint ep = new IPEndPoint(IPAddress.Any, 11000);
+
             // Read data from the client socket.
             int bytesRead = listener.EndReceiveFrom(ar, ref ep);
             //  Console.WriteLine("END RECEIVE FROM " + bytesRead);
@@ -123,8 +120,8 @@ namespace Share.Network.NetworkManager
                 content = state.sb.ToString();
                 Console.WriteLine($" Network Manager Received  from {ep} : {content}");
                 _delegates(content, ep); // notify receive
-              //  Send(listener, content, ep);
             }
+
         }
 
         private void Send(String data, EndPoint ep)
@@ -132,29 +129,17 @@ namespace Share.Network.NetworkManager
             Send(listener, data, ep);
         }
 
-        public void Send<T>(PacketMessage<T> data, EndPoint ep)
-        {
-            String jsonString = JsonConvert.SerializeObject(data);
-            Send(listener, jsonString, ep);
-        }
-
         private void Send(Socket handler, String data, EndPoint ep)
         {
-            // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.ASCII.GetBytes(data);
-
             StateObjectUDP state = new StateObjectUDP();
-
-            // Begin sending the data to the remote device.  
-            handler.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, ep,
-                new AsyncCallback(SendCallback), state);
+            handler.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, ep,new AsyncCallback(SendCallback), state);
         }
 
         private void SendCallback(IAsyncResult ar)
         {
             try
-            {
-                // Complete sending the data to the remote device.  
+            { 
                 int bytesSent = listener.EndSend(ar);
             }
             catch (Exception e)
@@ -164,9 +149,6 @@ namespace Share.Network.NetworkManager
 
         }
 
-        public void OnReceivedData(string obj, StateObjectTCP state)
-        {
-            throw new NotImplementedException();
-        }
     }
+
 }

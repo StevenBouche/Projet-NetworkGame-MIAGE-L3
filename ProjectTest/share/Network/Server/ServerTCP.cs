@@ -14,10 +14,10 @@ namespace Share.Network.Server
 
         public ServerTCP() { 
             managerTCP = new NetworkManagerTCP();
-            managerTCP.eventManager.OnEvent<String>(ProtocolEventsTCP<String>.CONNECTION, onConnection);
+            managerTCP.eventManager.OnEvent<String>(ProtocolEventsTCP<String>.CONNECTION, OnConnection);
         }
 
-        public void onConnection(String obj, String id)
+        public void OnConnection(String obj, String id)
         {
             Console.WriteLine("Client " + id + "have sent " + obj);
             PacketMessage<String> msg = new PacketMessage<string>() {evt = ProtocolEventsTCP<String>.CONNECTION.eventName, data = obj};

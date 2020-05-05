@@ -1,22 +1,22 @@
-﻿
-using share;
+﻿using share;
 using Share.Network.Message;
 using Share.Network.Message.obj;
 using Share.Network.NetworkManager;
 using Share.Network.Protocol;
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using System.Threading;
 
-namespace Serveur.Network
+namespace Share.Network.Server
 {
-   
-    class UDPServer 
+    public class ServerUDP
     {
 
         NetworkManagerUDP manager;
-    
-        public UDPServer()
+
+        public ServerUDP()
         {
             manager = new NetworkManagerUDP();
             manager.evtNetManager.OnEvent(ProtocolEventsUDP<Choice>.SUBSCRIPTION, OnSubscription);
@@ -59,7 +59,7 @@ namespace Serveur.Network
                 evt = ProtocolEventsUDP<DataServerGame>.GETLISTSERVERGAME.eventName,
                 data = dataServ
             };
-            manager.Send(packet, ep);    
+            manager.Send(packet, ep);
         }
 
     }
