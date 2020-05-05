@@ -12,8 +12,8 @@ namespace Share.Network.Server
     {
         NetworkManagerTCP managerTCP;
 
-        public ServerTCP() { 
-            managerTCP = new NetworkManagerTCP();
+        public ServerTCP(int port) { 
+            managerTCP = new NetworkManagerTCP(port);
             managerTCP.eventManager.OnEvent<String>(ProtocolEventsTCP<String>.CONNECTION, OnConnection);
         }
 
@@ -26,9 +26,12 @@ namespace Share.Network.Server
 
         public void Run()
         {
-            Thread t = new Thread(new ThreadStart(managerTCP.StartListening));
-            t.Start();
-            t.Join();
+            managerTCP.StartListening();
+        }
+
+        public void stop()
+        {
+            managerTCP.stop();
         }
 
 

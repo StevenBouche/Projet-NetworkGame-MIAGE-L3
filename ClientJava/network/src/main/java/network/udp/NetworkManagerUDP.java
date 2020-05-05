@@ -1,8 +1,6 @@
 package network.udp;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import network.message.obj.Choice;
 import network.share.EventNetworkManager;
 import network.share.IPEndPoint;
 import network.message.PacketMessage;

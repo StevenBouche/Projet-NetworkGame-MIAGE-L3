@@ -4,6 +4,7 @@ using Share.Network.Message;
 using shortid;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -18,7 +19,7 @@ namespace Share.Network.NetworkManager
         // Client  socket.  
         public Socket workSocket = null;
         // Size of receive buffer.  
-        public const int BufferSize = 8192;
+        public const int BufferSize = 4096;
         // Receive buffer.  
         public byte[] buffer = new byte[BufferSize];
         // Received data string.  
@@ -28,18 +29,29 @@ namespace Share.Network.NetworkManager
     class NetworkManagerTCP
     {
         //HashMap containing all the clients
-        Dictionary<String, StateObjectTCP> myClients;
+        Dictionary<String, StateObjectTCP> myClients { get; set; }
 
         public EventNetworkManagerTCP eventManager;
 
         // Thread signal.  
         public ManualResetEvent allDone;
 
-        public NetworkManagerTCP()
+        int port;
+
+        Boolean running;
+
+        public NetworkManagerTCP(int port)
         {
             this.myClients = new Dictionary<string, StateObjectTCP>();
             this.eventManager = new EventNetworkManagerTCP();
             this.allDone = new ManualResetEvent(false);
+            this.port = port;
+        }
+
+        public void stop()
+        {
+            running = false;
+            allDone.Set();
         }
 
         public void StartListening()
@@ -50,7 +62,7 @@ namespace Share.Network.NetworkManager
 
             // Establish the local endpoint for the socket. 
             IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 10001);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
 
             // Create a TCP/IP socket.  
             Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -61,7 +73,8 @@ namespace Share.Network.NetworkManager
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
 
-                while (true)
+                running = true;
+                while (running)
                 {
                     // Set the event to nonsignaled state.  
                     allDone.Reset();
@@ -73,23 +86,33 @@ namespace Share.Network.NetworkManager
                     // Wait until a connection is made before continuing.  
                     allDone.WaitOne();
                 }
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
 
-            //
-            //TODO myclients shutdown handler state object
-            //
+            //Closing event thread
+            Console.WriteLine("shutdown event thread");
+            eventManager.close();
+            t.Join();
+            
+            Dictionary<String, StateObjectTCP> copy = myClients.ToDictionary(entry => entry.Key, entry => entry.Value);
 
-            listener.Shutdown(SocketShutdown.Both);
+            Console.WriteLine("shutdown clients");
+            //Closing clients sockets
+            foreach (KeyValuePair<String, StateObjectTCP> keyValue in copy)
+            {
+                if (keyValue.Value.workSocket.Connected)
+                {
+                    keyValue.Value.workSocket.Shutdown(SocketShutdown.Both);
+                    keyValue.Value.workSocket.Close();
+                }
+            }
+
+            //Closing server socket
             listener.Close();
-
-            Console.WriteLine("\nPress ENTER to continue...");
-            Console.Read();
-
+            Console.WriteLine("\nShutdown network manager TCP");
         }
 
         public void Send<T>(PacketMessage<T> data, String id)
@@ -131,7 +154,7 @@ namespace Share.Network.NetworkManager
             state.workSocket.BeginReceive(state.buffer, 0, StateObjectTCP.BufferSize, 0, new AsyncCallback(ReadCallback), state);
         }
 
-        private void ReadCallback(IAsyncResult ar)
+        public void ReadCallback(IAsyncResult ar)
         {
             // Retrieve the state object and the handler socket  
             // from the asynchronous state object.  
@@ -150,17 +173,17 @@ namespace Share.Network.NetworkManager
                 }
                 else
                 {
-                    OnDisconnect(state);
+                    OnDisconnectWhileListening(state);
                 }
             } catch (SocketException s)
             {
                 Console.WriteLine("Socket disconnected because of " + s.Message);
-                OnDisconnect(state);
+                OnDisconnectWhileListening(state);
             }
             
         }
 
-        private void OnDisconnect(StateObjectTCP state)
+        private void OnDisconnectWhileListening(StateObjectTCP state)
         {
             myClients.Remove(state.id);
         }

@@ -1,14 +1,10 @@
 package network.client;
 
 import network.message.PacketMessage;
-import network.share.DataListener;
 import network.share.DataListenerTCP;
-import network.share.IPEndPoint;
 import network.tcp.INotifyState;
 import network.tcp.NetworkManagerTCP;
 import network.tcp.ProtocolEventsTCP;
-
-import java.io.IOException;
 
 public class ClientTCP implements Runnable, INotifyState {
 
