@@ -16,11 +16,14 @@ namespace Serveur.GameServer.Game
         ServerTCP network;
         Thread threadNetwork;
         GameEngine gameManager;
+        protected ManualResetEvent allDone = new ManualResetEvent(false);
 
         public ServerGame(int port) 
         {
             network = new ServerTCP(port,this);
             gameManager = new GameEngine();
+
+            gameManager.addCallbackPlayerJoined(notifyPlayerHaveJoined);
             InitEventAndStartServerTCP();
         }
 
@@ -28,15 +31,33 @@ namespace Serveur.GameServer.Game
         {
             //Sub on events to receive data
             network.OnEvent<String>(ProtocolEventsTCP<String>.CONNECTION, OnConnectionTest);
+            network.OnEvent<String>(ProtocolEventsTCP<String>.IDENTITY, OnIdentityReceived);
             //Start thread network
             threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
         }
 
+        public void run()
+        {
+            
+            while(gameManager.listIdPlayers.Count != 3)
+            {
+                allDone.Reset();
+                allDone.WaitOne();
+            }
+
+            gameManager.Play();
+            
+        }
+
+        public void notifyPlayerHaveJoined(String id)
+        {
+            allDone.Set();
+        }
+
         public void OnConnect(string id)
         {
-            Debug.WriteLine("On Connect player : " + id);
-            gameManager.AddPlayer(id);
+            
         }
 
         public void OnDisconnect(string id)
@@ -49,6 +70,15 @@ namespace Serveur.GameServer.Game
         {
             Console.WriteLine("Client " + id + "have sent " + obj);
             PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.CONNECTION.eventName, data = obj };
+            network.Send(msg, id);
+        }
+
+        public void OnIdentityReceived(String obj, String id)
+        {
+            Console.WriteLine("Client " + id + "have sent " + obj);
+            PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.IDENTITY.eventName, data = obj };
+            Debug.WriteLine("On Connect player : " + id);
+            gameManager.AddPlayer(id);
             network.Send(msg, id);
         }
     }

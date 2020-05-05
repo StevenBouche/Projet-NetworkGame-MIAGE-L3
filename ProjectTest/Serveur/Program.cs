@@ -1,4 +1,5 @@
 ﻿
+using Serveur.GameServer.Game;
 using Share.Network.Message;
 using Share.Network.NetworkManager;
 using Share.Network.Protocol;
@@ -24,30 +25,32 @@ namespace Serveur
 
     class Program
     {
-        static ServerTCP server;
+        //static ServerTCP server;
+        static ServerGame serverGame;
 
         static void Main(string[] args)
         {
             // Supply the state information required by the task.
 
              //ServerUDP myServer = new ServerUDP();
-             server = new ServerTCP(10001, new TestConnection());
-             server.OnEvent<String>(ProtocolEventsTCP<String>.CONNECTION, Program.OnConnection);
+             //server = new ServerTCP(10001, new TestConnection());
+            serverGame = new ServerGame(10001);
+            //  server.OnEvent<String>(ProtocolEventsTCP<String>.CONNECTION, Program.OnConnection);
             // Create a thread to execute the task, and then
             // start the thread.
 
-            Thread t = new Thread(new ThreadStart(server.Run));
+            Thread t = new Thread(new ThreadStart(serverGame.run));
             t.Start();
             Console.WriteLine("Main thread does some work, then waits.");
             t.Join();
             Console.WriteLine("Independent task has completed; main thread ends.");
         }
 
-        public static void OnConnection(String obj, String id)
+        /*public static void OnConnection(String obj, String id)
         {
             Console.WriteLine("Client " + id + "have sent " + obj);
             PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.CONNECTION.eventName, data = obj };
             server.Send(msg, id);
-        }
+        }*/
     }
 }

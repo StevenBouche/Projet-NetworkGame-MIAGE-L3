@@ -6,7 +6,8 @@ namespace Share.Network.Protocol
 {
     public class ProtocolEventsTCP<T> : ProtocolEvents<T>
     {
-        public static ProtocolEventsTCP<String> CONNECTION = new ProtocolEventsTCP<string>("CONNECTION");
+        public static ProtocolEventsTCP<String> CONNECTION = new ProtocolEventsTCP<String>("CONNECTION");
+        public static ProtocolEventsTCP<String> IDENTITY = new ProtocolEventsTCP<String>("IDENTITY");
 
 
 

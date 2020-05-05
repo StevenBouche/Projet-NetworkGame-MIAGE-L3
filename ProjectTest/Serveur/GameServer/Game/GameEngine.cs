@@ -27,6 +27,9 @@ namespace Serveur.GameServer.Game
         
         CommandManager CM;
 
+        public delegate void notifyPlayerJoined(String id);
+        public notifyPlayerJoined callback;
+
         public GameEngine()
         {
             wheel = new Roue();
@@ -34,6 +37,11 @@ namespace Serveur.GameServer.Game
             listIdPlayers = new List<string>();
             CM = new CommandManager(this);
             gameLoop = new GameLoop(CM);
+        }
+
+        public void addCallbackPlayerJoined(notifyPlayerJoined x)
+        {
+            callback = x;
         }
 
         public void Play()
@@ -45,6 +53,8 @@ namespace Serveur.GameServer.Game
         {
             listIdPlayers.Add(id);
             listPlayers.Add(id, new Joueur(id));
+
+            callback(id);
         }
 
         public void RemovePlayer(string id)
