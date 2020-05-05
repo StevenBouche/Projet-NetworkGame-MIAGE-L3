@@ -10,6 +10,7 @@ namespace Serveur.GameServer.GameModel
     public class CaseToAction
     {
         public static List<CaseToAction> listAction = new List<CaseToAction>();
+
         public static CaseToAction MISTERYACTION = new CaseToAction(typeof(CommandMystery), TypeCase.MYSTERE, ref listAction);
 
         Type actionType;

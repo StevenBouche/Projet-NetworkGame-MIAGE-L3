@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface INotifyEventUI {
 
-    void playerWantJoinGame(ServerGame srvGame) throws IOException;
+    void playerWantJoinGame(ServerGame srvGame, String name) throws IOException;
 
 
 }

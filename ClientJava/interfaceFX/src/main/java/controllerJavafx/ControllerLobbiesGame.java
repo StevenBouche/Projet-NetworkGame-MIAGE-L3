@@ -37,13 +37,17 @@ public class ControllerLobbiesGame implements Initializable {
     Map<Integer, ControllerItemPlayer> mapControllerPlayer;
 
     IMain main;
-    public ControllerLobbiesGame(IMain main, ServerGame serverInfo){
+
+    String name;
+
+    public ControllerLobbiesGame(IMain main, ServerGame serverInfo, String name){
         this.serverInfo = serverInfo;
         mapControllerPlayer = new HashMap<>();
         mapPlayer = new HashMap<>();
-        mapPlayer.put(1,"Maurice");
-        mapPlayer.put(2,"Jose");
-        mapPlayer.put(3,"Mopolo");
+        this.name = name;
+        mapPlayer.put(1,name);
+       // mapPlayer.put(2,"Jose");
+       // mapPlayer.put(3,"Mopolo");
         this.main = main;
     }
 
@@ -54,6 +58,9 @@ public class ControllerLobbiesGame implements Initializable {
             for(Integer i : mapPlayer.keySet()){
                 createItemPlayer(i,mapPlayer.get(i));
             }
+            ClientTCP client = new ClientTCP("127.0.0.1",10001,this.name); // todo change brut
+            Thread t = new Thread(client);
+            t.start();
     }
 
     private void createItemPlayer(int i, String name){

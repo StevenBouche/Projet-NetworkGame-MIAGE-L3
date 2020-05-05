@@ -15,14 +15,17 @@ public class NetworkManagerTCP {
     INotifyState observer;
     ObjectMapper mapper = new ObjectMapper();
 
-    public NetworkManagerTCP(INotifyState client){
+    String hostname;
+    int port;
+
+    public NetworkManagerTCP(INotifyState client, String addr, int port){
         this.eventManager = new EventNetworkManager();
         observer = client;
+        this.hostname = addr;
+        this.port = port;
     }
 
     public void startListening() {
-        String hostname = "127.0.0.1";
-        int port = 10001;
 
         Socket socket = null;
         try {

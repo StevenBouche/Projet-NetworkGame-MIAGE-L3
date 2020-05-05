@@ -7,10 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -43,11 +40,14 @@ public class ControllerLobbies implements Initializable {
     public Button buttonConnect;
     @FXML
     public Button buttonRefresh;
+    @FXML
+    public TextField name;
 
     ClientUDP server;
     Thread threadServer;
     private ServerGame srcGame;
     INotifyEventUI observer;
+    String nameField;
 
     public ControllerLobbies(INotifyEventUI observer){
         this.observer = observer;
@@ -58,6 +58,12 @@ public class ControllerLobbies implements Initializable {
         stateDisconnected();
         initTable();
         initButton();
+        name.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                nameField = name.getText();
+            }
+        });
         try {
             loadServerUDP();
         } catch (SocketException | UnknownHostException e) {
@@ -93,7 +99,7 @@ public class ControllerLobbies implements Initializable {
         enableInterface();
         stop();
         try {
-            observer.playerWantJoinGame(this.srcGame);
+            observer.playerWantJoinGame(this.srcGame,nameField);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -225,7 +231,7 @@ public class ControllerLobbies implements Initializable {
             }
 
             System.out.println(this.srcGame);
-            buttonConnect.setDisable(this.srcGame == null);
+            buttonConnect.setDisable(this.srcGame == null || nameField == null);
         });
     }
 
