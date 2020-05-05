@@ -18,8 +18,13 @@ namespace Serveur.GameServer.GameModel
             this.caseType = t1;
         }
 
-        public static Command<T> getCommand<T>(TypeCase caseType) where T : GameEngine
+        public static Command<GameEngine> getCommand<T>(TypeCase caseType, T engine, CommandManager cmd) where T : GameEngine
         {
+            if(MISTERYACTION.caseType == caseType)
+            {
+                return new CommandMystery(engine, cmd);
+            }
+            
             return null; //todo
         }
     }
