@@ -1,11 +1,20 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "wOhhzmI7dY01Z5G3dCjVpn1G+RTqaacAVrJS0IKkRU15dExUoIJWIn5+moqvWlhibbsfI9W1+rPNsLdAZ6MgPw==",
   "success": true,
   "projectFilePath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Steven\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\Steven\\.nuget\\packages\\shortid\\2.0.1\\shortid.2.0.1.nupkg.sha512"
+=======
+  "dgSpecHash": "rxVtZrVQYuCrVmHZoPrDwO7cBv4iVQVN9L3HWQ39Vdzh6ev9L+dkXvruYX5GNhqbKk8BuDeO2c+UB+3bY/74Tg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\arman\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\arman\\.nuget\\packages\\shortid\\2.0.1\\shortid.2.0.1.nupkg.sha512"
+>>>>>>> b8ff7500ed0a2b71d35e016fbdbb5ca69c9965fc
   ],
   "logs": []
 }

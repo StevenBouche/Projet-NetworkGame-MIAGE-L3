@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "4Pn+GFnkHRIZNVCj+CZRtUtXHef8KhdlGujxoJHv/gvZX8zYvE6iQE2mU1M+I78PPSfPdNrz2z0E5Irksk+dFQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\arman\\OneDrive\\Documents\\MIAGE\\C\\-WheelOfFortune\\ProjectTest\\ClientUdp\\ClientUdp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\arman\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\arman\\.nuget\\packages\\shortid\\2.0.1\\shortid.2.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
