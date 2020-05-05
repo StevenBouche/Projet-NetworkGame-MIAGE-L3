@@ -1,3 +1,4 @@
 .idea/*
-./ProjectTest/**/bin
+./ProjectTest/**/bin/*
+./ProjectTest/**/obj/*
 

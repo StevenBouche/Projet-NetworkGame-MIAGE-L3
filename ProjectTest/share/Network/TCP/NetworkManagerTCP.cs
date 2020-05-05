@@ -50,7 +50,7 @@ namespace Share.Network.NetworkManager
             Thread t = new Thread(new ThreadStart(eventManager.Run));
             t.Start();
             IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 10000);
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 10001);
             // Create a TCP/IP socket.  
             Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 
