@@ -18,8 +18,7 @@ public class ControllerLobbiesGame implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        System.out.println("test");
     }
-
 
 }

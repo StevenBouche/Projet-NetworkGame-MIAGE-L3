@@ -91,12 +91,16 @@ public class ControllerLobbies implements Initializable {
         disableInterface();
         enableInterface();
         try {
-            threadServer.interrupt();
+            server.stop();
             threadServer.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        observer.playerWantJoinGame(this.srcGame);
+        try {
+            observer.playerWantJoinGame(this.srcGame);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void enableInterface() {

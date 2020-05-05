@@ -28,8 +28,10 @@ public class ClientUDP implements Runnable {
 
     @Override
     public void run() {
+        manager.startListening();
+    }
 
-            manager.startListening();
-
+    public void stop() {
+        manager.stopListening();
     }
 }

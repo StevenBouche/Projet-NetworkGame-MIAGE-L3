@@ -36,8 +36,7 @@ public class NetworkManagerUDP {
         running = true;
         listener.onRunning("Running on "+addr.toString()+":"+portClient);
 
-        while(running && !Thread.currentThread().isInterrupted()){
-
+        while(running){
 
                 byte[] buffer2 = new byte[8196];
                 DatagramPacket packet2 = new DatagramPacket(buffer2, buffer2.length, addr, portClient);
@@ -46,18 +45,22 @@ public class NetworkManagerUDP {
             } catch (IOException e) {
                 e.printStackTrace();
                 running = false;
-            } finally {
-                println(" J'ai reçu une réponse du serveur : "+new String(packet2.getData()));
+            }
+
+            if(running) {
+                println(" J'ai reçu une réponse du serveur : " + new String(packet2.getData()));
                 IPEndPoint ipep = new IPEndPoint();
                 ipep.addr = packet2.getAddress().toString();
                 ipep.port = packet2.getPort();
-                evtManager.OnReceivedData(new String(packet2.getData()),ipep);
+                evtManager.OnReceivedData(new String(packet2.getData()), ipep);
             }
 
         }
-
         listener.onShutdown();
+    }
 
+    public void stopListening() {
+        client.close();
     }
 
     private void sendMessage(String str) throws IOException {
@@ -80,6 +83,5 @@ public class NetworkManagerUDP {
     public void println(String str){
         System.err.println(str);
     }
-
 
 }

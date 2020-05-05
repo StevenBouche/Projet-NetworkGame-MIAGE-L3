@@ -25,26 +25,49 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
     ControllerLobbies manager;
     ControllerLobbiesGame managerLobbiesGame;
 
+    FXMLLoader fxmlLoaderLobbies;
+    FXMLLoader fxmlLoaderLobbiesGame;
     Parent rootLobbies;
     Parent rootLobbiesGame;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("lobbie.fxml"));
+        fxmlLoaderLobbies = new FXMLLoader(getClass().getClassLoader().getResource("lobbie.fxml"));
+
         manager = new ControllerLobbies(this);
-        fxmlLoader.setController(manager);
+        fxmlLoaderLobbies.setController(manager);
+
         try {
-            rootLobbies = fxmlLoader.load();
-            rootLobbies.maxWidth(subscene.getWidth());
-            rootLobbies.maxHeight(subscene.getHeight());
-            subscene.setRoot(rootLobbies);
+            rootLobbies = fxmlLoaderLobbies.load();
+            setSizeOfParentSubScene(rootLobbies);
+            setScene(rootLobbies);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void setScene(Parent p ){
+        subscene.setRoot(p);
+    }
+
+    private void setSizeOfParentSubScene(Parent p){
+        p.maxWidth(subscene.getWidth());
+        p.maxHeight(subscene.getHeight());
+    }
+
     @Override
     public void playerWantJoinGame(ServerGame srvGame) {
-
+        System.out.println("Player has select a game server");
+        fxmlLoaderLobbiesGame = new FXMLLoader(getClass().getClassLoader().getResource("lobbiesGame.fxml"));
+        managerLobbiesGame = new ControllerLobbiesGame();
+        fxmlLoaderLobbiesGame.setController(managerLobbiesGame);
+        try {
+            rootLobbiesGame = fxmlLoaderLobbiesGame.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        setSizeOfParentSubScene(rootLobbiesGame);
+        subscene.setRoot(rootLobbiesGame);
     }
+
 }
