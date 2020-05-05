@@ -29,29 +29,29 @@ public class NetworkManagerUDP {
         evtManager = new EventNetworkManager();
     }
 
-    public void startListening() throws IOException {
+    public void startListening() {
 
         running = true;
-        int cpt = 0;
-
         listener.onRunning("Running on "+addr.toString()+":"+portClient);
 
         while(running && !Thread.currentThread().isInterrupted()){
 
-         /*   packet.data.message = "hello "+cpt;
-            String str = mapper.writeValueAsString(packet);
-            sendMessage(str);*/
 
-            //Et on récupère la réponse du serveur
-            byte[] buffer2 = new byte[8196];
-            DatagramPacket packet2 = new DatagramPacket(buffer2, buffer2.length, addr, portClient);
-            client.receive(packet2);
-            println(" J'ai reçu une réponse du serveur : "+new String(packet2.getData()));
-            IPEndPoint ipep = new IPEndPoint();
-            ipep.addr = packet2.getAddress().toString();
-            ipep.port = packet2.getPort();
-            evtManager.OnReceivedData(new String(packet2.getData()),ipep);
-            cpt++;
+                byte[] buffer2 = new byte[8196];
+                DatagramPacket packet2 = new DatagramPacket(buffer2, buffer2.length, addr, portClient);
+            try {
+                client.receive(packet2);
+            } catch (IOException e) {
+                e.printStackTrace();
+                running = false;
+            } finally {
+                println(" J'ai reçu une réponse du serveur : "+new String(packet2.getData()));
+                IPEndPoint ipep = new IPEndPoint();
+                ipep.addr = packet2.getAddress().toString();
+                ipep.port = packet2.getPort();
+                evtManager.OnReceivedData(new String(packet2.getData()),ipep);
+            }
+
         }
 
         listener.onShutdown();

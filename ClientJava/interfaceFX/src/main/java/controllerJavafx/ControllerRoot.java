@@ -6,12 +6,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.MenuBar;
+import network.message.obj.ServerGame;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerRoot implements Initializable {
+public class ControllerRoot implements Initializable, INotifyEventUI {
 
     @FXML
     public SubScene subscene;
@@ -19,22 +20,28 @@ public class ControllerRoot implements Initializable {
     public MenuBar menu;
 
     ControllerLobbies manager;
+    ControllerLobbiesGame managerLobbiesGame;
 
-    Parent root;
+    Parent rootLobbies;
+    Parent rootLobbiesGame;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("lobbie.fxml"));
-        manager = new ControllerLobbies();
+        manager = new ControllerLobbies(this);
         fxmlLoader.setController(manager);
         try {
-            root = fxmlLoader.load();
-            root.maxWidth(subscene.getWidth());
-            root.maxHeight(subscene.getHeight());
-            subscene.setRoot(root);
+            rootLobbies = fxmlLoader.load();
+            rootLobbies.maxWidth(subscene.getWidth());
+            rootLobbies.maxHeight(subscene.getHeight());
+            subscene.setRoot(rootLobbies);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
+    public void playerWantJoinGame(ServerGame srvGame) {
+
+    }
 }
