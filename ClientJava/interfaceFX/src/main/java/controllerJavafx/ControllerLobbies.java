@@ -89,11 +89,11 @@ public class ControllerLobbies implements Initializable {
                 actionEvent.consume();
             }
         });
-
+        buttonConnect.setDisable(false);
     }
 
     private void switchSceneAndConnectToServerGame() {
-        System.out.println("TODO start scene connection to server game selected : "+this.srcGame.addr+":"+this.srcGame.port);
+//        System.out.println("TODO start scene connection to server game selected : "+this.srcGame.addr+":"+this.srcGame.port);
         // request to server lobbies to know if server game selected at t instant have place
         disableInterface();
         enableInterface();
@@ -122,7 +122,7 @@ public class ControllerLobbies implements Initializable {
     }
 
     private void initTable() {
-        tableView.setOnKeyReleased(new EventHandler<KeyEvent>() {
+       /* tableView.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
                 setServerGame();
@@ -135,7 +135,7 @@ public class ControllerLobbies implements Initializable {
                 setServerGame();
                 mouseEvent.consume();
             }
-        });
+        }); */
         tableView.setEditable(false);
         TableColumn<ServerGame,String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));

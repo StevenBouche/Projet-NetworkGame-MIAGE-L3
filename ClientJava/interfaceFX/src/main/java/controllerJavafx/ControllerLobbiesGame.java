@@ -54,7 +54,7 @@ public class ControllerLobbiesGame implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("test");
-            title.setText("Room "+serverInfo.addr+":"+serverInfo.port);
+           // title.setText("Room "+serverInfo.addr+":"+serverInfo.port);
             for(Integer i : mapPlayer.keySet()){
                 createItemPlayer(i,mapPlayer.get(i));
             }

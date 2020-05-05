@@ -44,7 +44,7 @@ public class ClientTCP implements Runnable, INotifyState {
     @Override
     public void onConnect() {
         PacketMessage<String> msg = new PacketMessage<>();
-        msg.evt = ProtocolEventsTCP.CONNECTION.eventName;
+        msg.evt = ProtocolEventsTCP.IDENTITY.eventName;
         msg.data = this.name;
         managerTCP.sendMsg(msg);
       //  msgLoop();
