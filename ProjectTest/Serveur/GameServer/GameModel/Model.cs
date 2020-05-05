@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Collections.Generic;
 
 namespace Serveur.GameServer.GameModel
@@ -8,7 +8,6 @@ namespace Serveur.GameServer.GameModel
     {
 
         public Dictionary<Joueur, Cagnotte> ListJoueur { get; set; }
-        public Roue R { get; set; }
 
 
         public Model()
@@ -82,4 +81,4 @@ namespace Serveur.GameServer.GameModel
 
     }
 
-}
+}*/

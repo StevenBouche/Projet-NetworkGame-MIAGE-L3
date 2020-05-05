@@ -11,98 +11,45 @@ namespace Serveur.GameServer.Game
     {
         //Hold On
 
-        public Model m { get; }
-        
-        int manche;
-        public int IndexLoop { get; set; }
-        public int IndexJoueur { get; set; }
-        
-        public Joueur[] Joueurs { get; }
+        // public Model m { get; }
+
+        public Roue wheel { get; set; }
+
+        public Dictionary<String, Joueur> listPlayers;
+
+        public List<String> listIdPlayers;
+
+        public GameLoop gameLoop;
+
         public Joueur CurrentPlayer { get; set; }
-        public Case CurrentCase { get; set; }
+
+        public int CurrentPosPlayer = 0;
         
         CommandManager CM;
 
         public GameEngine()
         {
-            m = new Model();
-            Joueurs = new Joueur[3];
+            wheel = new Roue();
+            listPlayers = new Dictionary<string, Joueur>();
+            listIdPlayers = new List<string>();
             CM = new CommandManager(this);
+            gameLoop = new GameLoop(CM);
         }
 
         public void Play()
         {
-            GameInit();
-            GameLoop();
-            GameFinish();
+            gameLoop.ExecuteGame();
         }
 
-        public void GameInit()
+        public void AddPlayer(String id)
         {
-            manche = 0;
-            m.ListJoueur.Keys.CopyTo(Joueurs, 0);
-            IndexLoop = 0;
-            IndexJoueur = 0;
-            Console.WriteLine(" Init : \n" + m.ToString());
-
-        }
-
-        public void GameLoop()
-        {
-            while (IndexLoop < 15)
-            {
-                Random r = new Random();
-                manche++;
-
-                if (IndexLoop == 0)
-                {
-                    //Un joueur aléatoire découvre l'énigme, il prend la main
-                    int RandParam = r.Next(3);
-                    this.CurrentPlayer = Joueurs[RandParam];
-                    IndexJoueur = RandParam;
-                    IndexLoop++;
-                }
-                else if (IndexJoueur > 2)
-                {
-                    IndexJoueur = 0;
-                    CurrentPlayer = Joueurs[IndexJoueur];
-                }
-                else
-                    CurrentPlayer = Joueurs[IndexJoueur];
-
-                
-                Console.WriteLine("Manche : " + IndexLoop + "\n Joueur actif : " + CurrentPlayer.nom);
-
-                CurrentCase = m.R.OnWheelTurn();
-
-                if (CurrentCase.t == TypeCase.CASH || CurrentCase.t == TypeCase.SUPER_CASH)
-                {
-                    CM.AddCashCommand();
-                    IndexLoop++;
-                    IndexJoueur++;
-                }
-                else if (CurrentCase.t == TypeCase.PASSE)
-                {
-                    CM.AddPassCommand();
-                }
-                else
-                {
-                    IndexLoop++;
-                    IndexJoueur++;
-                }
-            }
-
-            Console.WriteLine(m.ToString());
-
-        }
-
-        public void AddPlayer(string id)
-        {
-            throw new NotImplementedException();
+            listIdPlayers.Add(id);
+            listPlayers.Add(id, new Joueur(id));
         }
 
         public void RemovePlayer(string id)
         {
+            //t
             throw new NotImplementedException();
         }
 

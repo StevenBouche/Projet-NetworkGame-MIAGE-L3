@@ -10,13 +10,9 @@ namespace Serveur.GameServer.CommandPack
         public CommandPass(GameEngine context, CommandManager manager) : base(context,manager) { }
         public override void onExecute()
         {
-            Console.WriteLine("Case : " + this.Context.CurrentCase.ToString());
-            if (this.Context.IndexJoueur == 2)
-            {
-                this.Context.IndexJoueur = 0;
-            }
-            else
-                this.Context.IndexJoueur++;
+            Console.WriteLine("Case : " + this.Context.wheel.CurrentCase.ToString());
+            
+            
         }
     }
 }

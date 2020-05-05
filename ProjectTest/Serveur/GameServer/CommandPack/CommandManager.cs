@@ -16,11 +16,30 @@ namespace Serveur.GameServer.CommandPack
             stack = new ConcurrentStack<Command<GameEngine>>();
             engine = context;
         }
-           
+
+        public void OnEndExecute<T>(Command<T> command) where T : GameEngine
+        {
+            stack.TryPop(out Command<GameEngine> cmdPop);
+            if (cmdPop != null)
+            {
+                //todo
+            }
+        }
+
         public void TriggerCommand(Command<GameEngine> cmd)
         {
             stack.Push(cmd);
             cmd.Trigger();
+        }
+
+        public void TriggerWheelTurn()
+        {
+            this.TriggerCommand(new CommandWheelTurn(engine, this));
+        }
+
+        public void TriggerNextPlayer()
+        {
+            this.TriggerCommand(new CommandNextPlayer(engine, this));
         }
 
         public void AddCashCommand()
@@ -33,14 +52,9 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandPass(engine,this));
         }
 
-        public void OnEndExecute(Command<GameEngine> cmd)
+        internal void triggerCurrentPlayer()
         {
-            
-            stack.TryPop(out Command<GameEngine> cmdPop);
-            if(cmdPop != null)
-            {
-                //todo
-            }
+            this.TriggerCommand(new CommandSetPlayerActif(engine, this));
         }
     }
 }

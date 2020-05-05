@@ -5,20 +5,20 @@ namespace Serveur.GameServer.GameModel
 {
     public class Case{
         public int valeur { get; set; }
-        public TypeCase t { get; set; }
+        public TypeCase type { get; set; }
 
         public Case(int v) {
             valeur = v;
         }
 
         public Case(TypeCase t) {
-            this.t = t;
+            this.type = t;
             Random r = new Random();
             if(t == TypeCase.CASH) {
                 valeur = (int)Enum.GetValues(typeof(Cash)).GetValue(r.Next(0, 7));
             }
             else if (t == TypeCase.SUPER_CASH) {
-                valeur = (int)Enum.GetValues(typeof(Cash)).GetValue(7); ;
+                valeur = (int)Enum.GetValues(typeof(Cash)).GetValue(7);
             }
             else
             {
@@ -28,7 +28,7 @@ namespace Serveur.GameServer.GameModel
 
         override public String ToString()
         {
-            return valeur + " " + t.ToString();
+            return valeur + " " + type.ToString();
         }
 
         

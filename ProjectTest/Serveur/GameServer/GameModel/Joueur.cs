@@ -10,9 +10,15 @@ namespace Serveur.GameServer.GameModel
     {
         public String nom;
 
-        public Joueur(String n)
+        public Cagnotte cagnotte;
+
+        public String id;
+
+        public Joueur(String id)
         {
-            nom = n;
+            this.id = id;
+          //  this.nom = name;
+            this.cagnotte = new Cagnotte();
         }
 
         public int CompareTo(Joueur other)

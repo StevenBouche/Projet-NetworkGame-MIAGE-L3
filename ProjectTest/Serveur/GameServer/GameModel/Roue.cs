@@ -7,22 +7,18 @@ namespace Serveur.GameServer.GameModel
     public class Roue {
         List<Case> Cases;
 
+        public Case CurrentCase { get; set; }
 
         public Roue()
         {
             Cases = new List<Case>();
             fill_Start();
-            
 
-            
-            
         }
-
-        public Case OnWheelTurn() 
+        
+        public Case getWheelCases(int pos)
         {
-            Random r = new Random();
-            return Cases[r.Next(23)];
-
+            return Cases[pos];
         }
 
         public void fill_Start()
@@ -60,15 +56,15 @@ namespace Serveur.GameServer.GameModel
         public void UnveiledMysteryCase(Case C)
         {
             Random r = new Random();
-            if (C.t == TypeCase.MYSTERE) {
+            if (C.type == TypeCase.MYSTERE) {
                 if (r.Next(2) == 1)
                 {
-                    C.t = TypeCase.CASH;
+                    C.type = TypeCase.CASH;
                     C.valeur = (int)Cash.CASH_500;
                 }
             }
             else
-                C.t = TypeCase.BANQUEROUTE;
+                C.type = TypeCase.BANQUEROUTE;
         }
 
         override

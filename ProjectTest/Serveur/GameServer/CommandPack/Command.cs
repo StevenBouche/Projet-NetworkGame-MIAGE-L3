@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Serveur.GameServer.Game;
 
 namespace Serveur.GameServer.CommandPack
 {
-    public abstract class Command<GameEngine>
+    public abstract class Command<T> where T : GameEngine
     {
-        private GameEngine context;
-        private CommandManager commandManager;
+        private T context;
+        protected CommandManager commandManager;
 
-        public Command(GameEngine context, CommandManager manager) {
+        public Command(T context, CommandManager manager) {
             this.context = context;
             this.commandManager = manager;
         }
@@ -17,10 +15,11 @@ namespace Serveur.GameServer.CommandPack
         public void Trigger()
         {
             this.onExecute();
+            commandManager.OnEndExecute(this);
         }
 
         public abstract void onExecute();
 
-        public GameEngine Context { get => context; set => context = value; }
+        public T Context { get => context; set => context = value; }
     }
 }

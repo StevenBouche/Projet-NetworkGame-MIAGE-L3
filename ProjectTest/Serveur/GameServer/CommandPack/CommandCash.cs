@@ -12,8 +12,8 @@ namespace Serveur.GameServer.CommandPack
         public CommandCash(GameEngine context, CommandManager manager) : base(context,manager) { }
         public override void onExecute()
         {
-            Console.WriteLine("Case : " + this.Context.CurrentCase.ToString());
-            this.Context.m.AddMontant(this.Context.CurrentPlayer, this.Context.CurrentCase);
+            Console.WriteLine("Case : " + this.Context.wheel.CurrentCase.ToString());
+            //this.Context.m.AddMontant(this.Context.CurrentPlayer, this.Context.CurrentCase);
         }
     }
 }
