@@ -58,10 +58,10 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
     }
 
     @Override
-    public void playerWantJoinGame(ServerGame srvGame) {
+    public void playerWantJoinGame(ServerGame srvGame, String name) {
         System.out.println("Player has select a game server");
         fxmlLoaderLobbiesGame = new FXMLLoader(getClass().getClassLoader().getResource("lobbiesGame.fxml"));
-        managerLobbiesGame = new ControllerLobbiesGame(main,srvGame);
+        managerLobbiesGame = new ControllerLobbiesGame(main,srvGame,name);
         fxmlLoaderLobbiesGame.setController(managerLobbiesGame);
         try {
             rootLobbiesGame = fxmlLoaderLobbiesGame.load();

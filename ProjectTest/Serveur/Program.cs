@@ -31,7 +31,6 @@ namespace Serveur
         static void Main(string[] args)
         {
             // Supply the state information required by the task.
-
              //ServerUDP myServer = new ServerUDP();
              //server = new ServerTCP(10001, new TestConnection());
             serverGame = new ServerGame(10001);
@@ -40,6 +39,7 @@ namespace Serveur
             // start the thread.
 
             Thread t = new Thread(new ThreadStart(serverGame.run));
+
             t.Start();
             Console.WriteLine("Main thread does some work, then waits.");
             t.Join();
