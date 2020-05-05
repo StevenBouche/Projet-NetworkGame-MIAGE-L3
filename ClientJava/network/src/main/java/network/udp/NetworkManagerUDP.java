@@ -54,6 +54,9 @@ public class NetworkManagerUDP {
             }
 
         }
+
+        if(!client.isClosed()) client.close();
+
         listener.onShutdown();
     }
 

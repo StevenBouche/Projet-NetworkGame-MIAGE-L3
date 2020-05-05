@@ -77,7 +77,9 @@ public class ControllerLobbies implements Initializable {
         buttonConnect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                switchSceneAndConnectToServerGame();
+                Platform.runLater(() ->  {
+                    switchSceneAndConnectToServerGame();
+                });
                 actionEvent.consume();
             }
         });
@@ -89,12 +91,7 @@ public class ControllerLobbies implements Initializable {
         // request to server lobbies to know if server game selected at t instant have place
         disableInterface();
         enableInterface();
-        try {
-            server.stop();
-            threadServer.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        stop();
         try {
             observer.playerWantJoinGame(this.srcGame);
         } catch (IOException e) {
@@ -232,4 +229,12 @@ public class ControllerLobbies implements Initializable {
         });
     }
 
+    public void stop() {
+        server.stop();
+        try {
+            threadServer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
