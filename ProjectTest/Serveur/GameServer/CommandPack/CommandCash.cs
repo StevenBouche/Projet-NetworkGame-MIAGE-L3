@@ -1,11 +1,11 @@
-﻿using Serveur.Game;
+﻿using Serveur.GameServer.Game;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 
-namespace Serveur.CommandPack
+namespace Serveur.GameServer.CommandPack
 {
     class CommandCash : Command<GameEngine>
     {

@@ -1,8 +1,8 @@
-using Serveur.GameModel;
 using System;
 using System.Collections.Generic;
 
-namespace GameModel {
+namespace Serveur.GameServer.GameModel
+{
 
     class Roue {
         List<Case> Cases;

@@ -1,9 +1,9 @@
-﻿using Serveur.Game;
+﻿using Serveur.GameServer.Game;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Serveur.CommandPack
+namespace Serveur.GameServer.CommandPack
 {
     class CommandManager
     {

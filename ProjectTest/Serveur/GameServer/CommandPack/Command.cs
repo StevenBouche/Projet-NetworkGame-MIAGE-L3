@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Serveur.CommandPack
+namespace Serveur.GameServer.CommandPack
 {
     public abstract class Command<GameEngine>
     {

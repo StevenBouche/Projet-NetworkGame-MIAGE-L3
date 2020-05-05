@@ -1,12 +1,11 @@
-﻿using GameModel;
-using Serveur.CommandPack;
-using Serveur.GameModel;
+﻿using Serveur.GameServer.CommandPack;
+using Serveur.GameServer.GameModel;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Serveur.Game
+namespace Serveur.GameServer.Game
 {
     class GameEngine
     {

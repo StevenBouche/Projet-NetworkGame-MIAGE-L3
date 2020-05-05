@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace Serveur.GameModel
+namespace Serveur.GameServer.GameModel
+
 {
     class Joueur : IComparable<Joueur>
     {

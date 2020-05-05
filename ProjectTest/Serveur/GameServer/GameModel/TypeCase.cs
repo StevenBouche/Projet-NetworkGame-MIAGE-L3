@@ -1,4 +1,5 @@
-namespace GameModel {
+namespace Serveur.GameServer.GameModel
+{
 
     enum TypeCase {
         CASH,

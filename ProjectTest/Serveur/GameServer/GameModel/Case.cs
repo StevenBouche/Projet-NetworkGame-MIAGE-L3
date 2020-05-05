@@ -1,8 +1,8 @@
-using Serveur.GameModel;
 using System;
 using System.Collections;
 
-namespace GameModel {
+namespace Serveur.GameServer.GameModel
+{
     class Case{
         public int valeur { get; set; }
         public TypeCase t { get; set; }

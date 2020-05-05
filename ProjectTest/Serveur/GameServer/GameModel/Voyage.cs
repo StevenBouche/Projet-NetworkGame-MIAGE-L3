@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Text;
 
-namespace Serveur.GameModel
+namespace Serveur.GameServer.GameModel
+
 {
     class Voyage
     {
