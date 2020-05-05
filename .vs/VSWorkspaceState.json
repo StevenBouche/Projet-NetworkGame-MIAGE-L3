@@ -1,6 +1,15 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\ClientJava\\interfaceFX\\src",
+    "\\ClientJava\\interfaceFX\\src\\main",
+    "\\ClientJava\\interfaceFX\\src\\main\\java",
+    "\\ClientJava\\interfaceFX\\src\\main\\java\\network",
+    "\\ClientJava\\interfaceFX\\src\\main\\java\\network\\main",
+    "\\ProjectTest",
+    "\\ProjectTest\\ClientUdp",
+    "\\ProjectTest\\Serveur",
+    "\\ProjectTest\\share"
   ],
   "PreviewInSolutionExplorer": false
 }

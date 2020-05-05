@@ -73,5 +73,11 @@ namespace Share.Network.Event
             }
 
         }
+
+        public void close()
+        {
+            running = false;
+            allDone.Set();
+        }
     }
 }

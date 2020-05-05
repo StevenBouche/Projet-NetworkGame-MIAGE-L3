@@ -11,8 +11,8 @@ namespace Serveur
         {
             // Supply the state information required by the task.
 
-             ServerUDP myServer = new ServerUDP();
-          //  ServerTCP myServer = new ServerTCP();
+             //ServerUDP myServer = new ServerUDP();
+             ServerTCP myServer = new ServerTCP(10001);
 
             // Create a thread to execute the task, and then
             // start the thread.
