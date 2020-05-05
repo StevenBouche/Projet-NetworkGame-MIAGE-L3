@@ -48,6 +48,11 @@ public class ControllerLobbies implements Initializable {
     ClientUDP server;
     Thread threadServer;
     private ServerGame srcGame;
+    INotifyEventUI observer;
+
+    public ControllerLobbies(INotifyEventUI observer){
+        this.observer = observer;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -85,6 +90,13 @@ public class ControllerLobbies implements Initializable {
         // request to server lobbies to know if server game selected at t instant have place
         disableInterface();
         enableInterface();
+        try {
+            threadServer.interrupt();
+            threadServer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        observer.playerWantJoinGame(this.srcGame);
     }
 
     private void enableInterface() {

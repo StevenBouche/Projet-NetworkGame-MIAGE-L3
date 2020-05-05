@@ -28,11 +28,8 @@ public class ClientUDP implements Runnable {
 
     @Override
     public void run() {
-        try {
+
             manager.startListening();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
+
     }
 }
