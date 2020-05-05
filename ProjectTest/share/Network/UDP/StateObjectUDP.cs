@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Share.Network.Protocol
 {
-    class StateObject
+    class StateObjectUDP
     {
         // Size of receive buffer.  
         public const int BufferSize = 1024;

@@ -75,9 +75,9 @@ namespace Share.Network.NetworkManager
                     // Set the event to nonsignaled state.  
                     allDone.Reset();
 
-                    StateObject state = new StateObject();
+                    StateObjectUDP state = new StateObjectUDP();
                     Console.WriteLine("Waiting receive data...");
-                    listener.BeginReceiveFrom(state.buffer, 0, StateObject.BufferSize, SocketFlags.None, ref localEndPoint, new AsyncCallback(ReadCallback), state);
+                    listener.BeginReceiveFrom(state.buffer, 0, StateObjectUDP.BufferSize, SocketFlags.None, ref localEndPoint, new AsyncCallback(ReadCallback), state);
 
                     // Wait until a connection is made before continuing.  
                     allDone.WaitOne();
@@ -110,7 +110,7 @@ namespace Share.Network.NetworkManager
 
             // Retrieve the state object and the handler socket  
             // from the asynchronous state object.  
-            StateObject state = (StateObject)ar.AsyncState;
+            StateObjectUDP state = (StateObjectUDP)ar.AsyncState;
 
             EndPoint ep = new IPEndPoint(IPAddress.Any, 11000);
             // Read data from the client socket.
@@ -143,7 +143,7 @@ namespace Share.Network.NetworkManager
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.ASCII.GetBytes(data);
 
-            StateObject state = new StateObject();
+            StateObjectUDP state = new StateObjectUDP();
 
             // Begin sending the data to the remote device.  
             handler.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, ep,

@@ -79,6 +79,13 @@ namespace Share.Network.NetworkManager
                 Console.WriteLine(e.ToString());
             }
 
+            //
+            //TODO myclients shutdown handler state object
+            //
+
+            listener.Shutdown(SocketShutdown.Both);
+            listener.Close();
+
             Console.WriteLine("\nPress ENTER to continue...");
             Console.Read();
 

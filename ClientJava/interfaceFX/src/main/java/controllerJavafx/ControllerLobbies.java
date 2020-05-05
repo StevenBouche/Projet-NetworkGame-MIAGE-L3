@@ -3,6 +3,7 @@ package controllerJavafx;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -32,9 +34,6 @@ import java.util.ResourceBundle;
 
 public class ControllerLobbies implements Initializable {
 
-    ClientUDP server;
-    Thread threadServer;
-
     @FXML
     public Rectangle rectRunning;
     @FXML
@@ -43,14 +42,18 @@ public class ControllerLobbies implements Initializable {
     public TableView<ServerGame> tableView;
     @FXML
     public Button buttonConnect;
+    @FXML
+    public Button buttonRefresh;
 
+    ClientUDP server;
+    Thread threadServer;
     private ServerGame srcGame;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         stateDisconnected();
         initTable();
-        initPane();
+        initButton();
         try {
             loadServerUDP();
         } catch (SocketException | UnknownHostException e) {
@@ -58,11 +61,56 @@ public class ControllerLobbies implements Initializable {
         }
     }
 
-    private void initPane() {
+    private void initButton() {
+        buttonRefresh.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                requestServerGame();
+                actionEvent.consume();
+            }
+        });
+
+        buttonConnect.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                switchSceneAndConnectToServerGame();
+                actionEvent.consume();
+            }
+        });
 
     }
 
+    private void switchSceneAndConnectToServerGame() {
+        System.out.println("TODO start scene connection to server game selected : "+this.srcGame.addr+":"+this.srcGame.port);
+        // request to server lobbies to know if server game selected at t instant have place
+        disableInterface();
+        enableInterface();
+    }
+
+    private void enableInterface() {
+      /*  Platform.runLater(() ->  {
+            tableView.setDisable(true);
+            buttonConnect.setDisable(true);
+            buttonRefresh.setDisable(true);
+        });*/
+    }
+
+    private void disableInterface() {
+      /*  Platform.runLater(() ->  {
+            tableView.setDisable(true);
+            buttonConnect.setDisable(true);
+            buttonRefresh.setDisable(true);
+        });*/
+    }
+    
     private void initTable() {
+        tableView.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                setServerGame();
+                keyEvent.consume();
+            }
+        });
         tableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -84,42 +132,20 @@ public class ControllerLobbies implements Initializable {
         tableView.getColumns().addAll(nameColumn, addrColumn, portColumn, currentColumn,maxColumn);
     }
 
-    private void setServerGame() {
-        ServerGame srcGame = tableView.getSelectionModel().getSelectedItem();
-        int index = tableView.getSelectionModel().getFocusedIndex();
-
-
-
-        if(this.srcGame != null && this.srcGame == srcGame) //todo comparable
-        {
-            tableView.getSelectionModel().clearSelection(index);
-            this.srcGame= null;
-        }
-        else {
-            this.srcGame = srcGame;
-        }
-        buttonConnect.setDisable(this.srcGame == null);
-    }
-
     private void loadServerUDP() throws SocketException, UnknownHostException {
+
         server = new ClientUDP(new ListenerState() {
             @Override
             public void onRunning(String str) {
                 stateConnected(str);
-                PacketMessage<DataServerGame> packet = new PacketMessage<>();
-                packet.evt = ProtocolEventsUDP.GETLISTSERVERGAME.eventName;
-                packet.data = new DataServerGame();;
-                try {
-                    server.send(packet);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                requestServerGame();
             }
             @Override
             public void onShutdown() {
                 stateDisconnected();
             }
         });
+
         server.OnEvent(DataServerGame.class, ProtocolEventsUDP.GETLISTSERVERGAME, new DataListener<DataServerGame>() {
             @Override
             public void onData(IPEndPoint var1, DataServerGame var2) {
@@ -130,6 +156,18 @@ public class ControllerLobbies implements Initializable {
         });
         threadServer = new Thread(server);
         threadServer.start();
+
+    }
+
+    private void requestServerGame() {
+        PacketMessage<DataServerGame> packet = new PacketMessage<>();
+        packet.evt = ProtocolEventsUDP.GETLISTSERVERGAME.eventName;
+        packet.data = new DataServerGame();;
+        try {
+            server.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateTable(DataServerGame data){
@@ -143,6 +181,7 @@ public class ControllerLobbies implements Initializable {
         Platform.runLater(() ->  {
             rectRunning.setFill(Color.GREEN);
             labelRunning.setText(str);
+            buttonRefresh.setDisable(false);
         });
     }
 
@@ -150,6 +189,31 @@ public class ControllerLobbies implements Initializable {
         Platform.runLater(() ->  {
             rectRunning.setFill(Color.RED);
             labelRunning.setText("Server UDP not Running");
+            buttonRefresh.setDisable(true);
+        });
+    }
+
+    private void setServerGame() {
+        Platform.runLater(() ->  {
+            ServerGame srcGame = tableView.getSelectionModel().getSelectedItem();
+            int index = tableView.getSelectionModel().getFocusedIndex();
+
+            if(srcGame == null) {
+                srcGame = tableView.getItems().get(index);
+                tableView.getSelectionModel().select(index);
+            }
+
+            if(this.srcGame == null){
+                if(srcGame.nbPlayerCurrent < srcGame.nbPlayerMax) this.srcGame = srcGame;
+                else tableView.getSelectionModel().clearSelection(index);
+            }
+            else  {
+                tableView.getSelectionModel().clearSelection(index);
+                this.srcGame= null;
+            }
+
+            System.out.println(this.srcGame);
+            buttonConnect.setDisable(this.srcGame == null);
         });
     }
 
