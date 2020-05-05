@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Share.Network.Protocol.TCP;
+using Share.Network.Protocol.UDP;
+using System;
 
 namespace Share.Network.Protocol
 {
@@ -12,9 +14,18 @@ namespace Share.Network.Protocol
             eventName = name;
         }
 
-        public ProtocolNetwork GetProtocol()
+        public ProtocolNetwork GetProtocolUDP()
         {
-            ProtocolNetwork pn = new Protocol<T>
+            ProtocolNetwork pn = new ProtocolUDP<T>
+            {
+                EventName = eventName
+            };
+            return pn;
+        }
+
+        public ProtocolNetwork GetProtocolTCP()
+        {
+            ProtocolNetwork pn = new ProtocolTCP<T>
             {
                 EventName = eventName
             };

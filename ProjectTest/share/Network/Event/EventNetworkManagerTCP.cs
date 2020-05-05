@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Share.Network.NetworkManager;
 using Share.Network.Protocol;
+using Share.Network.Protocol.TCP;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -10,11 +11,10 @@ namespace Share.Network.Event
 {
     public class EventNetworkManagerTCP : EventNetworkManager
     {
-        protected Dictionary<String, ProtocolNetwork> mapEvents;
 
-        public EventNetworkManagerTCP()
+        public EventNetworkManagerTCP() :base()
         {
-            mapEvents = new Dictionary<string, ProtocolNetwork>();
+            
         }
 
         public override void Run()
@@ -35,7 +35,7 @@ namespace Share.Network.Event
 
                 if (p.Count == 3 && p["evt"] != null && p["data"] != null && p["id"] != null)
                 {
-                    mapEvents[p["evt"].ToString()].OnReceive(p["data"], p["id"]);
+                    ((dynamic)mapEvents[p["evt"].ToString()]).OnReceive(p["data"], p["id"]);
                 }
             }
             allDone.WaitOne();
@@ -59,12 +59,12 @@ namespace Share.Network.Event
             throw new NotImplementedException(); //Cannot receive UDP datagrams
         }
 
-        public void OnEvent<T>(ProtocolEvents<T> proto, Protocol<T>.OnReceiveEventTCP callback)
+        public void OnEvent<T>(ProtocolEvents<T> proto, ProtocolTCP<T>.OnReceiveEventTCP callback)
         {
 
             if (!mapEvents.ContainsKey(proto.eventName))
             {
-                mapEvents.Add(proto.eventName, proto.GetProtocol());
+                mapEvents.Add(proto.eventName, proto.GetProtocolTCP());
             }
 
             if (mapEvents[proto.eventName].GetTypeDataEvent() == typeof(T))

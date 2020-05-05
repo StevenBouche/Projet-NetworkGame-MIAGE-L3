@@ -16,13 +16,10 @@ namespace Share.Network.Protocol
             this.type = type;
         }
 
-        public abstract void OnReceive(JToken jToken, EndPoint ep);
-
         public Type GetTypeDataEvent()
         {
             return this.type;
         }
 
-        public abstract void OnReceive(JToken jToken, JToken id);
     }
 }

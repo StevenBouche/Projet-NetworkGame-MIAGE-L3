@@ -17,9 +17,11 @@ namespace Share.Network
         protected Boolean running;
         protected ManualResetEvent allDone = new ManualResetEvent(false);
         protected ConcurrentQueue<JObject> packets;
+        protected Dictionary<String, ProtocolNetwork> mapEvents;
 
         public EventNetworkManager()
         {
+            mapEvents = new Dictionary<string, ProtocolNetwork>();
             packets = new ConcurrentQueue<JObject>();
         }
         

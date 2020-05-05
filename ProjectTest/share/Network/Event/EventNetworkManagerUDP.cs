@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Share.Network.NetworkManager;
 using Share.Network.Protocol;
+using Share.Network.Protocol.UDP;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -10,19 +11,18 @@ namespace Share.Network.Event
 {
     public class EventNetworkManagerUDP : EventNetworkManager
     {
-        protected Dictionary<String, ProtocolNetwork> mapEvents;
-
-        public EventNetworkManagerUDP()
+       
+        public EventNetworkManagerUDP() : base()
         {
-            mapEvents = new Dictionary<String, ProtocolNetwork>();
+
         }
 
-        public void OnEvent<T>(ProtocolEvents<T> proto, Protocol<T>.OnReceiveEvent callback)
+        public void OnEvent<T>(ProtocolEvents<T> proto, ProtocolUDP<T>.OnReceiveEvent callback)
         {
 
             if (!mapEvents.ContainsKey(proto.eventName))
             {
-                mapEvents.Add(proto.eventName, proto.GetProtocol());
+                mapEvents.Add(proto.eventName, proto.GetProtocolUDP());
             }
 
             if (mapEvents[proto.eventName].GetTypeDataEvent() == typeof(T))
@@ -41,7 +41,7 @@ namespace Share.Network.Event
 
                 if (p.Count == 3 && p["evt"] != null && p["data"] != null && p["endpoint"] != null)
                 {
-                    mapEvents[p["evt"].ToString()].OnReceive(p["data"], GetEndPointFromJObject(p));
+                    ((dynamic)mapEvents[p["evt"].ToString()]).OnReceive(p["data"], GetEndPointFromJObject(p));
                 }
             }
             allDone.WaitOne();
