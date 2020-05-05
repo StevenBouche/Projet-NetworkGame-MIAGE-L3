@@ -1,4 +1,6 @@
-.idea/*
-./ProjectTest/**/bin/*
-./ProjectTest/**/obj/*
-
+ProjectTest/.vs/*
+ProjectTest/ClientUdp/obj/*
+ProjectTest/Serveur/bin/*
+ProjectTest/Serveur/obj/*
+ProjectTest/share/bin/*
+ProjectTest/share/obj/*
