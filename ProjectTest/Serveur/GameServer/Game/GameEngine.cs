@@ -88,7 +88,8 @@ namespace Serveur.GameServer.Game
                 l.listPlayers.Add(new PlayerGame()
                 {
                     id = p.Key,
-                    name = p.Value.nom
+                    name = p.Value.nom,
+                    isReady = false
                 });
             }
             return l;
