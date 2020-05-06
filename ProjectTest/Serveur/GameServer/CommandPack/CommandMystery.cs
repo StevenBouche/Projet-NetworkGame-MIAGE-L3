@@ -5,19 +5,18 @@ using System.Text;
 
 namespace Serveur.GameServer.CommandPack
 {
-    class CommandMystery : Command<GameEngine>
+    public class CommandMystery : Command<GameEngine>
     {
-        public CommandMystery(GameEngine context, CommandManager CM) : base(context, CM) { }
+        public CommandMystery(GameEngine engine, CommandManager cmd) : base(engine,cmd) { }
         public override void onExecute()
         {
-            Context.wheel.UnveiledMysteryCase(Context.wheel.CurrentCase);
-            if(Context.wheel.CurrentCase.valeur != 0)
+            try
             {
-                commandManager.AddCashCommand();
+                throw new NotImplementedException();
             }
-            else
+            catch(NotImplementedException e)
             {
-                commandManager.AddPassCommand();
+                Console.WriteLine(e);
             }
         }
     }

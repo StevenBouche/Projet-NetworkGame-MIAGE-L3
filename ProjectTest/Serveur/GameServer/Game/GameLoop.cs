@@ -11,13 +11,12 @@ namespace Serveur.GameServer.Game
         private readonly CommandManager commandManager;
 
         private Boolean isEnignaDiscovered = false;
-        public int roundsNb { get; set; }
+        private int roundsNb = 0;
         private Boolean isFinal = false;
 
         public GameLoop(CommandManager commandManager)
         {
             this.commandManager = commandManager;
-            roundsNb = 0;
         }
 
         public void ExecuteGame()
@@ -40,6 +39,7 @@ namespace Serveur.GameServer.Game
             }
 
             ExecuteGame();
+            // Console.WriteLine(m.ToString());
         }
 
 
@@ -57,9 +57,9 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteTurn()
         {
-            commandManager.TriggerActivePlayer();
             commandManager.TriggerWheelTurn(); //sets the current case fallen and trigger action of the corresponding case
             commandManager.TriggerNextPlayer(); //sets the next player 
+            isEnignaDiscovered = true;
         }
 
         public void ExecuteFinalRound()
@@ -69,7 +69,7 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteQuickRound()
         {
-            commandManager.TriggerCurrentPlayer();
+            commandManager.triggerCurrentPlayer();
         }
 
     }

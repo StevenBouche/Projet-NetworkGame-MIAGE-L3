@@ -1,5 +1,6 @@
 ﻿using Serveur.GameServer.CommandPack;
 using Serveur.GameServer.GameModel;
+using Share.Network.Message.modele;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -27,6 +28,13 @@ namespace Serveur.GameServer.Game
         
         CommandManager CM;
 
+        public GameState gameState;
+
+        public delegate void notifyPlayerJoined(String id, ListPlayerGame l);
+        public delegate void notifyPlayerLeaved(String id, ListPlayerGame l);
+        public notifyPlayerJoined callbackJoin;
+        public notifyPlayerLeaved callbackLeave;
+
         public GameEngine()
         {
             wheel = new Roue();
@@ -34,24 +42,39 @@ namespace Serveur.GameServer.Game
             listIdPlayers = new List<string>();
             CM = new CommandManager(this);
             gameLoop = new GameLoop(CM);
-            FillDemo();
+        }
+
+        public void addCallbackPlayerJoined(notifyPlayerJoined x)
+        {
+            callbackJoin = x;
+        }
+
+        public void addCallbackPlayerLeaved(notifyPlayerLeaved x)
+        {
+            callbackLeave = x;
         }
 
         public void Play()
         {
             gameLoop.ExecuteGame();
+            this.gameState = GameState.FINISHED;
         }
 
-        public void AddPlayer(String id)
+        public void AddPlayer(String id, String name)
         {
             listIdPlayers.Add(id);
-            listPlayers.Add(id, new Joueur(id));
+            listPlayers.Add(id, new Joueur(id,name));
+            callbackJoin(id, GetListOfPlayerLobbies());
         }
 
         public void RemovePlayer(string id)
         {
-            //t
-            throw new NotImplementedException();
+            //TODO
+            //depend de si la game est lancer ou pas
+            //si game lancer stop partie sinon remove
+            listIdPlayers.Remove(id);
+            listPlayers.Remove(id);
+            callbackLeave(id, GetListOfPlayerLobbies());
         }
 
         public void GameFinish()
@@ -59,12 +82,30 @@ namespace Serveur.GameServer.Game
 
         }
 
-        internal void FillDemo() 
+        public ListPlayerGame GetListOfPlayerLobbies()
         {
-            this.AddPlayer("RAMON");
-            this.AddPlayer("GILLES");
-            this.AddPlayer("MICHEL");
+            ListPlayerGame l = new ListPlayerGame();
 
+            foreach (KeyValuePair<String, Joueur> p in listPlayers)
+            {
+                l.listPlayers.Add(new PlayerGame()
+                {
+                    id = p.Key,
+                    name = p.Value.nom,
+                    isReady = p.Value.isReady
+                });
+            }
+            return l;
+        }
+
+        public void setReadyPlayer(Boolean state, String id)
+        {
+            listPlayers.TryGetValue(id, out Joueur j);
+
+            if(j != null)
+            {
+                j.isReady = state;
+            }
         }
     }
 }

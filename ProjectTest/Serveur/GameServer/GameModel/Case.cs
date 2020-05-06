@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
-using System.Reflection;
 
 namespace Serveur.GameServer.GameModel
 {
     public class Case{
-        [TypeCase("DEFAULT")]
         public int valeur { get; set; }
         public TypeCase type { get; set; }
 
@@ -16,13 +14,10 @@ namespace Serveur.GameServer.GameModel
         public Case(TypeCase t) {
             this.type = t;
             Random r = new Random();
-
-            FieldInfo[] listCase = typeof(TypeCase).GetFields(BindingFlags.Static | BindingFlags.Public);
-
-            if(t.Equals(TypeCase.CASH)) {
+            if(t == TypeCase.CASH) {
                 valeur = (int)Enum.GetValues(typeof(Cash)).GetValue(r.Next(0, 7));
             }
-            else if (t.Equals(TypeCase.SUPERCASH)) {
+            else if (t == TypeCase.SUPER_CASH) {
                 valeur = (int)Enum.GetValues(typeof(Cash)).GetValue(7);
             }
             else

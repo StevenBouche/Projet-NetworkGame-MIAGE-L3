@@ -12,9 +12,8 @@ namespace Serveur.GameServer.CommandPack
 
         public override void onExecute()
         {
-            
-            commandManager.TriggerCommand(CaseToAction.getCommand<GameEngine>(Context.wheel.CurrentCase.type, Context, commandManager));
-            
+            Command<GameEngine> cmd = CaseToAction.getCommand<GameEngine>(Context.wheel.CurrentCase.type,Context,commandManager);
+            if(cmd != null) commandManager.TriggerCommand(cmd);
         }
     }
 }

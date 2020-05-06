@@ -13,8 +13,9 @@ namespace Serveur.GameServer.CommandPack
         {
             Random r = new Random();
             Context.wheel.CurrentCase = Context.wheel.getWheelCases(r.Next(23));
-            Console.WriteLine("La case tombée est " + Context.wheel.CurrentCase.ToString() + "\n");
-          
+
+            Console.WriteLine("La case tombée est " + Context.wheel.CurrentCase.ToString());
+
             commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager));
         }
     }

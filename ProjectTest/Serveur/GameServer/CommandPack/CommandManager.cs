@@ -52,19 +52,9 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandPass(engine,this));
         }
 
-        internal void TriggerCurrentPlayer()
+        internal void triggerCurrentPlayer()
         {
             this.TriggerCommand(new CommandSetPlayerActif(engine, this));
-        }
-
-        public void TriggerCurrentCaseAction()
-        {
-            this.TriggerCommand(new CommandCurrentCaseAction(engine, this));
-        }
-
-        public void TriggerActivePlayer()
-        {
-            this.TriggerCommand(new CommandGetPlayerActif(engine, this));
         }
     }
 }

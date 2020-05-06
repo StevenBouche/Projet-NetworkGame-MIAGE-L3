@@ -12,24 +12,17 @@ namespace Serveur.GameServer.CommandPack
         }
         public override void onExecute()
         {
-            int pos = Context.CurrentPosPlayer;
+            int pos = Context.CurrentPosPlayer++;
 
-            if (pos + 1 >= Context.listIdPlayers.Count)
+            if (pos >= Context.listIdPlayers.Count)
             {
                 pos = 0;
                 Context.CurrentPosPlayer = 0;
-                Context.listPlayers.TryGetValue(Context.listIdPlayers[pos], out Joueur j);
-                Context.CurrentPlayer = j;
-
-            }
-            else
-            {
-                pos++;
-                Context.CurrentPosPlayer++;
-                Context.listPlayers.TryGetValue(Context.listIdPlayers[pos], out Joueur j);
-                Context.CurrentPlayer = j;
             }
             
+            Context.listPlayers.TryGetValue(Context.listIdPlayers[pos], out Joueur j);
+            Context.CurrentPlayer = j;
+
         }
     }
 }
