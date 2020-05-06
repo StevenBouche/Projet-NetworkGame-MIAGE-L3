@@ -34,8 +34,8 @@ public class ControllerItemPlayer implements Initializable {
     @FXML
     public VBox vbox;
 
-    IMain main;
-    public ControllerItemPlayer(String id, String name, IMain main, boolean currentPlayer){
+    ControllerLobbiesGame main;
+    public ControllerItemPlayer(String id, String name, ControllerLobbiesGame main, boolean currentPlayer){
         idValue = id;
         nameValue = name;
         this.main = main;
@@ -60,11 +60,7 @@ public class ControllerItemPlayer implements Initializable {
     }
 
     private void backToLobbies(){
-        //todo ? deconnecte
-        System.out.println("todo ? deconnecte");
-        Platform.runLater(() -> {
-            main.backToMainLobbies();
-        });
+        main.onCancelAction();
     }
 
 }

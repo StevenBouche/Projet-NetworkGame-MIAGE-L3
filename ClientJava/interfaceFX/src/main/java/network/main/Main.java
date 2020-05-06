@@ -22,14 +22,12 @@ public class Main extends Application {
         this.primaryStage.setTitle("Hello World");
         this.primaryStage.resizableProperty().setValue(false);
         this.primaryStage.show();
-
     }
 
     @Override
     public void stop() throws Exception {
         super.stop();
         managerRoot.stop();
-
     }
 
     public void setScene(Parent p ){

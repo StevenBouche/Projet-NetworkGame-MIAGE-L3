@@ -18,6 +18,8 @@ public class NetworkManagerTCP {
     String hostname;
     int port;
 
+    boolean running;
+
     public NetworkManagerTCP(INotifyState client, String addr, int port){
         this.eventManager = new EventNetworkManager();
         observer = client;
@@ -35,26 +37,31 @@ public class NetworkManagerTCP {
             input = new BufferedInputStream(s.getInputStream());
             output = new BufferedOutputStream(s.getOutputStream());
 
+            running = true;
             observer.onConnect();
-            while (s.isConnected()) {
-
+            while (running) {
                 int character = 0;
                 StringBuilder data = new StringBuilder();
-                byte[] tab = new byte[128];
-
+                byte[] tab = new byte[4096];
                 while ((character = input.read(tab)) != -1) {
                     data.append(new String(tab, 0, character));
                     eventManager.OnReceivedData(data.toString());
                     data = new StringBuilder();
                 }
             }
-            output.close();
-            input.close();
-            s.close();
+            System.out.println("STOP CLIENT TCP");
         }
         catch (Exception e){
             e.printStackTrace();
         }
+        try {
+            output.close();
+            input.close();
+            if(!s.isClosed()) s.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         observer.onDisconnect();
     }
 
@@ -72,6 +79,15 @@ public class NetworkManagerTCP {
             String str = mapper.writeValueAsString(msg);
             send(str);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stop() {
+        running = false;
+        try {
+            s.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

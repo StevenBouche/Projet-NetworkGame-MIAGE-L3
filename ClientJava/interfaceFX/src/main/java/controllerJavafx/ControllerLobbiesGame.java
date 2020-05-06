@@ -36,6 +36,7 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
     ServerGame serverInfo;
     // Client tcp pour joindre le serveur
     ClientTCP client;
+    Thread clientThread;
     //List contenant les joueurs dans le lobby
     ListPlayerGame listPlayer;
     //Un controller par joueur dans le lobby
@@ -62,13 +63,13 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
         title.setText("Room "+serverInfo.addr+":"+serverInfo.port);
         client = new ClientTCP(serverInfo.addr,serverInfo.port,this.name);
         client.setNotifierLobby(this);
-        Thread t = new Thread(client);
-        t.start();
+        clientThread = new Thread(client);
+        clientThread.start();
     }
 
     private void createItemPlayer(int i, String name, String id){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("itemPlayerWaitingStartGame.fxml"));
-        ControllerItemPlayer ctr = new ControllerItemPlayer(id,name,main, id.equals(this.id));
+        ControllerItemPlayer ctr = new ControllerItemPlayer(id,name,this, id.equals(this.id));
         fxmlLoader.setController(ctr);
         try {
             Parent p = fxmlLoader.load();
@@ -98,7 +99,12 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
     }
 
     public void stop() {
-
+        client.stop();
+        try {
+            clientThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -118,5 +124,12 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
 
         });
 
+    }
+
+    public void onCancelAction() {
+        stop();
+        Platform.runLater(() -> {
+            main.backToMainLobbies();
+        });
     }
 }

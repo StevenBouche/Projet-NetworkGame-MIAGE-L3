@@ -55,4 +55,8 @@ public class ClientTCP implements Runnable, INotifyState {
     @Override
     public void onDisconnect() {
     }
+
+    public void stop() {
+        managerTCP.stop();
+    }
 }
