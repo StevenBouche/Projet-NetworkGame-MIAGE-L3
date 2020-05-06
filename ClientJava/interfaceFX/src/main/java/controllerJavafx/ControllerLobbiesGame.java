@@ -12,9 +12,11 @@ import javafx.scene.paint.Color;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersLobby;
 import network.main.IMain;
+import network.message.PacketMessage;
 import network.message.obj.ListPlayerGame;
 import network.message.obj.PlayerGame;
 import network.message.obj.ServerGame;
+import network.tcp.ProtocolEventsTCP;
 
 import java.io.IOException;
 import java.net.URL;
@@ -67,9 +69,9 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
         clientThread.start();
     }
 
-    private void createItemPlayer(int i, String name, String id){
+    private void createItemPlayer(int i, String name, String id, boolean ready, int nbPlayerLobby){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("itemPlayerWaitingStartGame.fxml"));
-        ControllerItemPlayer ctr = new ControllerItemPlayer(id,name,this, id.equals(this.id));
+        ControllerItemPlayer ctr = new ControllerItemPlayer(id,name,this, id.equals(this.id), ready,nbPlayerLobby);
         fxmlLoader.setController(ctr);
         try {
             Parent p = fxmlLoader.load();
@@ -100,11 +102,6 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
 
     public void stop() {
         client.stop();
-        try {
-            clientThread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -120,11 +117,15 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
             mapSubScene.clear();
             int cpt = 1;
             for(PlayerGame i : this.listPlayer.listPlayers){
-                createItemPlayer(cpt,i.name,i.id);
+                createItemPlayer(cpt,i.name,i.id,i.isReady,l.listPlayers.size());
                 cpt++;
             }
-
         });
+    }
+
+    @Override
+    public void notifyDisconnect() {
+        onCancelAction();
     }
 
     public void onCancelAction() {
@@ -132,5 +133,12 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
         Platform.runLater(() -> {
             main.backToMainLobbies();
         });
+    }
+
+    public void UpdateReadyPlayer(boolean b) {
+        PacketMessage<Boolean> msg = new PacketMessage<>();
+        msg.evt = ProtocolEventsTCP.NOTIFYPLAYERREADY.eventName;
+        msg.data =b;
+        client.sendMsg(msg);
     }
 }

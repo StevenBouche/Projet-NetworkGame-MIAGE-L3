@@ -150,7 +150,13 @@ namespace Share.Network.NetworkManager
         private void StartReceiving(StateObjectTCP state)
         {
             state.buffer = new byte[4096];
-            state.workSocket.BeginReceive(state.buffer, 0, StateObjectTCP.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+            try
+            {
+                state.workSocket.BeginReceive(state.buffer, 0, StateObjectTCP.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+            } catch(ObjectDisposedException e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public void ReadCallback(IAsyncResult ar)

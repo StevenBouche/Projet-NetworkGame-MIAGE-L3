@@ -30,31 +30,68 @@ public class ControllerItemPlayer implements Initializable {
     String nameValue;
     String idValue;
     boolean currentplayer;
-
+    boolean readyPlayer;
+    int nbPlayerLobby;
     @FXML
     public VBox vbox;
 
     ControllerLobbiesGame main;
-    public ControllerItemPlayer(String id, String name, ControllerLobbiesGame main, boolean currentPlayer){
+    public ControllerItemPlayer(String id, String name, ControllerLobbiesGame main, boolean currentPlayer, boolean ready, int nbPlayerLobby){
         idValue = id;
         nameValue = name;
         this.main = main;
         this.currentplayer = currentPlayer;
+        this.readyPlayer = ready;
+        this.nbPlayerLobby = nbPlayerLobby;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initButtonReady();
+        initButtonCancel();
+        initLabel();
+    }
+
+    private void initLabel() {
         this.name.setText(nameValue);
-        this.state.setText("Waiting Connexion");
-        ready.setVisible(currentplayer);
+        if(this.readyPlayer) this.state.setText("Ready");
+        else this.state.setText("Not Ready");
+
+    }
+
+    private void initButtonCancel() {
         cancel.setVisible(currentplayer);
-        ready.setDisable(true);
         cancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-               backToLobbies();
+                backToLobbies();
             }
         });
+    }
+
+    private void initButtonReady() {
+        ready.setVisible(currentplayer);
+        if(readyPlayer) {
+            ready.setText("Not ready");
+            ready.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    actionButtonReady(false);
+                }
+            });
+        } else {
+            ready.setText("Ready");
+            ready.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    actionButtonReady(true);
+                }
+            });
+        }
+    }
+
+    private void actionButtonReady(boolean b) {
+        main.UpdateReadyPlayer(b);
     }
 
     private void backToLobbies(){

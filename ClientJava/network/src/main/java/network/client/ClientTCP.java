@@ -52,8 +52,13 @@ public class ClientTCP implements Runnable, INotifyState {
         managerTCP.sendMsg(msg);
     }
 
+    public void sendMsg(PacketMessage<?> msg){
+        managerTCP.sendMsg(msg);
+    }
+
     @Override
     public void onDisconnect() {
+        if(notifier != null) notifier.notifyDisconnect();
     }
 
     public void stop() {

@@ -120,7 +120,7 @@ namespace Share.Network.NetworkManager
             EndPoint ep = new IPEndPoint(IPAddress.Any, 11000);
 
             // Read data from the client socket.
-            int bytesRead = listener.EndReceiveFrom(ar, ref ep);
+            int bytesRead = listener.EndReceiveFrom(ar, ref ep); //todo SocketException fermeture socket client try catch pendant reception message 
             //  Console.WriteLine("END RECEIVE FROM " + bytesRead);
 
             if (bytesRead > 0)

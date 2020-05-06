@@ -108,6 +108,7 @@ namespace Serveur.GameServer.Game
             else
             {
                 Console.WriteLine("Too much Identity msg received");
+
             }
         }
 
@@ -115,15 +116,14 @@ namespace Serveur.GameServer.Game
         {
             Console.WriteLine("(TCP exchange) Received" + id + " is ready");
             gameManager.setReadyPlayer(isReady, id);
-            
-            if (!checkAllPlayersReady())
-            {
-                ListPlayerGame list = gameManager.GetListOfPlayerLobbies();
-                updateClientLobby(ProtocolEventsTCP<String>.NOTIFYLOBBYPLAYER, list);
-            }
-            else
+
+            ListPlayerGame list = gameManager.GetListOfPlayerLobbies();
+            updateClientLobby(ProtocolEventsTCP<String>.NOTIFYLOBBYPLAYER, list);
+
+            if (checkAllPlayersReady())
             {
                 gameManager.gameState = GameState.STARTED;
+       //         allDone.Set();
             }
         }
 
