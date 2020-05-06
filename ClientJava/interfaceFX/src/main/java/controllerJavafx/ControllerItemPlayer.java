@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.VBox;
 import network.main.IMain;
 
 import java.net.URL;
@@ -27,17 +28,28 @@ public class ControllerItemPlayer implements Initializable {
     public Button cancel;
 
     String nameValue;
+    String idValue;
+    boolean currentplayer;
+
+    @FXML
+    public VBox vbox;
 
     IMain main;
-    public ControllerItemPlayer(String name, IMain main){
+    public ControllerItemPlayer(String id, String name, IMain main, boolean currentPlayer){
+        idValue = id;
         nameValue = name;
         this.main = main;
+        this.currentplayer = currentPlayer;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.name.setText(nameValue);
         this.state.setText("Waiting Connexion");
+        if(!currentplayer){
+            ready.setVisible(true);
+            ready.setVisible(true);
+        }
         ready.setDisable(true);
         cancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override

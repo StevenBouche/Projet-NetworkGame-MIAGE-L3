@@ -1,5 +1,6 @@
 ﻿
 using Serveur.GameServer.Game;
+using Serveur.MainProgram;
 using Share.Network.Message;
 using Share.Network.NetworkManager;
 using Share.Network.Protocol;
@@ -31,14 +32,14 @@ namespace Serveur
         static void Main(string[] args)
         {
             // Supply the state information required by the task.
-             //ServerUDP myServer = new ServerUDP();
-             //server = new ServerTCP(10001, new TestConnection());
-            serverGame = new ServerGame(10001);
+            //ServerUDP myServer = new ServerUDP();
+            //server = new ServerTCP(10001, new TestConnection());
+            //  serverGame = new ServerGame(10001);
             //  server.OnEvent<String>(ProtocolEventsTCP<String>.CONNECTION, Program.OnConnection);
             // Create a thread to execute the task, and then
             // start the thread.
-
-            Thread t = new Thread(new ThreadStart(serverGame.run));
+            Launcher l = new Launcher();
+            Thread t = new Thread(new ThreadStart(l.Run));
 
             t.Start();
             Console.WriteLine("Main thread does some work, then waits.");

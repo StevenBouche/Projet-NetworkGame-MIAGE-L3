@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Share.Network.Message.obj
 {
-    public class ServerGame
+    public class ServerGameInfo
     {
 
         public String name;
@@ -13,7 +13,7 @@ namespace Share.Network.Message.obj
         public int nbPlayerMax;
         public int nbPlayerCurrent;
 
-        public ServerGame()
+        public ServerGameInfo()
         {
 
         }

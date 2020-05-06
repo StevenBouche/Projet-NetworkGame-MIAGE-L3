@@ -36,7 +36,7 @@ namespace Share.Network.NetworkManager
         // Thread signal.  
         public ManualResetEvent allDone;
 
-        int port;
+        public int port;
 
         Boolean running;
 

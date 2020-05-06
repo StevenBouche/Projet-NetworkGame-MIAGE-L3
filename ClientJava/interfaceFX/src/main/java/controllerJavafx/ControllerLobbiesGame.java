@@ -7,82 +7,116 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import network.client.ClientTCP;
+import network.client.INotifyPlayersLobby;
 import network.main.IMain;
+import network.message.obj.ListPlayerGame;
+import network.message.obj.PlayerGame;
 import network.message.obj.ServerGame;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-public class ControllerLobbiesGame implements Initializable {
+public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby {
 
     @FXML
-    public SubScene scenePlayer1;
-    @FXML
-    public SubScene scenePlayer2;
-    @FXML
-    public SubScene scenePlayer3;
+    public Pane mainPane;
     @FXML
     public Label title;
 
+    Map<Integer,SubScene> mapSubScene;
+
+    // Informations concernant le serveur ou l'on vient de se connecter
     ServerGame serverInfo;
-
-    ClientTCP tcp;
-
-    Map<Integer, String> mapPlayer;
+    // Client tcp pour joindre le serveur
+    ClientTCP client;
+    //List contenant les joueurs dans le lobby
+    ListPlayerGame listPlayer;
+    //Un controller par joueur dans le lobby
     Map<Integer, ControllerItemPlayer> mapControllerPlayer;
-
+    //to switch other scene
     IMain main;
 
+    //MY DATA
     String name;
+    String id;
 
     public ControllerLobbiesGame(IMain main, ServerGame serverInfo, String name){
+        mapSubScene = new HashMap<>();
         this.serverInfo = serverInfo;
         mapControllerPlayer = new HashMap<>();
-        mapPlayer = new HashMap<>();
+        listPlayer = new ListPlayerGame();
         this.name = name;
-        mapPlayer.put(1,name);
-       // mapPlayer.put(2,"Jose");
-       // mapPlayer.put(3,"Mopolo");
         this.main = main;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("test");
-           // title.setText("Room "+serverInfo.addr+":"+serverInfo.port);
-            for(Integer i : mapPlayer.keySet()){
-                createItemPlayer(i,mapPlayer.get(i));
-            }
-            ClientTCP client = new ClientTCP("127.0.0.1",10001,this.name); // todo change brut
-            Thread t = new Thread(client);
-            t.start();
+        title.setText("Room "+serverInfo.addr+":"+serverInfo.port);
+        client = new ClientTCP(serverInfo.addr,serverInfo.port,this.name);
+        client.setNotifierLobby(this);
+        Thread t = new Thread(client);
+        t.start();
     }
 
-    private void createItemPlayer(int i, String name){
+    private void createItemPlayer(int i, String name, String id){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("itemPlayerWaitingStartGame.fxml"));
-        ControllerItemPlayer ctr = new ControllerItemPlayer(name,main);
+        ControllerItemPlayer ctr = new ControllerItemPlayer(id,name,main, id.equals(this.id));
         fxmlLoader.setController(ctr);
         try {
             Parent p = fxmlLoader.load();
-            if(i == 1){
-                scenePlayer1.setRoot(p);
-            }else if (i==2){
-                scenePlayer2.setRoot(p);
-            }else if(i == 3){
-                scenePlayer3.setRoot(p);
-            }
             mapControllerPlayer.put(i,ctr);
+            SubScene sub = new SubScene(p,ctr.vbox.getPrefWidth(),ctr.vbox.getPrefHeight());
+            sub.setLayoutY(128);
+            if(i == 1){
+                mapSubScene.put(1,sub);
+                sub.setLayoutX(54);
+                sub.setRoot(p);
+                mainPane.getChildren().add(sub);
+            }else if (i==2){
+                mapSubScene.put(2,sub);
+                sub.setLayoutX(232);
+                sub.setRoot(p);
+                mainPane.getChildren().add(sub);
+            }else if(i == 3){
+                mapSubScene.put(3,sub);
+                sub.setLayoutX(422);
+                sub.setRoot(p);
+                mainPane.getChildren().add(sub);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void stop() {
+
+    }
+
+    @Override
+    public void notifyReceiveMyId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public void notifyReceiveListPlayer(ListPlayerGame l) {
+        this.listPlayer.listPlayers = l.listPlayers;
+        Platform.runLater(() -> {
+            int cpt = 1;
+            for(PlayerGame i : this.listPlayer.listPlayers){
+                createItemPlayer(cpt,i.name,i.id);
+                cpt++;
+            }
+
+        });
 
     }
 }

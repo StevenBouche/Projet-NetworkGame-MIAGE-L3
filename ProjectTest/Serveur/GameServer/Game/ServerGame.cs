@@ -1,4 +1,7 @@
-﻿using Share.Network.Message;
+﻿using Serveur.GameServer.GameModel;
+using Share.Network.Message;
+using Share.Network.Message.modele;
+using Share.Network.Message.obj;
 using Share.Network.NetworkManager;
 using Share.Network.Protocol;
 using Share.Network.Server;
@@ -17,27 +20,43 @@ namespace Serveur.GameServer.Game
         Thread threadNetwork;
         GameEngine gameManager;
         protected ManualResetEvent allDone = new ManualResetEvent(false);
+        String id; 
 
-        public ServerGame(int port) 
+        public int GetNbCurrentPlayer { get => gameManager.listPlayers.Count;  }
+
+        public ServerGame(String id, int port) 
         {
+            this.id = id;
             network = new ServerTCP(port,this);
             gameManager = new GameEngine();
-
             gameManager.addCallbackPlayerJoined(notifyPlayerHaveJoined);
+            gameManager.addCallbackPlayerLeaved(notifyPlayerHaveLeaved);
             InitEventAndStartServerTCP();
+        }
+
+        public ServerGameInfo GetInfo()
+        {
+            ServerGameInfo srv = new ServerGameInfo()
+            {
+                addr = "127.0.0.1",
+                port = this.network.Port,
+                name = this.id,
+                nbPlayerMax = 3,
+                nbPlayerCurrent = this.GetNbCurrentPlayer
+            };
+            return srv;
         }
 
         private void InitEventAndStartServerTCP()
         {
             //Sub on events to receive data
-            network.OnEvent<String>(ProtocolEventsTCP<String>.CONNECTION, OnConnectionTest);
             network.OnEvent<String>(ProtocolEventsTCP<String>.IDENTITY, OnIdentityReceived);
             //Start thread network
             threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
         }
 
-        public void run()
+        public void Run()
         {
             
             while(gameManager.listIdPlayers.Count != 3)
@@ -50,8 +69,24 @@ namespace Serveur.GameServer.Game
             
         }
 
-        public void notifyPlayerHaveJoined(String id)
+        public void notifyPlayerHaveJoined(String id, ListPlayerGame l)
         {
+     //       ListPlayerGame l = gameManager.GetListOfPlayerLobbies();
+            PacketMessage<ListPlayerGame> msgP = new PacketMessage<ListPlayerGame>() { evt = ProtocolEventsTCP<String>.NOTIFYLOBBYPLAYER.eventName, data = l };
+            foreach (PlayerGame p in l.listPlayers)
+            {
+                network.Send(msgP, p.id);
+            }
+            allDone.Set();
+        }
+
+        public void notifyPlayerHaveLeaved(String id, ListPlayerGame l)
+        {
+            PacketMessage<ListPlayerGame> msgP = new PacketMessage<ListPlayerGame>() { evt = ProtocolEventsTCP<String>.NOTIFYLOBBYPLAYER.eventName, data = l };
+            foreach (PlayerGame p in l.listPlayers)
+            {
+                network.Send(msgP, p.id);
+            }
             allDone.Set();
         }
 
@@ -66,20 +101,13 @@ namespace Serveur.GameServer.Game
             gameManager.RemovePlayer(id);
         }
 
-        public void OnConnectionTest(String obj, String id)
-        {
-            Console.WriteLine("Client " + id + "have sent " + obj);
-            PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.CONNECTION.eventName, data = obj };
-            network.Send(msg, id);
-        }
-
         public void OnIdentityReceived(String obj, String id)
         {
             Console.WriteLine("Client " + id + "have sent " + obj);
-            PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.IDENTITY.eventName, data = obj };
+            PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.IDENTITY.eventName, data = id };
             Debug.WriteLine("On Connect player : " + id);
-            gameManager.AddPlayer(id);
             network.Send(msg, id);
+            gameManager.AddPlayer(id, obj);
         }
     }
 }

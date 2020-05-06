@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading;
 
@@ -23,6 +24,8 @@ namespace Share.Network.NetworkManager
         private delegate void OnReceivedDataDel(String obj, EndPoint endPoint);
         private OnReceivedDataDel _delegates;
         private Dictionary<IReceiverNetwork, OnReceivedDataDel> _listDelegates;
+
+        public Boolean running;
 
         public NetworkManagerUDP()
         {
@@ -61,8 +64,8 @@ namespace Share.Network.NetworkManager
             {
 
                 listener.Bind(localEndPoint);
-
-                while (true)
+                running = true;
+                while (running)
                 {
                     // Set the event to nonsignaled state.  
                     allDone.Reset();
@@ -87,6 +90,12 @@ namespace Share.Network.NetworkManager
             Console.WriteLine("\nPress ENTER to continue...");
             Console.Read();
 
+        }
+
+        public void Stop()
+        {
+            running = false;
+            allDone.Set();
         }
 
         public void Send<T>(PacketMessage<T> data, EndPoint ep)

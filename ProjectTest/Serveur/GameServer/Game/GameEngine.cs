@@ -1,5 +1,6 @@
 ﻿using Serveur.GameServer.CommandPack;
 using Serveur.GameServer.GameModel;
+using Share.Network.Message.modele;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -27,8 +28,10 @@ namespace Serveur.GameServer.Game
         
         CommandManager CM;
 
-        public delegate void notifyPlayerJoined(String id);
-        public notifyPlayerJoined callback;
+        public delegate void notifyPlayerJoined(String id, ListPlayerGame l);
+        public delegate void notifyPlayerLeaved(String id, ListPlayerGame l);
+        public notifyPlayerJoined callbackJoin;
+        public notifyPlayerLeaved callbackLeave;
 
         public GameEngine()
         {
@@ -41,7 +44,12 @@ namespace Serveur.GameServer.Game
 
         public void addCallbackPlayerJoined(notifyPlayerJoined x)
         {
-            callback = x;
+            callbackJoin = x;
+        }
+
+        public void addCallbackPlayerLeaved(notifyPlayerLeaved x)
+        {
+            callbackLeave = x;
         }
 
         public void Play()
@@ -49,23 +57,41 @@ namespace Serveur.GameServer.Game
             gameLoop.ExecuteGame();
         }
 
-        public void AddPlayer(String id)
+        public void AddPlayer(String id, String name)
         {
             listIdPlayers.Add(id);
-            listPlayers.Add(id, new Joueur(id));
-
-            callback(id);
+            listPlayers.Add(id, new Joueur(id,name));
+            callbackJoin(id, GetListOfPlayerLobbies());
         }
 
         public void RemovePlayer(string id)
         {
-            //t
-            throw new NotImplementedException();
+            //TODO
+            //depend de si la game est lancer ou pas
+            //si game lancer stop partie sinon remove
+            listIdPlayers.Remove(id);
+            listPlayers.Remove(id);
+            callbackLeave(id, GetListOfPlayerLobbies());
         }
 
         public void GameFinish()
         {
 
+        }
+
+        private ListPlayerGame GetListOfPlayerLobbies()
+        {
+            ListPlayerGame l = new ListPlayerGame();
+
+            foreach (KeyValuePair<String, Joueur> p in listPlayers)
+            {
+                l.listPlayers.Add(new PlayerGame()
+                {
+                    id = p.Key,
+                    name = p.Value.nom
+                });
+            }
+            return l;
         }
     }
 }

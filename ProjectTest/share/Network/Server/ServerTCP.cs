@@ -12,7 +12,7 @@ namespace Share.Network.Server
     public class ServerTCP
     {
         NetworkManagerTCP managerTCP;
-
+        public int Port { get => managerTCP.port;  }
         public ServerTCP(int port, INotifyStateSocket observer) { 
             managerTCP = new NetworkManagerTCP(port, observer);
         }

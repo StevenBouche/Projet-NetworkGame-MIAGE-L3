@@ -1,31 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="mainPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <SubScene fx:id="scenePlayer1" height="144.0" layoutX="232.0" layoutY="128.0" width="137.0">
-        <root>
-          <Region />
-        </root>
-      </SubScene>
-      <SubScene fx:id="scenePlayer2" height="144.0" layoutX="54.0" layoutY="128.0" width="137.0">
-        <root>
-          <Region />
-        </root>
-      </SubScene>
-      <SubScene fx:id="scenePlayer3" height="144.0" layoutX="422.0" layoutY="128.0" width="137.0">
-        <root>
-          <Region />
-        </root>
-      </SubScene>
       <Label fx:id="title" alignment="CENTER" layoutX="48.0" layoutY="24.0" prefHeight="39.0" prefWidth="527.0" text="Titre">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
    </children>
-</AnchorPane>
+</Pane>

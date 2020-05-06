@@ -14,10 +14,10 @@ namespace Serveur.GameServer.GameModel
 
         public String id;
 
-        public Joueur(String id)
+        public Joueur(String id,String name)
         {
             this.id = id;
-          //  this.nom = name;
+            this.nom = name;
             this.cagnotte = new Cagnotte();
         }
 

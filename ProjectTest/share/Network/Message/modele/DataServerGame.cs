@@ -7,11 +7,11 @@ namespace Share.Network.Message.obj
     public class DataServerGame
     {
 
-        public List<ServerGame> listServer;
+        public List<ServerGameInfo> listServer;
 
         public DataServerGame()
         {
-
+            listServer = new List<ServerGameInfo>();
         }
     }
 }

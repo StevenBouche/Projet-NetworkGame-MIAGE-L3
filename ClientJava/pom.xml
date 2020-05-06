@@ -14,6 +14,15 @@
         <module>interfaceFX</module>
     </modules>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>12.0.2</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -29,6 +38,15 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
+                <configuration>
+                    <skip>true</skip>
+                    <mainClass>none</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.4</version>
                 <configuration>
                     <skip>true</skip>
                     <mainClass>none</mainClass>
