@@ -11,7 +11,7 @@ namespace Serveur.GameServer.Game
         private readonly CommandManager commandManager;
 
         private Boolean isEnignaDiscovered = false;
-        private int roundsNb = 0;
+        public int roundsNb = 0;
         private Boolean isFinal = false;
 
         public GameLoop(CommandManager commandManager)
@@ -69,7 +69,7 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteQuickRound()
         {
-            commandManager.triggerCurrentPlayer();
+            commandManager.TriggerCurrentPlayer();
         }
 
     }
