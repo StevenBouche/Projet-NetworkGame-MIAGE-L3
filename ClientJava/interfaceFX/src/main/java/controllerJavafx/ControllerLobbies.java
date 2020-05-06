@@ -151,7 +151,7 @@ public class ControllerLobbies implements Initializable {
             @Override
             public void handle(KeyEvent keyEvent) {
                 nameField = name.getText();
-                //setServerGame();
+                buttonConnect.setDisable(nameField.length() <= 3 || srcGame == null);
             }
         });
     }
