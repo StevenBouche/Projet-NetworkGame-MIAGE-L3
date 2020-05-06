@@ -136,7 +136,7 @@ namespace Serveur.GameServer.Game
             if (checkAllPlayersReady())
             {
                 gameManager.gameState = GameState.STARTED;
-       //         allDone.Set();
+                allDone.Set();
             }
         }
 
