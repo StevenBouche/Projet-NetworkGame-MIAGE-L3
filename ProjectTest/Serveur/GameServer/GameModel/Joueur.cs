@@ -16,7 +16,7 @@ namespace Serveur.GameServer.GameModel
 
         public Boolean isReady;
 
-        public Joueur(String id,String name)
+        public Joueur(String id, String name)
         {
             this.id = id;
             this.nom = name;
