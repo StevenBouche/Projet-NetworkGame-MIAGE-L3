@@ -59,6 +59,7 @@ namespace Serveur.GameServer.Game
         {
             commandManager.TriggerWheelTurn(); //sets the current case fallen and trigger action of the corresponding case
             commandManager.TriggerNextPlayer(); //sets the next player 
+            isEnignaDiscovered = true;
         }
 
         public void ExecuteFinalRound()
