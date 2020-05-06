@@ -5,8 +5,8 @@ namespace Serveur.GameServer.GameModel
 {
 
     public class Roue {
-        List<Case> Cases;
-
+        
+        public List<Case> Cases { get; }
         public Case CurrentCase { get; set; }
 
         public Roue()
@@ -47,7 +47,7 @@ namespace Serveur.GameServer.GameModel
                 }
                 else
                 {
-                    Cases.Add(new Case(TypeCase.SUPER_CASH));
+                    Cases.Add(new Case(TypeCase.SUPERCASH));
                     Cases.Add(new Case(TypeCase.MYSTERE));
                 }
             }
@@ -56,15 +56,15 @@ namespace Serveur.GameServer.GameModel
         public void UnveiledMysteryCase(Case C)
         {
             Random r = new Random();
-            if (C.type == TypeCase.MYSTERE) {
+            if (C.type.Equals(TypeCase.MYSTERE)) {
                 if (r.Next(2) == 1)
-                {
-                    C.type = TypeCase.CASH;
                     C.valeur = (int)Cash.CASH_500;
-                }
             }
-            else
-                C.type = TypeCase.BANQUEROUTE;
+        }
+
+        public void NextWheelTurn()
+        {
+
         }
 
         override

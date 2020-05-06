@@ -5,11 +5,14 @@ using System.Text;
 
 namespace Serveur.GameServer.CommandPack
 {
-    class CommandPass : Command<GameEngine>
+    class CommandBanqueroute : Command<GameEngine>
     {
-        public CommandPass(GameEngine context, CommandManager manager) : base(context,manager) { }
+
+        public CommandBanqueroute(GameEngine context, CommandManager CM) : base(context, CM) { }
+
         public override void onExecute()
         {
+            Context.CurrentPlayer.cagnotte.Montant_Manche = 0;
         }
     }
 }

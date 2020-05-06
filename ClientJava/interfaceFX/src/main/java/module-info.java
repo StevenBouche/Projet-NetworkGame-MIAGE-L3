@@ -5,6 +5,7 @@ module org.miage.interfaceFX {
     requires javafx.controls;
     requires javafx.graphics;
     requires org.miage.network;
+    requires com.jfoenix;
     exports controllerJavafx;
     exports network.main;
     opens network.main to javafx.graphics;
