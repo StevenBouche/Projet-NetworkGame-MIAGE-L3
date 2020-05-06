@@ -20,7 +20,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
         loadPrimaryScene();
-        this.primaryStage.setTitle("Hello World");
+        this.primaryStage.setTitle("Wheel of fortune");
         this.primaryStage.resizableProperty().setValue(false);
         this.primaryStage.show();
     }
