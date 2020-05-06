@@ -14,14 +14,11 @@ namespace Serveur.GameServer.GameModel
 
         public String id;
 
-        public Boolean isReady;
-
-        public Joueur(String id,String name)
+        public Joueur(String id)
         {
             this.id = id;
-            this.nom = name;
+          //  this.nom = name;
             this.cagnotte = new Cagnotte();
-            this.isReady = false;
         }
 
         public int CompareTo(Joueur other)

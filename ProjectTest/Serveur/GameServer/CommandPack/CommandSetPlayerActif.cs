@@ -19,13 +19,14 @@ namespace Serveur.GameServer.CommandPack
             int RandParam = r.Next(3);
             String id = Context.listIdPlayers.ToArray()[RandParam];
             Context.CurrentPlayer = Context.listPlayers[id];
+            Context.CurrentPosPlayer = RandParam;
 
-            Context.listIdPlayers.RemoveAt(RandParam);
+            /*Context.listIdPlayers.RemoveAt(RandParam);
             Context.listIdPlayers.Insert(0, id);
-            Context.CurrentPosPlayer = 0;
+            Context.CurrentPosPlayer = 0*/
             
 
-            Console.WriteLine("\n Joueur actif : " + Context.CurrentPlayer.nom);
+            Console.WriteLine("\n Gagnant de l'echauffement : " + Context.CurrentPlayer.id + "\n");
         }
     }
 }
