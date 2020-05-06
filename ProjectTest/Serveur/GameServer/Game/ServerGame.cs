@@ -51,7 +51,7 @@ namespace Serveur.GameServer.Game
         {
             //Sub on events to receive data
             network.OnEvent<String>(ProtocolEventsTCP<String>.IDENTITY, OnIdentityReceived);
-            network.OnEvent<ListPlayerGame>(ProtocolEventsTCP<ListPlayerGame>.NOTIFYPLAYERREADY, OnReadyReceived);
+            network.OnEvent<Boolean>(ProtocolEventsTCP<Boolean>.NOTIFYPLAYERREADY, OnReadyReceived);
             //Start thread network
             threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
@@ -59,8 +59,9 @@ namespace Serveur.GameServer.Game
 
         public void Run()
         {
-            
-            while(gameManager.listIdPlayers.Count != 3)
+            gameManager.gameState = GameState.WAITING_PLAYER;
+
+            while(gameManager.gameState != GameState.STARTED)
             {
                 allDone.Reset();
                 allDone.WaitOne();
@@ -72,28 +73,20 @@ namespace Serveur.GameServer.Game
 
         public void notifyPlayerHaveJoined(String id, ListPlayerGame l)
         {
-     //       ListPlayerGame l = gameManager.GetListOfPlayerLobbies();
-            PacketMessage<ListPlayerGame> msgP = new PacketMessage<ListPlayerGame>() { evt = ProtocolEventsTCP<String>.NOTIFYLOBBYPLAYER.eventName, data = l };
-            foreach (PlayerGame p in l.listPlayers)
-            {
-                network.Send(msgP, p.id);
-            }
-            allDone.Set();
+            updateClientLobby(ProtocolEventsTCP<String>.NOTIFYLOBBYPLAYER, l);
         }
 
         public void notifyPlayerHaveLeaved(String id, ListPlayerGame l)
         {
-            PacketMessage<ListPlayerGame> msgP = new PacketMessage<ListPlayerGame>() { evt = ProtocolEventsTCP<String>.NOTIFYLOBBYPLAYER.eventName, data = l };
-            foreach (PlayerGame p in l.listPlayers)
-            {
-                network.Send(msgP, p.id);
-            }
-            allDone.Set();
+            updateClientLobby(ProtocolEventsTCP<String>.NOTIFYLOBBYPLAYER, l);
         }
 
         public void OnConnect(string id)
         {
-            
+            if(gameManager.listPlayers.Count == 3)
+            {
+                network.disconnectClient(id);
+            }
         }
 
         public void OnDisconnect(string id)
@@ -104,23 +97,61 @@ namespace Serveur.GameServer.Game
 
         public void OnIdentityReceived(String obj, String id)
         {
-            Console.WriteLine("(TCP exchange) Client " + id + "have sent " + obj);
-            PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.IDENTITY.eventName, data = id };
-            Debug.WriteLine("On Connect player : " + id);
-            network.Send(msg, id);
-            gameManager.AddPlayer(id, obj);
+            if(gameManager.listPlayers.Count <= 3)
+            {
+                Console.WriteLine("(TCP exchange) Client " + id + "have sent " + obj);
+                PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.IDENTITY.eventName, data = id };
+                Debug.WriteLine("On Connect player : " + id);
+                network.Send(msg, id);
+                gameManager.AddPlayer(id, obj);
+            }
+            else
+            {
+                Console.WriteLine("Too much Identity msg received");
+            }
         }
 
-        public void OnReadyReceived(ListPlayerGame l, String id)
+        public void OnReadyReceived(Boolean isReady, String id)
         {
             Console.WriteLine("(TCP exchange) Received" + id + " is ready");
-            PacketMessage<ListPlayerGame> msgP = new PacketMessage<ListPlayerGame>() { evt = ProtocolEventsTCP<String>.NOTIFYPLAYERREADY.eventName, data = l };
+            gameManager.setReadyPlayer(isReady, id);
             
-            foreach (PlayerGame p in l.listPlayers)
+            if (!checkAllPlayersReady())
             {
-                network.Send(msgP, p.id);
+                ListPlayerGame list = gameManager.GetListOfPlayerLobbies();
+                updateClientLobby(ProtocolEventsTCP<String>.NOTIFYLOBBYPLAYER, list);
             }
+            else
+            {
+                gameManager.gameState = GameState.STARTED;
+            }
+        }
 
+        private Boolean checkAllPlayersReady()
+        {
+            if (gameManager.listIdPlayers.Count != 3)
+            {
+                return false;
+            }
+            foreach (KeyValuePair<String, Joueur> p in gameManager.listPlayers)
+            {
+                if (!p.Value.isReady)
+                {
+                    return false;
+                }                
+            }
+            return true;
+        }
+
+        private void updateClientLobby<T>(ProtocolEventsTCP<T> p, ListPlayerGame l)
+        {
+            PacketMessage<ListPlayerGame> msgP = new PacketMessage<ListPlayerGame>() { evt = p.eventName, data = l };
+            
+            foreach (PlayerGame player in l.listPlayers)
+            {
+                network.Send(msgP, player.id);
+            }
+            allDone.Set();
         }
     }
 }

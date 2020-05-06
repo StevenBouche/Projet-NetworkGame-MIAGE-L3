@@ -57,7 +57,7 @@ namespace Share.Network.NetworkManager
             allDone.Set();
         }
 
-        public void StartListening()
+        public void StartListening() //TODO : Desactivate listening when GameState = Started
         {
             // Service Event redirection
             Thread t = new Thread(new ThreadStart(eventManager.Run));
@@ -106,11 +106,7 @@ namespace Share.Network.NetworkManager
             //Closing clients sockets
             foreach (KeyValuePair<String, StateObjectTCP> keyValue in copy)
             {
-                if (keyValue.Value.workSocket.Connected)
-                {
-                    keyValue.Value.workSocket.Shutdown(SocketShutdown.Both);
-                    keyValue.Value.workSocket.Close();
-                }
+                disconnectClient(keyValue.Key);
             }
 
             //Closing server socket
@@ -232,6 +228,22 @@ namespace Share.Network.NetworkManager
             {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        public void disconnectClient(String id)
+        {
+            myClients.TryGetValue(id, out StateObjectTCP j);
+
+            if(j != null)
+            {
+                if (j.workSocket.Connected)
+                {
+                    j.workSocket.Shutdown(SocketShutdown.Both);
+                    j.workSocket.Close();
+                    myClients.Remove(id);
+                }
+            }
+            Console.WriteLine("Tried to disconnect a null client");
         }
     }
 }

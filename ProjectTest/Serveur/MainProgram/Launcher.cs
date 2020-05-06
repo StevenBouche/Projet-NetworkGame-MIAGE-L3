@@ -49,7 +49,7 @@ namespace Serveur.MainProgram
         private void StartGames()
         {
             int port = 11000;
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 1; i++)
             {
                 Console.WriteLine("Create and start game on port "+port+i);
                 String id = ShortId.Generate(true, true, 12);

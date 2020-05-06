@@ -11,7 +11,7 @@ namespace Share.Network.Server
 {
     public class ServerTCP
     {
-        NetworkManagerTCP managerTCP;
+        readonly NetworkManagerTCP managerTCP;
         public int Port { get => managerTCP.port;  }
         public ServerTCP(int port, INotifyStateSocket observer) { 
             managerTCP = new NetworkManagerTCP(port, observer);
@@ -37,6 +37,10 @@ namespace Share.Network.Server
             managerTCP.stop();
         }
 
+        public void disconnectClient(String id)
+        {
+            managerTCP.disconnectClient(id);
+        }
 
     }
 }

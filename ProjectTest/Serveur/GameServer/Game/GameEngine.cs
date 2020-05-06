@@ -28,6 +28,8 @@ namespace Serveur.GameServer.Game
         
         CommandManager CM;
 
+        public GameState gameState;
+
         public delegate void notifyPlayerJoined(String id, ListPlayerGame l);
         public delegate void notifyPlayerLeaved(String id, ListPlayerGame l);
         public notifyPlayerJoined callbackJoin;
@@ -55,6 +57,7 @@ namespace Serveur.GameServer.Game
         public void Play()
         {
             gameLoop.ExecuteGame();
+            this.gameState = GameState.FINISHED;
         }
 
         public void AddPlayer(String id, String name)
@@ -79,7 +82,7 @@ namespace Serveur.GameServer.Game
 
         }
 
-        private ListPlayerGame GetListOfPlayerLobbies()
+        public ListPlayerGame GetListOfPlayerLobbies()
         {
             ListPlayerGame l = new ListPlayerGame();
 
@@ -89,10 +92,20 @@ namespace Serveur.GameServer.Game
                 {
                     id = p.Key,
                     name = p.Value.nom,
-                    isReady = false
+                    isReady = p.Value.isReady
                 });
             }
             return l;
+        }
+
+        public void setReadyPlayer(Boolean state, String id)
+        {
+            listPlayers.TryGetValue(id, out Joueur j);
+
+            if(j != null)
+            {
+                j.isReady = state;
+            }
         }
     }
 }

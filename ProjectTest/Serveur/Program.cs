@@ -27,7 +27,7 @@ namespace Serveur
     class Program
     {
         //static ServerTCP server;
-        static ServerGame serverGame;
+        //static ServerGame serverGame;
 
         static void Main(string[] args)
         {
