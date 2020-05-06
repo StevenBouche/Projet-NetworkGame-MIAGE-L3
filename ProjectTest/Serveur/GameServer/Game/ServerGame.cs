@@ -70,7 +70,12 @@ namespace Serveur.GameServer.Game
             notifyGameIsReady();
             gameManager.Play();
 
-            
+
+
+            //todo prevenir que je termine le server ou Reset ou choix ?
+
+
+
         }
 
         private void notifyGameIsReady()
@@ -137,7 +142,7 @@ namespace Serveur.GameServer.Game
             if (checkAllPlayersReady())
             {
                 gameManager.gameState = GameState.STARTED;
-       //         allDone.Set();
+                allDone.Set();
             }
         }
 

@@ -13,6 +13,16 @@ public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
     public static ProtocolEventsTCP<ListPlayerGame> NOTIFYPLAYERREADY = new ProtocolEventsTCP<ListPlayerGame>("NOTIFYPLAYERREADY");
     public static ProtocolEventsTCP<String> NOTIFYGAMEREADY = new ProtocolEventsTCP<String>("NOTIFYGAMEREADY");
 
+    /*
+        GAME PROTOCOL
+     */
+
+
+
+
+
+
+
     private ProtocolEventsTCP(String name){
         super(name);
     }

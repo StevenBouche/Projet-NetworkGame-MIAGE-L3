@@ -1,5 +1,7 @@
 package coco.controller;
 
+import coco.state.StateGameUI;
+import coco.state.StateStartGame;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import network.client.ClientTCP;
+import network.client.INotifyPlayersGame;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,10 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ControllerGameUI implements Initializable {
-
-
-
+public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     /** FXML elements */
     @FXML
@@ -66,8 +67,19 @@ public class ControllerGameUI implements Initializable {
      */
     public Boolean switchActive;
     //for loadSubScene()
-    ControllerSceneRectancle manager;
-    Parent root;
+    public ControllerSceneRectancle manager;
+    public Parent root;
+
+    ClientTCP client;
+    Thread clientThread;
+    StateGameUI stateUI;
+
+    public ControllerGameUI(ClientTCP client, Thread clientThread) {
+        stateUI = new StateStartGame(this);
+        this.client = client;
+        this.clientThread = clientThread;
+        if(this.client != null) this.client.setNotifierGame(this);
+    }
 
 
     @Override
@@ -75,7 +87,7 @@ public class ControllerGameUI implements Initializable {
         System.out.println("hello");
         switchActive = false;
         try {
-            loadSubScene();
+            stateUI.loadSubScene();
             loadButtons();
             loadCBD();
             loadSwitch();
@@ -96,8 +108,6 @@ public class ControllerGameUI implements Initializable {
         fxmlLoader.setController(manager);
         root = fxmlLoader.load();
         subScene.setRoot(root);
-
-
     }
 
     /**
@@ -296,6 +306,11 @@ public class ControllerGameUI implements Initializable {
      */
     public void addCashPlayer(int numPlayer, int cash){
         listPlayersScore.get(numPlayer-1).setText("Cash " + cash);
+    }
+
+    @Override
+    public void receiveLetterFromServer(String str) {
+
     }
 
 /*--------------------------------useless
