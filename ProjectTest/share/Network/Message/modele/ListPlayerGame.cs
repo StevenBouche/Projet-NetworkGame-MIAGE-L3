@@ -8,6 +8,7 @@ namespace Share.Network.Message.modele
     {
         public String name;
         public String id;
+        public Boolean isReady = false;
 
         public PlayerGame()
         {

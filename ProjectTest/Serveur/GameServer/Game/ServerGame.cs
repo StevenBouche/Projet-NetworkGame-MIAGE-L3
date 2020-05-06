@@ -51,6 +51,7 @@ namespace Serveur.GameServer.Game
         {
             //Sub on events to receive data
             network.OnEvent<String>(ProtocolEventsTCP<String>.IDENTITY, OnIdentityReceived);
+            network.OnEvent<ListPlayerGame>(ProtocolEventsTCP<ListPlayerGame>.NOTIFYPLAYERREADY, OnReadyReceived);
             //Start thread network
             threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
@@ -97,17 +98,29 @@ namespace Serveur.GameServer.Game
 
         public void OnDisconnect(string id)
         {
-            Debug.WriteLine("On Disconnect player : " + id);
+            Debug.WriteLine("(TCP exchange) On Disconnect player : " + id);
             gameManager.RemovePlayer(id);
         }
 
         public void OnIdentityReceived(String obj, String id)
         {
-            Console.WriteLine("Client " + id + "have sent " + obj);
+            Console.WriteLine("(TCP exchange) Client " + id + "have sent " + obj);
             PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.IDENTITY.eventName, data = id };
             Debug.WriteLine("On Connect player : " + id);
             network.Send(msg, id);
             gameManager.AddPlayer(id, obj);
+        }
+
+        public void OnReadyReceived(ListPlayerGame l, String id)
+        {
+            Console.WriteLine("(TCP exchange) Received" + id + " is ready");
+            PacketMessage<ListPlayerGame> msgP = new PacketMessage<ListPlayerGame>() { evt = ProtocolEventsTCP<String>.NOTIFYPLAYERREADY.eventName, data = l };
+            
+            foreach (PlayerGame p in l.listPlayers)
+            {
+                network.Send(msgP, p.id);
+            }
+
         }
     }
 }
