@@ -10,7 +10,14 @@ namespace Serveur.GameServer.CommandPack
         public CommandMystery(GameEngine engine, CommandManager cmd) : base(engine,cmd) { }
         public override void onExecute()
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch(NotImplementedException e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

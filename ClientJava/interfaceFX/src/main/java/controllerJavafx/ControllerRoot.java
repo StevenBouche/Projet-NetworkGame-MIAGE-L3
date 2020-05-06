@@ -3,6 +3,7 @@ package controllerJavafx;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import network.client.ClientTCP;
 import network.main.IMain;
 import network.message.obj.ServerGame;
 
@@ -19,6 +20,8 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
     ControllerLobbiesGame managerLobbiesGame;
     FXMLLoader fxmlLoaderLobbiesGame;
     Parent rootLobbiesGame;
+
+    // TODO CONTROLLER COCO
 
     IMain main;
 
@@ -80,5 +83,9 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
     public void stop() {
         if(manager != null) manager.stop();
         if(managerLobbiesGame != null) managerLobbiesGame.stop();
+    }
+
+    public void startSceneGame(ClientTCP client, Thread clientThread) {
+        //TODO SCENE COCO
     }
 }
