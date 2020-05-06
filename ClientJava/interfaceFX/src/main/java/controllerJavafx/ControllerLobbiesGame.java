@@ -116,6 +116,8 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
     public void notifyReceiveListPlayer(ListPlayerGame l) {
         this.listPlayer.listPlayers = l.listPlayers;
         Platform.runLater(() -> {
+            mainPane.getChildren().removeAll(mapSubScene.values());
+            mapSubScene.clear();
             int cpt = 1;
             for(PlayerGame i : this.listPlayer.listPlayers){
                 createItemPlayer(cpt,i.name,i.id);
@@ -123,7 +125,6 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
             }
 
         });
-
     }
 
     public void onCancelAction() {

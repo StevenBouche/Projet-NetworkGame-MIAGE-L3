@@ -46,10 +46,8 @@ public class ControllerItemPlayer implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.name.setText(nameValue);
         this.state.setText("Waiting Connexion");
-        if(!currentplayer){
-            ready.setVisible(true);
-            ready.setVisible(true);
-        }
+        ready.setVisible(currentplayer);
+        cancel.setVisible(currentplayer);
         ready.setDisable(true);
         cancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override

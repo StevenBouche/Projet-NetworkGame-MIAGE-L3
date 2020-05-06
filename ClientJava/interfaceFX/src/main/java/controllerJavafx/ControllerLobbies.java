@@ -58,17 +58,102 @@ public class ControllerLobbies implements Initializable {
         stateDisconnected();
         initTable();
         initButton();
-        name.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                nameField = name.getText();
-            }
-        });
+        initNameField();
         try {
             loadServerUDP();
         } catch (SocketException | UnknownHostException e) {
             e.printStackTrace();
         }
+    }
+
+    private void switchSceneAndConnectToServerGame() {
+        stop(); // stop thread curretn scene
+        Platform.runLater(() -> {
+            try {
+            observer.startSceneLobbyGame(this.srcGame, nameField);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void updateTable(DataServerGame data){
+        Platform.runLater(() ->  {
+            ObservableList<ServerGame> list = FXCollections.observableArrayList(data.listServer);
+            tableView.setItems(list);
+        });
+    }
+
+    private void stateConnected(String str){
+        Platform.runLater(() ->  {
+            rectRunning.setFill(Color.GREEN);
+            labelRunning.setText(str);
+            buttonRefresh.setDisable(false);
+        });
+    }
+
+    private void stateDisconnected(){
+        Platform.runLater(() ->  {
+            rectRunning.setFill(Color.RED);
+            labelRunning.setText("Server UDP not Running");
+            buttonRefresh.setDisable(true);
+        });
+    }
+
+    private void requestServerGame() {
+        PacketMessage<DataServerGame> packet = new PacketMessage<>();
+        packet.evt = ProtocolEventsUDP.GETLISTSERVERGAME.eventName;
+        packet.data = new DataServerGame();;
+        try {
+            server.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setServerGame() {
+        Platform.runLater(() ->  {
+            ServerGame srcGame = tableView.getSelectionModel().getSelectedItem();
+            int index = tableView.getSelectionModel().getFocusedIndex();
+
+            if(srcGame == null) {
+                srcGame = tableView.getItems().get(index);
+                tableView.getSelectionModel().select(index);
+            }
+
+            if(this.srcGame == null){
+                if(srcGame.nbPlayerCurrent < srcGame.nbPlayerMax) this.srcGame = srcGame;
+                else tableView.getSelectionModel().clearSelection(index);
+            }
+            else if(this.srcGame != srcGame)  {
+                this.srcGame = srcGame;
+            } else {
+                tableView.getSelectionModel().clearSelection(index);
+                this.srcGame= null;
+            }
+
+            System.out.println(this.srcGame);
+            buttonConnect.setDisable(this.srcGame == null || nameField == null || nameField.length() < 3 );
+        });
+    }
+
+    public void stop() {
+        server.stop();
+        try {
+            threadServer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initNameField() {
+        name.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                nameField = name.getText();
+                //setServerGame();
+            }
+        });
     }
 
     private void initButton() {
@@ -83,41 +168,10 @@ public class ControllerLobbies implements Initializable {
         buttonConnect.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                Platform.runLater(() ->  {
-                    switchSceneAndConnectToServerGame();
-                });
+                switchSceneAndConnectToServerGame();
                 actionEvent.consume();
             }
         });
-    }
-
-    private void switchSceneAndConnectToServerGame() {
-        System.out.println("TODO start scene connection to server game selected : "+this.srcGame.addr+":"+this.srcGame.port);
-        // request to server lobbies to know if server game selected at t instant have place
-        disableInterface();
-        enableInterface();
-        stop();
-        try {
-            observer.playerWantJoinGame(this.srcGame,nameField);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void enableInterface() {
-      /*  Platform.runLater(() ->  {
-            tableView.setDisable(true);
-            buttonConnect.setDisable(true);
-            buttonRefresh.setDisable(true);
-        });*/
-    }
-
-    private void disableInterface() {
-      /*  Platform.runLater(() ->  {
-            tableView.setDisable(true);
-            buttonConnect.setDisable(true);
-            buttonRefresh.setDisable(true);
-        });*/
     }
 
     private void initTable() {
@@ -176,70 +230,4 @@ public class ControllerLobbies implements Initializable {
 
     }
 
-    private void requestServerGame() {
-        PacketMessage<DataServerGame> packet = new PacketMessage<>();
-        packet.evt = ProtocolEventsUDP.GETLISTSERVERGAME.eventName;
-        packet.data = new DataServerGame();;
-        try {
-            server.send(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateTable(DataServerGame data){
-        Platform.runLater(() ->  {
-            ObservableList<ServerGame> list = FXCollections.observableArrayList(data.listServer);
-            tableView.setItems(list);
-        });
-    }
-
-    private void stateConnected(String str){
-        Platform.runLater(() ->  {
-            rectRunning.setFill(Color.GREEN);
-            labelRunning.setText(str);
-            buttonRefresh.setDisable(false);
-        });
-    }
-
-    private void stateDisconnected(){
-        Platform.runLater(() ->  {
-            rectRunning.setFill(Color.RED);
-            labelRunning.setText("Server UDP not Running");
-            buttonRefresh.setDisable(true);
-        });
-    }
-
-    private void setServerGame() {
-        Platform.runLater(() ->  {
-            ServerGame srcGame = tableView.getSelectionModel().getSelectedItem();
-            int index = tableView.getSelectionModel().getFocusedIndex();
-
-            if(srcGame == null) {
-                srcGame = tableView.getItems().get(index);
-                tableView.getSelectionModel().select(index);
-            }
-
-            if(this.srcGame == null){
-                if(srcGame.nbPlayerCurrent < srcGame.nbPlayerMax) this.srcGame = srcGame;
-                else tableView.getSelectionModel().clearSelection(index);
-            }
-            else  {
-                tableView.getSelectionModel().clearSelection(index);
-                this.srcGame= null;
-            }
-
-            System.out.println(this.srcGame);
-            buttonConnect.setDisable(this.srcGame == null || nameField == null);
-        });
-    }
-
-    public void stop() {
-        server.stop();
-        try {
-            threadServer.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }

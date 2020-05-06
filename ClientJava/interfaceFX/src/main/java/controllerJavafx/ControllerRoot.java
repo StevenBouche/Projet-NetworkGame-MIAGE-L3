@@ -1,11 +1,8 @@
 package controllerJavafx;
 
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.SubScene;
-import javafx.scene.control.MenuBar;
 import network.main.IMain;
 import network.message.obj.ServerGame;
 
@@ -16,11 +13,11 @@ import java.util.ResourceBundle;
 public class ControllerRoot implements Initializable, INotifyEventUI {
 
     ControllerLobbies manager;
-    ControllerLobbiesGame managerLobbiesGame;
-
     FXMLLoader fxmlLoaderLobbies;
-    FXMLLoader fxmlLoaderLobbiesGame;
     Parent rootLobbies;
+
+    ControllerLobbiesGame managerLobbiesGame;
+    FXMLLoader fxmlLoaderLobbiesGame;
     Parent rootLobbiesGame;
 
     IMain main;
@@ -42,23 +39,13 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
             rootLobbies = fxmlLoaderLobbies.load();
             setSizeOfParentSubScene(rootLobbies);
             setScene(rootLobbies);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void setScene(Parent p ){
-        main.switchScene(p);;
-    }
-
-    private void setSizeOfParentSubScene(Parent p){
-        p.maxWidth(main.getWidth());
-        p.maxHeight(main.getHeight());
-    }
-
     @Override
-    public void playerWantJoinGame(ServerGame srvGame, String name) {
+    public void startSceneLobbyGame(ServerGame srvGame, String name) {
         System.out.println("Player has select a game server");
         fxmlLoaderLobbiesGame = new FXMLLoader(getClass().getClassLoader().getResource("lobbiesGame.fxml"));
         managerLobbiesGame = new ControllerLobbiesGame(main,srvGame,name);
@@ -70,7 +57,20 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void startSceneGame() {
+
+    }
+
+    public void setScene(Parent p ){
+        main.switchScene(p);;
+    }
+
+    private void setSizeOfParentSubScene(Parent p){
+        p.maxWidth(main.getWidth());
+        p.maxHeight(main.getHeight());
     }
 
     public void backToMainLobbies() {
