@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="vbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="142.0" prefWidth="137.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vbox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="142.0" prefWidth="137.0" style="-fx-border-color: #3399ff; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="name" alignment="CENTER" prefHeight="50.0" prefWidth="137.0" text="playerName" textAlignment="CENTER" />
       <ProgressIndicator fx:id="loader" prefHeight="36.0" prefWidth="83.0" />
@@ -11,4 +12,7 @@
       <Button fx:id="ready" mnemonicParsing="false" prefHeight="33.0" prefWidth="137.0" text="Ready" />
       <Button fx:id="cancel" mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Cancel" />
    </children>
+   <effect>
+      <Blend mode="SRC_ATOP" />
+   </effect>
 </VBox>
