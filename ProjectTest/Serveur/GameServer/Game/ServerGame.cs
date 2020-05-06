@@ -69,6 +69,7 @@ namespace Serveur.GameServer.Game
 
             notifyGameIsReady();
             gameManager.Play();
+
             
         }
 

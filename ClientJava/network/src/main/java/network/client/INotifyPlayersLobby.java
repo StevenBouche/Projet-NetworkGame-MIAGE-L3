@@ -6,4 +6,5 @@ public interface INotifyPlayersLobby {
     void notifyReceiveMyId(String id);
     void notifyReceiveListPlayer(ListPlayerGame l);
     void notifyDisconnect();
+    void notifyGameStart();
 }

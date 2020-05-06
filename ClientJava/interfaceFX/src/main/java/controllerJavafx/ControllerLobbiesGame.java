@@ -128,6 +128,14 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
         onCancelAction();
     }
 
+    @Override
+    public void notifyGameStart() {
+        client.removeNotifierLobby();
+        Platform.runLater(() -> {
+           main.startSceneGame(client,clientThread);
+        });
+    }
+
     public void onCancelAction() {
         stop();
         Platform.runLater(() -> {
