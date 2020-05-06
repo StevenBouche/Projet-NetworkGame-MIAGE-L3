@@ -67,8 +67,21 @@ namespace Serveur.GameServer.Game
                 allDone.WaitOne();
             }
 
+            notifyGameIsReady();
             gameManager.Play();
             
+        }
+
+        private void notifyGameIsReady()
+        {
+            String s = "Game is ready";
+            PacketMessage<String> msg = new PacketMessage<string>() { evt = ProtocolEventsTCP<String>.NOTIFYGAMEREADY.eventName, data = s };
+            
+            foreach(KeyValuePair<String, Joueur> p in gameManager.listPlayers)
+            {
+                network.Send(msg, p.Key);
+            }
+                
         }
 
         public void notifyPlayerHaveJoined(String id, ListPlayerGame l)
