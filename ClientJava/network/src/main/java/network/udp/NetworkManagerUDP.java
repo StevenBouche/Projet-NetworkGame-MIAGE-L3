@@ -8,6 +8,7 @@ import network.share.ListenerState;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Base64;
 import java.util.Random;
 
 public class NetworkManagerUDP {
@@ -46,11 +47,12 @@ public class NetworkManagerUDP {
             }
 
             if(running) {
-                println(" J'ai reçu une réponse du serveur : " + new String(packet2.getData()));
+                String str = new String(packet2.getData()).trim();
+                print("J'ai reçu une reponse du serveur : " + str+"\n" );
                 IPEndPoint ipep = new IPEndPoint();
                 ipep.addr = packet2.getAddress().toString();
                 ipep.port = packet2.getPort();
-                evtManager.OnReceivedData(new String(packet2.getData()), ipep);
+                evtManager.OnReceivedData(str, ipep);
             }
 
         }

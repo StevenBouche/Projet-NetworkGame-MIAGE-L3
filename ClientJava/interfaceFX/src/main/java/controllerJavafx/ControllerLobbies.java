@@ -226,6 +226,7 @@ public class ControllerLobbies implements Initializable {
             }
         });
         threadServer = new Thread(server);
+        threadServer.setName("Thread Client UDP");
         threadServer.start();
 
     }

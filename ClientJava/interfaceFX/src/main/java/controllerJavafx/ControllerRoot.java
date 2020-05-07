@@ -37,8 +37,10 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
     }
 
     private void initLobbiesScene(){
+        if( manager == null){
+            manager = new ControllerLobbies(this);
+        }
         fxmlLoaderLobbies = new FXMLLoader(getClass().getClassLoader().getResource("lobbie.fxml"));
-        manager = new ControllerLobbies(this);
         fxmlLoaderLobbies.setController(manager);
         try {
             rootLobbies = fxmlLoaderLobbies.load();
