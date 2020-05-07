@@ -72,6 +72,11 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandGetPlayerActif(engine, this));
         }
 
+        public void TriggerCurrentEnigma()
+        {
+            this.TriggerCommand(new CommandSetCurrentEnigma(engine, this));
+        }
+
         public void NotifyLastCommandReceivePlayer<T>(T obj, string id)
         {
             stack.TryPop(out Command<GameEngine> cmd);

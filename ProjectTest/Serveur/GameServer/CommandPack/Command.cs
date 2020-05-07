@@ -6,6 +6,7 @@ namespace Serveur.GameServer.CommandPack
     {
         private T context;
         protected CommandManager commandManager;
+        protected int nbOfOccurrences = -1;
 
         public Command(T context, CommandManager manager) {
             this.context = context;

@@ -30,6 +30,7 @@ namespace Serveur.GameServer.Game
             {
                 Console.WriteLine("Manche : " + roundsNb + 1);
                 ExecuteQuickRound();
+                commandManager.TriggerCurrentEnigma();
                 ExecuteRound();
             }
 

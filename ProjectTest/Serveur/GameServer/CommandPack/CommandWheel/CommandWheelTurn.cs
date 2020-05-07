@@ -1,4 +1,5 @@
 ﻿using Serveur.GameServer.CommandPack.CommandCase;
+using Serveur.GameServer.CommandPack.CommandPlayer;
 using Serveur.GameServer.CommandPack.ReceiverNetwork;
 using Serveur.GameServer.Game;
 using Serveur.GameServer.GameModel;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace Serveur.GameServer.CommandPack.CommandWheel
 {
-    class CommandWheelTurn : CommandReceiverClient<String>
+    class CommandWheelTurn : Command<GameEngine>
     {
         public CommandWheelTurn(GameEngine game, CommandManager CM) : base (game, CM) { }
         
@@ -20,16 +21,21 @@ namespace Serveur.GameServer.CommandPack.CommandWheel
             Random r = new Random();
             Context.wheel.CurrentCase = Context.wheel.GetWheelCases(r.Next(23));
 
-            SendCaseToClient(idClient);
-
-            WaitReceiveClient();
-
-            if (Context.CurrentEnigma.label)
+            SendCaseToClient(Context.CurrentPlayer.id);
           
-            commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager));
-
-
-
+            if(!Context.wheel.CurrentCase.type.isLetterNeeded)
+            {
+                Console.WriteLine("Je suis tombé sur banqueroute ou passe, pas de lettre");
+                commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager));
+            }
+            else
+            {
+                Console.WriteLine("Je suis tombé sur autre chose que banqueroute ou passe, je demande une lettre");
+                
+                //TODO : Recevoir choix client entre Lettre et Enigme complète
+                commandManager.TriggerCommand(new CommandAskForALetter(Context, commandManager));
+            }
+            
         }
 
         private void SendCaseToClient(String id)

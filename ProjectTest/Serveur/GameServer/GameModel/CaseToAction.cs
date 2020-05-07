@@ -43,6 +43,20 @@ namespace Serveur.GameServer.GameModel
             return null;
         }
 
+        public static Command<T> getCommand<T>(TypeCase caseType, GameEngine context, CommandManager CM, int nb) where T : GameEngine
+        {
+
+            foreach (FieldInfo t in typeof(CaseToAction).GetFields(BindingFlags.Static | BindingFlags.Public))
+            {
+                CaseToAction current = (CaseToAction)t.GetValue(null);
+                if (caseType.Equals(current.caseType))
+                {
+                    return (Command<T>)Activator.CreateInstance(current.actionType, new Object[] { context, CM, nb });
+                }
+            }
+            return null;
+        }
+
     }
 
 }
