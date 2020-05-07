@@ -43,6 +43,8 @@ namespace Serveur.GameServer.Game
 
         public Dictionary<Category, Enigme> gameEnigmaPool;
 
+        public Enigme CurrentEnigma;
+
         public GameEngine(ISenderAtClient sender)
         {
             this.sender = sender;
