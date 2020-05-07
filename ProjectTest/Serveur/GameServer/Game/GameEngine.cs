@@ -1,5 +1,6 @@
 ﻿using Serveur.GameServer.CommandPack;
 using Serveur.GameServer.GameModel;
+using Share.Network.Message;
 using Share.Network.Message.modele;
 using System;
 using System.Collections.Generic;
@@ -32,12 +33,16 @@ namespace Serveur.GameServer.Game
 
         public delegate void notifyPlayerJoined(String id, ListPlayerGame l);
         public delegate void notifyPlayerLeaved(String id, ListPlayerGame l);
+
         public notifyPlayerJoined callbackJoin;
         public notifyPlayerLeaved callbackLeave;
 
-        public GameEngine()
+        ISenderAtClient sender;
+
+        public GameEngine(ISenderAtClient sender)
         {
-            wheel = new Roue();
+            this.sender = sender;
+            wheel = new Roue(false);
             listPlayers = new Dictionary<string, Joueur>();
             listIdPlayers = new List<string>();
             CM = new CommandManager(this);
@@ -77,6 +82,11 @@ namespace Serveur.GameServer.Game
             callbackLeave(id, GetListOfPlayerLobbies());
         }
 
+        public void NotifyReceivePlayer<T>(T obj, string id)
+        {
+            CM.NotifyLastCommandReceivePlayer(obj, id);
+        }
+
         public void GameFinish()
         {
 
@@ -96,6 +106,16 @@ namespace Serveur.GameServer.Game
                 });
             }
             return l;
+        }
+
+       public void SendClient<T>(PacketMessage<T> msg, String idClient)
+       {
+            sender.SendClient(msg, idClient);
+       }
+
+        public void SendAllClient<T>(PacketMessage<T> msg)
+        {
+            sender.SendAllClientInGame(msg);
         }
 
         public void setReadyPlayer(Boolean state, String id)

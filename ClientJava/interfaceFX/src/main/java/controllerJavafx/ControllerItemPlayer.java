@@ -65,6 +65,7 @@ public class ControllerItemPlayer implements Initializable {
             @Override
             public void handle(ActionEvent actionEvent) {
                 backToLobbies();
+                actionEvent.consume();
             }
         });
     }

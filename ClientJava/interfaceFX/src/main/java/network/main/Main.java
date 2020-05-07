@@ -27,8 +27,8 @@ public class Main extends Application {
 
     @Override
     public void stop() throws Exception {
-        super.stop();
         managerRoot.stop();
+        super.stop();
     }
 
     public void setScene(Parent p ){
@@ -40,7 +40,7 @@ public class Main extends Application {
             managerRoot = new ControllerRoot(new IMain() {
                 @Override
                 public void backToMainLobbies() {
-                    managerRoot.backToMainLobbies();
+                   managerRoot.backToMainLobbies();
                 }
 
                 @Override

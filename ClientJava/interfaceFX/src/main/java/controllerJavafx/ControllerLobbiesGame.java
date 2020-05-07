@@ -50,6 +50,7 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
     //MY DATA
     String name;
     String id;
+    private boolean alreadyStop;
 
     public ControllerLobbiesGame(IMain main, ServerGame serverInfo, String name){
         mapSubScene = new HashMap<>();
@@ -58,6 +59,7 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
         listPlayer = new ListPlayerGame();
         this.name = name;
         this.main = main;
+        alreadyStop=false;
     }
 
     @Override
@@ -67,6 +69,7 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
         client = new ClientTCP(serverInfo.addr,serverInfo.port,this.name);
         client.setNotifierLobby(this);
         clientThread = new Thread(client);
+        clientThread.setName("Thread Client TCP");
         clientThread.start();
     }
 
@@ -102,6 +105,7 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
     }
 
     public void stop() {
+        alreadyStop = true;
         client.stop();
     }
 
@@ -138,10 +142,11 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
     }
 
     public void onCancelAction() {
-        stop();
-        Platform.runLater(() -> {
+        if(!alreadyStop){
+            alreadyStop = true;
+            stop();
             main.backToMainLobbies();
-        });
+        }
     }
 
     public void UpdateReadyPlayer(boolean b) {

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Share.Network
 {
-    public interface IReceiverNetwork
+    public interface IReceiverClient
     {
 
         public void OnReceivedData(String obj, EndPoint endPoint);
