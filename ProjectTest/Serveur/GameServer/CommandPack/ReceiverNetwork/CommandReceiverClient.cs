@@ -12,14 +12,30 @@ namespace Serveur.GameServer.CommandPack.ReceiverNetwork
 
         public CommandReceiverClient(GameEngine engine, CommandManager cm) : base(engine,cm)
         {
-
+            AllDone = new ManualResetEvent(false);
         }
 
         public T Data { get; set; }
 
         protected ManualResetEvent AllDone { get; set; }
 
-        public abstract void NotifyReceiveClient(T data, string id);
+        protected String idClient;
+
+        protected void WaitReceiveClient()
+        {
+            while (Data == null)
+            {
+                AllDone.Reset();
+                AllDone.WaitOne();
+            }
+        }
+
+        public virtual void NotifyReceiveClient(T data, string id)
+        {
+            Data = data;
+            idClient = id;
+            AllDone.Set();
+        }
 
     }
 

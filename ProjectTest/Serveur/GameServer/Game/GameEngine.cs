@@ -1,5 +1,6 @@
 ﻿using Serveur.GameServer.CommandPack;
 using Serveur.GameServer.GameModel;
+using Share.Network.Message;
 using Share.Network.Message.modele;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace Serveur.GameServer.Game
 
         public delegate void notifyPlayerJoined(String id, ListPlayerGame l);
         public delegate void notifyPlayerLeaved(String id, ListPlayerGame l);
+        public delegate void sendMessage(String id, ListPlayerGame l);
         public notifyPlayerJoined callbackJoin;
         public notifyPlayerLeaved callbackLeave;
 
@@ -79,7 +81,7 @@ namespace Serveur.GameServer.Game
 
         public void NotifyReceivePlayer<T>(T obj, string id)
         {
-            CM.NotifyLastCommandReceivePlayer(obj,id);
+            CM.NotifyLastCommandReceivePlayer(obj, id);
         }
 
         public void GameFinish()
@@ -101,6 +103,16 @@ namespace Serveur.GameServer.Game
                 });
             }
             return l;
+        }
+
+       public void SendClient(PacketMessage<string> msg, string idClient)
+       {
+            throw new NotImplementedException();
+       }
+
+        public void SendAllClient(PacketMessage<string> msg)
+        {
+            throw new NotImplementedException();
         }
 
         public void setReadyPlayer(Boolean state, String id)
