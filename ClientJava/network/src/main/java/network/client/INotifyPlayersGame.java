@@ -1,8 +1,9 @@
 package network.client;
 
+import network.message.obj.Enigme;
+
 public interface INotifyPlayersGame {
 
-    void receiveLetterFromServer(String str);
-
-
+    void startActionEnigmeRapide(Enigme var);
+    void receiveFromServeurBadProposalResponse(String var);
 }

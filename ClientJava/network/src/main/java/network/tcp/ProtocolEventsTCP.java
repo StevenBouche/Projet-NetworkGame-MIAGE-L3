@@ -1,5 +1,6 @@
 package network.tcp;
 
+import network.message.obj.Enigme;
 import network.message.obj.ListPlayerGame;
 import network.protocol.ProtocolEvents;
 
@@ -14,11 +15,19 @@ public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
     public static ProtocolEventsTCP<String> NOTIFYGAMEREADY = new ProtocolEventsTCP<String>("NOTIFYGAMEREADY");
 
     /*
-        GAME PROTOCOL
+     *  PROTOCOL GAME FOR SEND
      */
 
+    public static ProtocolEventsTCP<String> PROPOSALRESPONSE = new ProtocolEventsTCP<String>("PROPOSALRESPONSE");
+    public static ProtocolEventsTCP<Integer> SENDCASEVALUE = new ProtocolEventsTCP<Integer>("SENDCASEVALUE");
 
-
+    /*
+     *  PROTOCOL GAME FOR RECEIVE
+     */
+    public static ProtocolEventsTCP<Enigme> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMERAPIDE");
+    public static ProtocolEventsTCP<Enigme> ACTIONENIGMEPRINCIPALE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMEPRINCIPALE");
+    public static ProtocolEventsTCP<String> BADPROPOSALRESPONSE = new ProtocolEventsTCP<String>("BADPROPOSALRESPONSE");
+    public static ProtocolEventsTCP<String> GOODPROPOSALRESPONSE = new ProtocolEventsTCP<String>("GOODPROPOSALRESPONSE");
 
 
 

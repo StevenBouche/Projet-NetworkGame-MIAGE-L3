@@ -5,14 +5,14 @@ import coco.controller.ControllerGameUI;
 public abstract class StateGameUI {
 
     protected boolean buttonDisable;
-    protected boolean choicePlayerDisible;
+    protected boolean choicePlayerDisable;
 
     protected ControllerGameUI controller;
 
     public StateGameUI(ControllerGameUI controller, boolean buttonAvailable, boolean choicePlayerDisible){
         this.controller = controller;
         this.buttonDisable = buttonAvailable;
-        this.choicePlayerDisible = choicePlayerDisible;
+        this.choicePlayerDisable = choicePlayerDisible;
     }
 
     public abstract void execute();
@@ -24,6 +24,7 @@ public abstract class StateGameUI {
     }
 
     protected void stateChoiceP(){
-        controller.clientChoic.setDisable(this.choicePlayerDisible);
+        controller.clientChoic.setDisable(this.choicePlayerDisable);
     }
+
 }

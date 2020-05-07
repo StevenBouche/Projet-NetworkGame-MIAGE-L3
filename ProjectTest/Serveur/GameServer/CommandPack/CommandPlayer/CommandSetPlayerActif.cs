@@ -52,13 +52,26 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             
             Console.WriteLine("\n Reponse valide par : " + this.idClient + "\n");
             Context.CurrentPlayer = Context.listPlayers[this.idClient];
+
+            SendGoodResponse();
             //bien recu les données
 
         }
 
+        private void SendGoodResponse()
+        {
+            throw new NotImplementedException();
+        }
+
         private void SendClientBadResponse(String id)
         {
-            //todo
+            
+            PacketMessage<String> msg = new PacketMessage<String>()
+            {
+                evt = ProtocolEventsTCP<String>.BADPROPOSALRESPONSE.eventName,
+                data = id
+            };
+            Context.SendAllClient(msg);
             idClient = null;
         }
 

@@ -1,5 +1,6 @@
 package network.main;
 
+import coco.controller.PlayerData;
 import controllerJavafx.ControllerRoot;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,7 @@ import javafx.stage.Stage;
 import network.client.ClientTCP;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -59,8 +61,8 @@ public class Main extends Application {
                 }
 
                 @Override
-                public void startSceneGame(ClientTCP client, Thread clientThread) {
-                    managerRoot.startSceneGame(client,clientThread);
+                public void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> listData, String id) {
+                    managerRoot.startSceneGame(client,clientThread,listData,id);
                 }
             });
             fxmlLoader.setController(managerRoot);
