@@ -52,9 +52,15 @@ namespace Serveur.GameServer.Game
             //Sub on events to receive data
             network.OnEvent<String>(ProtocolEventsTCP<String>.IDENTITY, OnIdentityReceived);
             network.OnEvent<Boolean>(ProtocolEventsTCP<Boolean>.NOTIFYPLAYERREADY, OnReadyReceived);
+            network.OnEvent<String>(ProtocolEventsTCP<Boolean>.PROPOSALRESPONSE, OnProposalResponse);
             //Start thread network
             threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
+        }
+
+        private void OnProposalResponse(String obj, String id)
+        {
+            gameManager.NotifyReceivePlayer(obj, id);
         }
 
         public void Run()
@@ -71,10 +77,7 @@ namespace Serveur.GameServer.Game
             gameManager.Play();
 
 
-
             //todo prevenir que je termine le server ou Reset ou choix ?
-
-
 
         }
 

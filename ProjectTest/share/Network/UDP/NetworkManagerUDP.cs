@@ -23,20 +23,20 @@ namespace Share.Network.NetworkManager
 
         private delegate void OnReceivedDataDel(String obj, EndPoint endPoint);
         private OnReceivedDataDel _delegates;
-        private Dictionary<IReceiverNetwork, OnReceivedDataDel> _listDelegates;
+        private Dictionary<IReceiverClient, OnReceivedDataDel> _listDelegates;
 
         public Boolean running;
 
         public NetworkManagerUDP()
         {
-            _listDelegates = new Dictionary<IReceiverNetwork, OnReceivedDataDel>();
+            _listDelegates = new Dictionary<IReceiverClient, OnReceivedDataDel>();
             evtNetManager = new EventNetworkManagerUDP();
             AddListenerReceivedData(evtNetManager);
             Thread t = new Thread(new ThreadStart(evtNetManager.Run));
             t.Start();
         }
 
-        private void AddListenerReceivedData(IReceiverNetwork irn)
+        private void AddListenerReceivedData(IReceiverClient irn)
         {
             if (_listDelegates.ContainsKey(irn)) return;
             _listDelegates.Add(irn, new OnReceivedDataDel(irn.OnReceivedData));
@@ -44,7 +44,7 @@ namespace Share.Network.NetworkManager
             _delegates += res;
         }
 
-        private void RemoveListenerReceivedData(IReceiverNetwork irn)
+        private void RemoveListenerReceivedData(IReceiverClient irn)
         {
             _listDelegates.TryGetValue(irn, out OnReceivedDataDel res);
             if (res != null)

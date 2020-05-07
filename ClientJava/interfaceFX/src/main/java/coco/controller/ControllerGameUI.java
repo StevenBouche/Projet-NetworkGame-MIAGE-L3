@@ -81,7 +81,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         if(this.client != null) this.client.setNotifierGame(this);
     }
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("hello");

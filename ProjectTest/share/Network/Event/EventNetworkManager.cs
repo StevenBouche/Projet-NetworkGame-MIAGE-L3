@@ -12,7 +12,7 @@ using System.Threading;
 namespace Share.Network
 {
 
-    public abstract class EventNetworkManager : IReceiverNetwork
+    public abstract class EventNetworkManager : IReceiverClient
     {
         protected Boolean running;
         protected ManualResetEvent allDone = new ManualResetEvent(false);

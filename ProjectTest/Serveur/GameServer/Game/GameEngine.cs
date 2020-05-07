@@ -77,6 +77,11 @@ namespace Serveur.GameServer.Game
             callbackLeave(id, GetListOfPlayerLobbies());
         }
 
+        public void NotifyReceivePlayer<T>(T obj, string id)
+        {
+            CM.NotifyLastCommandReceivePlayer(obj,id);
+        }
+
         public void GameFinish()
         {
 

@@ -57,10 +57,11 @@ public class NetworkManagerUDP {
 
         if(!client.isClosed()) client.close();
 
-        listener.onShutdown();
+       // listener.onShutdown();
     }
 
     public void stopListening() {
+        running = false;
         client.close();
     }
 

@@ -1,4 +1,5 @@
-﻿using Serveur.GameServer.Game;
+﻿using Serveur.GameServer.CommandPack.ReceiverNetwork;
+using Serveur.GameServer.Game;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace Serveur.GameServer.CommandPack
             {
                 //todo
             }
+           
         }
 
         public void TriggerCommand(Command<GameEngine> cmd)
@@ -52,7 +54,7 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandPass(engine,this));
         }
 
-        internal void TriggerCurrentPlayer()
+        public void TriggerCurrentPlayer()
         {
             this.TriggerCommand(new CommandSetPlayerActif(engine, this));
         }
@@ -66,5 +68,23 @@ namespace Serveur.GameServer.CommandPack
         {
             this.TriggerCommand(new CommandGetPlayerActif(engine, this));
         }
+
+        public void NotifyLastCommandReceivePlayer<T>(T obj, string id)
+        {
+            stack.TryPop(out Command<GameEngine> cmd);
+            if(cmd != null)
+            {
+                CommandReceiverClient<T> cmdSafeCast = cmd as CommandReceiverClient<T>;
+                cmdSafeCast.NotifyReceiveClient(obj, id);
+                stack.Push(cmd);
+            }
+            else
+            {
+                Console.WriteLine("reponse but stack have not cmd actually");
+            }
+
+        }
+
     }
+
 }

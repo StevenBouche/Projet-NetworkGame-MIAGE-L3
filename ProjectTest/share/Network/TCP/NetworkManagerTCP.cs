@@ -64,7 +64,7 @@ namespace Share.Network.NetworkManager
             t.Start();
 
             // Establish the local endpoint for the socket. 
-            IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+            IPAddress ipAddress = IPAddress.Any;
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
 
             // Create a TCP/IP socket.  

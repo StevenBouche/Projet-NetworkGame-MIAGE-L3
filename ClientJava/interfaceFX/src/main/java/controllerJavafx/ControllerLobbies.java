@@ -213,7 +213,7 @@ public class ControllerLobbies implements Initializable {
             }
             @Override
             public void onShutdown() {
-                stateDisconnected();
+               // stateDisconnected();
             }
         });
 
