@@ -4,24 +4,33 @@ using System.Collections.Generic;
 namespace Serveur.GameServer.GameModel
 {
 
-    public class Roue {
-        
+    public class Roue
+    {
+
         public List<Case> Cases { get; }
         public Case CurrentCase { get; set; }
 
-        public Roue()
+
+
+        public Roue(bool Final)
         {
             Cases = new List<Case>();
-            fill_Start();
-
+            if (Final)
+            {
+                Fill_Final();
+            }
+            else
+            {
+                Fill_Start();
+            }
         }
-        
-        public Case getWheelCases(int pos)
+
+        public Case GetWheelCases(int pos)
         {
             return Cases[pos];
         }
 
-        public void fill_Start()
+        public void Fill_Start()
         {
             /* CONFIG ROUE : 
              * 4 Cases PASSE
@@ -53,22 +62,25 @@ namespace Serveur.GameServer.GameModel
             }
         }
 
+        public void Fill_Final()
+        {
+            for (int i = 0; i <= 11; i++)
+            {
+                Cases.Add(new Case(TypeCase.FINAL));
+            }
+        }
+
         public void UnveiledMysteryCase(Case C)
         {
             Random r = new Random();
-            if (C.type.Equals(TypeCase.MYSTERE)) {
+            if (C.type.Equals(TypeCase.MYSTERE))
+            {
                 if (r.Next(2) == 1)
                     C.valeur = (int)Cash.CASH_500;
             }
         }
 
-        public void NextWheelTurn()
-        {
-
-        }
-
-        override
-        public String ToString()
+        override public String ToString()
         {
             String res = "";
             foreach (Case c in Cases)

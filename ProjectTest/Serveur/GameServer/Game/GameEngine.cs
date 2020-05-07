@@ -39,7 +39,7 @@ namespace Serveur.GameServer.Game
 
         public GameEngine()
         {
-            wheel = new Roue();
+            wheel = new Roue(false);
             listPlayers = new Dictionary<string, Joueur>();
             listIdPlayers = new List<string>();
             CM = new CommandManager(this);

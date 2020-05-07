@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Serveur.GameServer.CommandPack
-{
+namespace Serveur.GameServer.CommandPack.CommandPlayer
+{ 
     class CommandGetPlayerActif : Command<GameEngine>
     {
         public CommandGetPlayerActif(GameEngine context, CommandManager CM) : base(context, CM) { }

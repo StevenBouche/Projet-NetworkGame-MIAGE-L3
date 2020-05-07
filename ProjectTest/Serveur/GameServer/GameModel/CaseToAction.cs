@@ -1,4 +1,5 @@
 ﻿using Serveur.GameServer.CommandPack;
+using Serveur.GameServer.CommandPack.CommandCase;
 using Serveur.GameServer.Game;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace Serveur.GameServer.GameModel
         public static CaseToAction CAVERNEACTION = new CaseToAction(typeof(CommandCaverne), TypeCase.CAVERNE);
         public static CaseToAction HOLDUPACTION = new CaseToAction(typeof(CommandHoldUp), TypeCase.HOLDUP);
         //public static CaseToAction VOYAGE = new CaseToAction(typeof(CommandBonus), TypeCase.VOYAGE);
+        public static CaseToAction FINALACTION = new CaseToAction(typeof(CommandCash), TypeCase.FINAL);
         Type actionType { get; }
         TypeCase caseType { get; }
 
@@ -29,13 +31,13 @@ namespace Serveur.GameServer.GameModel
 
         public static Command<T> getCommand<T>(TypeCase caseType, GameEngine context, CommandManager CM) where T : GameEngine
         {
-            
+
             foreach (FieldInfo t in typeof(CaseToAction).GetFields(BindingFlags.Static | BindingFlags.Public))
             {
-                CaseToAction current = (CaseToAction)t.GetValue(null);            
-                if(caseType.Equals(current.caseType))
+                CaseToAction current = (CaseToAction)t.GetValue(null);
+                if (caseType.Equals(current.caseType))
                 {
-                    return (Command<T>)Activator.CreateInstance(current.actionType, new Object[] {context, CM});
+                    return (Command<T>)Activator.CreateInstance(current.actionType, new Object[] { context, CM });
                 }
             }
             return null;

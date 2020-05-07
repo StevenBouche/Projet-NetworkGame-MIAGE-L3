@@ -2,7 +2,7 @@
 using Serveur.GameServer.GameModel;
 using System;
 
-namespace Serveur.GameServer.CommandPack
+namespace Serveur.GameServer.CommandPack.CommandPlayer
 {
     class CommandNextPlayer : Command<GameEngine>
     {

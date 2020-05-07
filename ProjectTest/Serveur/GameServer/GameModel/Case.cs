@@ -5,7 +5,6 @@ using System.Reflection;
 namespace Serveur.GameServer.GameModel
 {
     public class Case{
-        [TypeCase("DEFAULT")]
         public int valeur { get; set; }
         public TypeCase type { get; set; }
 

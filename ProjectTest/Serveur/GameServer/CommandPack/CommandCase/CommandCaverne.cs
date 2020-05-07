@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Serveur.GameServer.CommandPack
+namespace Serveur.GameServer.CommandPack.CommandCase
 {
     class CommandCaverne : Command<GameEngine>
     {
