@@ -21,10 +21,10 @@ namespace Share.Network.Protocol
          *  PROTOCOL GAME
          */
         public static ProtocolEventsTCP<String> PROPOSALRESPONSE = new ProtocolEventsTCP<String>("PROPOSALRESPONSE");
-        public static ProtocolEventsTCP<String> SENDLETTERCLIENT = new ProtocolEventsTCP<String>("SENDLETTERCLIENT");
+        public static ProtocolEventsTCP<Enigme> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMERAPIDE");
+        public static ProtocolEventsTCP<Enigme> ACTIONENIGMEPRINCIPALE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMEPRINCIPALE");
+        public static ProtocolEventsTCP<int> SENDCASEVALUE = new ProtocolEventsTCP<int>("ACTIONENIGMEPRINCIPALE");
 
-        public static ProtocolEventsTCP<String> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<String>("ACTIONENIGMERAPIDE");
-        public static ProtocolEventsTCP<String> NOTIFYCURRENTPLAYERROUND = new ProtocolEventsTCP<String>("NOTIFYCURRENTPLAYERROUND");
 
         private ProtocolEventsTCP(String name) : base(name)
         {

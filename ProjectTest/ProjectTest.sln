@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serveur", "Serveur\Serveur.csproj", "{D3349408-2F1D-4A72-ACB3-4C89C5256EB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientUdp", "ClientUdp\ClientUdp.csproj", "{9811FE7E-BFF5-4F58-9FF8-E4400127F99C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Share", "share\Share.csproj", "{18B6912A-E6A3-4A8B-A619-7B6A1D4C5191}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		{D3349408-2F1D-4A72-ACB3-4C89C5256EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3349408-2F1D-4A72-ACB3-4C89C5256EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3349408-2F1D-4A72-ACB3-4C89C5256EB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9811FE7E-BFF5-4F58-9FF8-E4400127F99C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9811FE7E-BFF5-4F58-9FF8-E4400127F99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9811FE7E-BFF5-4F58-9FF8-E4400127F99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9811FE7E-BFF5-4F58-9FF8-E4400127F99C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{18B6912A-E6A3-4A8B-A619-7B6A1D4C5191}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{18B6912A-E6A3-4A8B-A619-7B6A1D4C5191}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18B6912A-E6A3-4A8B-A619-7B6A1D4C5191}.Release|Any CPU.ActiveCfg = Release|Any CPU

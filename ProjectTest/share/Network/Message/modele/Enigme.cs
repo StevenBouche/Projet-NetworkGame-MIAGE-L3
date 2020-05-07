@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Serveur.GameServer.Enigma
+namespace Share.Network.Message.modele
 {
     public class Enigme
     {
