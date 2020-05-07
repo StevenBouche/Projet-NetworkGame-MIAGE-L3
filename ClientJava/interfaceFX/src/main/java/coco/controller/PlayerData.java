@@ -2,6 +2,7 @@ package coco.controller;
 
 public class PlayerData {
 
+    public String id;
     public String namePlayer;
     public int cashPlayer;
 

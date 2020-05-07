@@ -1,7 +1,6 @@
 package coco;
 
 import coco.controller.ControllerGameUI;
-import controllerJavafx.ControllerRoot;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,7 +30,7 @@ public class Main extends Application {
 
     private void loadPrimaryScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("gameUI.fxml"));
-        managerGameUI = new ControllerGameUI(null,null);
+        managerGameUI = new ControllerGameUI(null,null, null);
         fxmlLoader.setController(managerGameUI);
         root = fxmlLoader.load();
     }

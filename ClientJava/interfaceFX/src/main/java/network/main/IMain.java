@@ -1,7 +1,10 @@
 package network.main;
 
+import coco.controller.PlayerData;
 import javafx.scene.Parent;
 import network.client.ClientTCP;
+
+import java.util.List;
 
 public interface IMain {
 
@@ -9,5 +12,5 @@ public interface IMain {
     void switchScene(Parent p);
     double getWidth();
     double getHeight();
-    void startSceneGame(ClientTCP client, Thread clientThread);
+    void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> listData);
 }

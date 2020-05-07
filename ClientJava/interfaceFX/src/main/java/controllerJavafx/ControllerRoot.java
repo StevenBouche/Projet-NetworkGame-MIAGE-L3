@@ -1,6 +1,7 @@
 package controllerJavafx;
 
 import coco.controller.ControllerGameUI;
+import coco.controller.PlayerData;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -10,6 +11,7 @@ import network.message.obj.ServerGame;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ControllerRoot implements Initializable, INotifyEventUI {
@@ -89,10 +91,10 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
         if(managerLobbiesGame != null) managerLobbiesGame.stop();
     }
 
-    public void startSceneGame(ClientTCP client, Thread clientThread) {
+    public void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> data) {
         //TODO SCENE COCO
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("gameUI.fxml"));
-        managerGameUI = new ControllerGameUI(client,clientThread);
+        managerGameUI = new ControllerGameUI(client,clientThread,data);
         fxmlLoader.setController(managerGameUI);
         try {
             rootGameUI = fxmlLoader.load();

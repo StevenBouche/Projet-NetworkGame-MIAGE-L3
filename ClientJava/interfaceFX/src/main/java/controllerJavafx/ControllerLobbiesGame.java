@@ -1,5 +1,6 @@
 package controllerJavafx;
 
+import coco.controller.PlayerData;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,10 +22,7 @@ import com.jfoenix.controls.JFXButton;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby {
 
@@ -136,9 +134,21 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
     @Override
     public void notifyGameStart() {
         client.removeNotifierLobby();
+        List<PlayerData> listData = buildPlayerDataForGame();
         Platform.runLater(() -> {
-           main.startSceneGame(client,clientThread);
+           main.startSceneGame(client,clientThread,listData);
         });
+    }
+
+    private List<PlayerData> buildPlayerDataForGame(){
+        List<PlayerData> listData = new ArrayList<>();
+        for(PlayerGame p : this.listPlayer.listPlayers){
+            PlayerData p2 = new PlayerData();
+            p2.id = p.id;
+            p2.namePlayer = p.name;
+            p2.cashPlayer = 0;
+        }
+        return listData;
     }
 
     public void onCancelAction() {

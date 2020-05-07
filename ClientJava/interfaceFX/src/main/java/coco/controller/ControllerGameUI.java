@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
+import network.message.obj.Enigme;
 
 import java.io.IOException;
 import java.net.URL;
@@ -77,12 +78,14 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     Thread clientThread;
     StateGameUI stateUI;
 
-    public ControllerGameUI(ClientTCP client, Thread clientThread) {
+    Enigme currentEnigme;
+
+    public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data) {
         this.client = client;
         this.clientThread = clientThread;
+        this.listPlayerData = data;
         if(this.client != null) this.client.setNotifierGame(this);
     }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -94,8 +97,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             loadSwitch();
             loadScoreBoard();
             setAndExecuteState(new StateStartGame(this));
-            setAndExecuteState(new StateEnigme(this));
-            setAndExecuteState(new StateNotCurrentPlayerRound(this));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -299,22 +300,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         tableView.getColumns().add(nameColumn);
         tableView.getColumns().add(cashColumn);
 
-        listPlayerData = new ArrayList<>();
-        PlayerData p1 = new PlayerData();
-        p1.namePlayer = "coco";
-        p1.cashPlayer = 0;
-        listPlayerData.add(p1);
-        PlayerData p2 = new PlayerData();
-        p2.namePlayer = "steven";
-        p2.cashPlayer = 0;
-        listPlayerData.add(p2);
-        PlayerData p3 = new PlayerData();
-        p3.namePlayer = "pierre";
-        //p3.cashPlayer = 0;
-        listPlayerData.add(p3);
-        resetCashPlayer(2, 0);
-        updateNamePlayer(0, "Aramand");
-        addCashPlayer(1, 150);
         updateTable(listPlayerData);
     }
 
@@ -369,10 +354,12 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         displayManche.setText("Manche n°" + manche);
     }
 
-
     @Override
-    public void receiveLetterFromServer(String str) {
-
+    public void startActionEnigmeRapide(Enigme varE) {
+        currentEnigme = varE;
+        Platform.runLater(() -> {
+            setAndExecuteState(new StateEnigmeRapide(this));
+        });
     }
 
 }
