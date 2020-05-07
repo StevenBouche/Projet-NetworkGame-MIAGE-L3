@@ -4,6 +4,7 @@ using Serveur.GameServer.Game;
 using Share.Network.Message;
 using Share.Network.Protocol;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Serveur.GameServer.CommandPack.CommandPlayer
@@ -19,14 +20,15 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
             WaitReceiveClient();
 
-            if (Context.CurrentEnigma.label.Contains(Data))
+            if (Context.CurrentEnigma.label.Contains(Data) && isAVowel(char.Parse(Data))) //TODO Verifier que la consonne n'est pas déjà proposée
             {
                 this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data);
                 commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager, nbOfOccurrences));
+
             }
             else
             {
-                Console.WriteLine("La lettre n'est pas contenue dans l'enigme, c'est au joueur suivant \n");
+                Console.WriteLine("La lettre n'est pas contenue dans l'enigme ou est une voyelle, c'est au joueur suivant \n");
             }
 
         }
@@ -37,7 +39,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             PacketMessage<String> msg = new PacketMessage<String>()
             {
                 evt = ProtocolEventsTCP<String>.ASKFORALETTER.eventName,
-                data = "Please enter a letter"
+                data = "Entrez une consonne"
             };
 
             Context.SendClient(msg, id);
@@ -55,6 +57,17 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 }
             }
             return count;
+        }
+
+        private Boolean isAVowel(char letter)
+        {
+            var vowels = new HashSet<char> { 'A', 'E', 'I', 'O', 'U', 'Y' };
+
+            if (vowels.Contains(letter))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
