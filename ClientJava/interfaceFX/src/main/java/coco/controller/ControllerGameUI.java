@@ -17,7 +17,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
+import network.message.PacketMessage;
 import network.message.obj.Enigme;
+import network.tcp.ProtocolEventsTCP;
 
 import java.io.IOException;
 import java.net.URL;
@@ -44,43 +46,41 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public CheckBox switchVoyCons;
     @FXML
     public Pane weelPane;
-
     @FXML
     public TableView<PlayerData> tableView;
 
-    /** other declaration */
-    //for loadButtons
-    public Button buttonSetEnigm;
+    /** Element dynamic with code */
+    public Button buttonSetEnigm; //for loadButtons
     public Button buttonShowEnigm;
     public Button buttonReset;
     public Button validLetter;
-    public int posFound;
-    //for loadCBD()
-    public ChoiceBox cbdV;
-    public ChoiceBox cbdC;
-    //for loadScoreBoard()
-    public Label displayTheme;
+    public Boolean switchActive; //switchActive = true -> voyelle switchActive = false -> consonne
+    public ChoiceBox<String> cbdV; //for loadCBD()
+    public ChoiceBox<String> cbdC;
+    public Label displayTheme; //for loadScoreBoard()
     public Label displayManche;
-    int manche;
 
-    /**
-     * switchActive = true -> voyelle
-     * switchActive = false -> consonne
-     */
-    public Boolean switchActive;
-    //for loadSubScene()
+    /** My current state **/
+    StateGameUI stateUI;
+
+    /** Sub Scene Element **/
     public ControllerSceneRectancle manager;
     public Parent root;
 
-    public List<PlayerData> listPlayerData;
-
+    /** Client Network**/
     ClientTCP client;
     Thread clientThread;
-    StateGameUI stateUI;
 
+    /** Current Data Game **/
+    public List<PlayerData> listPlayerData;
     Enigme currentEnigme;
+    String myId;
+    String currentPlayerId;
+    int manche;
+    String idPlayerHaveBadProposal; /** quand recu event bad proposal set id player in this variable**/
 
-    public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data) {
+    public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId) {
+        this.myId = myId;
         this.client = client;
         this.clientThread = clientThread;
         this.listPlayerData = data;
@@ -96,7 +96,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             loadCBD();
             loadSwitch();
             loadScoreBoard();
-            setAndExecuteState(new StateStartGame(this));
+            setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -106,7 +106,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         stateUI = state;
         stateUI.execute();
     }
-
 
     /**
      * This function set up enigm board
@@ -230,36 +229,49 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         /** set Event to propose the enigm chosen */
         validLetter.setOnMouseReleased(new EventHandler<MouseEvent>(){
             public void handle(MouseEvent me){
-                    /** Compare state of switch button v/c */
-                    if(switchActive){
-                        char charCb = cbdV.getValue().toString().charAt(0);
-
-                        manager.displayLetter(charCb);
-                    }
-                    else{
-                        char charCb = cbdC.getValue().toString().charAt(0);
-
-                        manager.displayLetter(charCb);
-
-                    }
-                    /** When the sending has been done */
-                    cbdC.setValue(" ");
-                    cbdV.setValue(" ");
-                    System.out.println("client submit letter");
+                handlePropositionLetter();
+                me.consume();
             }
-
         });
 
         /** set Event to propose the enigm chosen */
         validChoice.setOnMouseReleased(new EventHandler<MouseEvent>(){
             public void handle(MouseEvent me){
-                /** If player propose enigme */
-                manager.compareProp(proposEnigm.getText());
-                System.out.println("client submit enigm");
+               handlePropositionEnigma();
+               me.consume();
             }
         });
         /** Set visibility of ChoiceBoxs */
         changeChoiceB(cbdV, cbdC);
+    }
+
+    private void handlePropositionEnigma() {
+
+        /** If player propose enigme */
+        manager.compareProp(proposEnigm.getText());
+        System.out.println("client submit enigm");
+
+        /** Send at server my proposal string **/
+        PacketMessage<String> msg = new PacketMessage<>();
+        msg.evt = ProtocolEventsTCP.PROPOSALRESPONSE.eventName;
+        msg.data = proposEnigm.getText().trim();
+        client.sendMsg(msg);
+    }
+
+    private void handlePropositionLetter() {
+        /** Compare state of switch button v/c */
+        if(switchActive){
+            char charCb = cbdV.getValue().toString().charAt(0);
+            manager.displayLetter(charCb);
+        }
+        else{
+            char charCb = cbdC.getValue().toString().charAt(0);
+            manager.displayLetter(charCb);
+        }
+        /** When the sending has been done */
+        cbdC.setValue(" ");
+        cbdV.setValue(" ");
+        System.out.println("client submit letter");
     }
 
     /**
@@ -358,9 +370,22 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public void startActionEnigmeRapide(Enigme varE) {
         currentEnigme = varE;
         Platform.runLater(() -> {
+            // todo change state of UI on rapid enigma
             setAndExecuteState(new StateEnigmeRapide(this));
+            //todo handle enigme => panneau enigme
         });
     }
+
+    @Override
+    public void receiveFromServeurBadProposalResponse(String var) {
+        idPlayerHaveBadProposal = var;
+        //todo
+        Platform.runLater(() -> {
+            // OBLIGATOIRE LORS DE MODIFICATION DE QUELQUE CHOSE DE GRAPHIQUE CAR CELA VIENT DU RESEAU
+        });
+    }
+
+    //TODO GOOD REPONSE
 
 }
 

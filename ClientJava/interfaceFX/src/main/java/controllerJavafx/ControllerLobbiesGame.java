@@ -136,7 +136,7 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
         client.removeNotifierLobby();
         List<PlayerData> listData = buildPlayerDataForGame();
         Platform.runLater(() -> {
-           main.startSceneGame(client,clientThread,listData);
+           main.startSceneGame(client,clientThread,listData,id);
         });
     }
 

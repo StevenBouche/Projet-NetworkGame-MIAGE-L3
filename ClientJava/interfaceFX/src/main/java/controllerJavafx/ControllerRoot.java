@@ -91,10 +91,10 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
         if(managerLobbiesGame != null) managerLobbiesGame.stop();
     }
 
-    public void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> data) {
+    public void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId) {
         //TODO SCENE COCO
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("gameUI.fxml"));
-        managerGameUI = new ControllerGameUI(client,clientThread,data);
+        managerGameUI = new ControllerGameUI(client,clientThread,data,myId);
         fxmlLoader.setController(managerGameUI);
         try {
             rootGameUI = fxmlLoader.load();

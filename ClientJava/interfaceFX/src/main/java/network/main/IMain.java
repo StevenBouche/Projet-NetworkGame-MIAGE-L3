@@ -12,5 +12,5 @@ public interface IMain {
     void switchScene(Parent p);
     double getWidth();
     double getHeight();
-    void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> listData);
+    void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> listData, String id);
 }

@@ -61,8 +61,8 @@ public class Main extends Application {
                 }
 
                 @Override
-                public void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> listData) {
-                    managerRoot.startSceneGame(client,clientThread,listData);
+                public void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> listData, String id) {
+                    managerRoot.startSceneGame(client,clientThread,listData,id);
                 }
             });
             fxmlLoader.setController(managerRoot);

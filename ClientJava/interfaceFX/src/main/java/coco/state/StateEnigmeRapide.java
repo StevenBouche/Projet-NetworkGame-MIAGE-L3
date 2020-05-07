@@ -21,5 +21,5 @@ public class StateEnigmeRapide extends StateGameUI {
         controller.clientChoic.setVisible(true);
         controller.clientChoic.setDisable(choicePlayerDisable);
     }
-    
+
 }

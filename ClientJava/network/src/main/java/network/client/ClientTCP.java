@@ -26,14 +26,24 @@ public class ClientTCP implements Runnable, INotifyState {
         initEventGameTCP();
     }
 
+    /**
+     * TO RECEIVE DATA FROM SERVER IN GAME
+     */
     private void initEventGameTCP() {
+
         managerTCP.eventManager.OnEvent(Enigme.class, ProtocolEventsTCP.ACTIONENIGMERAPIDE, new DataListenerTCP<Enigme>() {
             @Override
             public void onData(Enigme var) {
-                System.out.println("IDENTITY SET "+var);
-                if(notifier != null) notifierGame.startActionEnigmeRapide(var);
+                if(notifierGame != null) notifierGame.startActionEnigmeRapide(var);
             }
         });
+        managerTCP.eventManager.OnEvent(String.class, ProtocolEventsTCP.BADPROPOSALRESPONSE, new DataListenerTCP<String>() {
+            @Override
+            public void onData(String var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurBadProposalResponse(var);
+            }
+        });
+        // TODO GOODPROPOSALRESPONSE PROTOCOL
     }
 
     private void initEventLobbyTCP() {
