@@ -33,12 +33,15 @@ namespace Serveur.GameServer.Game
 
         public delegate void notifyPlayerJoined(String id, ListPlayerGame l);
         public delegate void notifyPlayerLeaved(String id, ListPlayerGame l);
-        public delegate void sendMessage(String id, ListPlayerGame l);
+
         public notifyPlayerJoined callbackJoin;
         public notifyPlayerLeaved callbackLeave;
 
-        public GameEngine()
+        ISenderAtClient sender;
+
+        public GameEngine(ISenderAtClient sender)
         {
+            this.sender = sender;
             wheel = new Roue(false);
             listPlayers = new Dictionary<string, Joueur>();
             listIdPlayers = new List<string>();
@@ -105,14 +108,14 @@ namespace Serveur.GameServer.Game
             return l;
         }
 
-       public void SendClient(PacketMessage<string> msg, string idClient)
+       public void SendClient<T>(PacketMessage<T> msg, String idClient)
        {
-            throw new NotImplementedException();
+            sender.SendClient(msg, idClient);
        }
 
-        public void SendAllClient(PacketMessage<string> msg)
+        public void SendAllClient<T>(PacketMessage<T> msg)
         {
-            throw new NotImplementedException();
+            sender.SendAllClientInGame(msg);
         }
 
         public void setReadyPlayer(Boolean state, String id)

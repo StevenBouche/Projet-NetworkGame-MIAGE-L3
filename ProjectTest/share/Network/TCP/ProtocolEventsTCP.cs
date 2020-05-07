@@ -24,6 +24,8 @@ namespace Share.Network.Protocol
         public static ProtocolEventsTCP<String> SENDLETTERCLIENT = new ProtocolEventsTCP<String>("SENDLETTERCLIENT");
 
 
+        public static ProtocolEventsTCP<String> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<String>("ACTIONENIGMERAPIDE");
+        public static ProtocolEventsTCP<String> NOTIFYCURRENTPLAYERROUND = new ProtocolEventsTCP<String>("NOTIFYCURRENTPLAYERROUND");
 
         private ProtocolEventsTCP(String name) : base(name)
         {

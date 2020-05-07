@@ -27,6 +27,14 @@ namespace Share.Network.Server
             managerTCP.Send(data, id);
         }
 
+        public void SendAll<T>(PacketMessage<T> data, List<String> ids)
+        {
+            foreach(String id in ids)
+            {
+                managerTCP.Send(data, id);
+            } 
+        }
+
         public void Run()
         {
             managerTCP.StartListening();
