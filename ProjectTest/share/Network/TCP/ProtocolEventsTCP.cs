@@ -24,6 +24,7 @@ namespace Share.Network.Protocol
         public static ProtocolEventsTCP<Enigme> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMERAPIDE");
         public static ProtocolEventsTCP<Enigme> ACTIONENIGMEPRINCIPALE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMEPRINCIPALE");
         public static ProtocolEventsTCP<int> SENDCASEVALUE = new ProtocolEventsTCP<int>("ACTIONENIGMEPRINCIPALE");
+        public static ProtocolEventsTCP<String> ASKFORALETTER = new ProtocolEventsTCP<String>("ASKFORALETTER");
 
 
         private ProtocolEventsTCP(String name) : base(name)

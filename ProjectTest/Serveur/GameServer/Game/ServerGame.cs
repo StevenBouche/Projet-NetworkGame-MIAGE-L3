@@ -58,10 +58,16 @@ namespace Serveur.GameServer.Game
             
             //event game choice client
             network.OnEvent<String>(ProtocolEventsTCP<String>.PROPOSALRESPONSE, OnProposalResponse);
+            network.OnEvent<String>(ProtocolEventsTCP<String>.ASKFORALETTER, OnLetterProposed);
 
             //Start thread network
             threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
+        }
+
+        private void OnLetterProposed(String letter, String id)
+        {
+            gameManager.NotifyReceivePlayer(letter, id);
         }
 
         private void OnProposalResponse(String obj, String id)
