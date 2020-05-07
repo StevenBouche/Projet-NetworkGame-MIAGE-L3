@@ -15,22 +15,21 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         public override void onExecute()
         {
-            SendALetterAsked();
+            SendALetterAsked(); // notify client he need choice a letter 
 
-
-            WaitReceiveClient();
-
-            if (Context.CurrentEnigma.label.Contains(Data) && isAVowel(char.Parse(Data))) //TODO Verifier que la consonne n'est pas déjà proposée
+            WaitReceiveClient(); // waiting choice player
+             
+            // if enigma containe letter and is not a vowel and is not already buy
+            if (Context.CurrentEnigma.label.Contains(Data) && !isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data)) //TODO Verifier que la consonne n'est pas déjà proposée
             {
-                this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data);
+                Context.letterBuyInARound.Add(Data); // Add letter to already buy
+                this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data); 
                 commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager, nbOfOccurrences));
-
             }
             else
             {
                 Console.WriteLine("La lettre n'est pas contenue dans l'enigme ou est une voyelle, c'est au joueur suivant \n");
             }
-
         }
 
         private void SendALetterAsked()

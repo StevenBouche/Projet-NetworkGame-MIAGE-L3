@@ -14,6 +14,8 @@ namespace Serveur.GameServer.Enigma
         {
             if (firstGet)
             {
+
+                list = new Dictionary<Category, List<Enigme>>();
                 //Create musical enigmas
                 List<Enigme> listEnigmeMusique = new List<Enigme>();
                 Enigme e1 = new Enigme("HAPPY BIRTHDAY", Category.MUSIQUE);
@@ -168,7 +170,7 @@ namespace Serveur.GameServer.Enigma
                 Enigme e49 = new Enigme("CONCOURS DE TEE-SHIRTS MOUILLES", Category.EN_VACANCES);
                 Enigme e50 = new Enigme("PRENDRE UN APERITIF", Category.EN_VACANCES);
                 listEnigmeHolidays.Add(e49); listEnigmeHolidays.Add(e50);
-                list.Add(Category.PERSONNAGE, listEnigmeHolidays);
+                list.Add(Category.EN_VACANCES, listEnigmeHolidays);
 
                 firstGet = false;
             }

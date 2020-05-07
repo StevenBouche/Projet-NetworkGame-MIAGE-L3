@@ -30,7 +30,7 @@ public class Main extends Application {
 
     private void loadPrimaryScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("gameUI.fxml"));
-        managerGameUI = new ControllerGameUI(null,null, null);
+        managerGameUI = new ControllerGameUI(null,null, null,null);
         fxmlLoader.setController(managerGameUI);
         root = fxmlLoader.load();
     }

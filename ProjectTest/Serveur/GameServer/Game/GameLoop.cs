@@ -21,10 +21,7 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteGame()
         {
-            if (isFinal)
-            {
-                return;
-            }
+            if (isFinal) return;
 
             if (roundsNb < 4)
             {
@@ -40,7 +37,6 @@ namespace Serveur.GameServer.Game
             }
 
             ExecuteGame();
-            // Console.WriteLine(m.ToString());
         }
 
 
@@ -58,9 +54,9 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteTurn()
         {
-            commandManager.TriggerWheelTurn(); //sets the current case fallen and trigger action of the corresponding case
+            commandManager.TriggerHandleTurn(); //trigger handler for turn of one player
             commandManager.TriggerNextPlayer(); //sets the next player 
-            isEnignaDiscovered = true;
+            isEnignaDiscovered = true; //todo remove
         }
 
         public void ExecuteFinalRound()
@@ -73,5 +69,11 @@ namespace Serveur.GameServer.Game
             commandManager.TriggerCurrentPlayer();
         }
 
+        public void NotifyPlayerHaveWinRound(string idClient)
+        {
+            // TRIGGER COMMAND WIN ROUND FOR AN ACTION
+            isEnignaDiscovered = true;
+            throw new NotImplementedException();
+        }
     }
 }
