@@ -7,22 +7,27 @@
 
 <AnchorPane fx:id="board" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <SubScene fx:id="subScene" height="150.0" layoutX="14.0" layoutY="14.0" width="420.0">
+      <SubScene fx:id="subScene" height="150.0" layoutX="14.0" layoutY="14.0" width="380.0">
         <root>
           <Region />
         </root>
       </SubScene>
-      <Pane fx:id="zoneButtons" layoutX="14.0" layoutY="279.0" prefHeight="107.0" prefWidth="420.0" />
-      <Pane fx:id="clientChoic" layoutX="8.0" layoutY="182.0" prefHeight="97.0" prefWidth="432.0" visible="false">
+      <Pane fx:id="zoneButtons" layoutX="14.0" layoutY="323.0" prefHeight="63.0" prefWidth="385.0" />
+      <Pane fx:id="clientChoic" layoutX="8.0" layoutY="214.0" prefHeight="105.0" prefWidth="385.0" visible="false">
          <children>
             <TextField fx:id="proposEnigm" layoutX="14.0" layoutY="26.0" />
             <Button fx:id="validChoice" layoutX="14.0" layoutY="58.0" mnemonicParsing="false" text="Valider" />
-            <CheckBox fx:id="switchVoyCons" layoutX="99.0" layoutY="62.0" mnemonicParsing="false" text="Consonnes/Voyelles">
+            <CheckBox fx:id="switchVoyCons" layoutX="99.0" layoutY="62.0" mnemonicParsing="false" text="C/V">
                <font>
                   <Font size="10.0" />
                </font></CheckBox>
          </children>
       </Pane>
-      <Pane fx:id="scoreBoard" layoutX="437.0" layoutY="24.0" prefHeight="300.0" prefWidth="150.0" />
+      <Pane fx:id="scoreBoard" layoutX="14.0" layoutY="151.0" prefHeight="26.0" prefWidth="554.0" />
+      <Pane fx:id="weelPane" layoutX="400.0" layoutY="200.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: gray;" />
+      <TableView fx:id="tableView" layoutX="400.0" layoutY="14.0" prefHeight="125.0" prefWidth="200.0">
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy></TableView>
    </children>
 </AnchorPane>

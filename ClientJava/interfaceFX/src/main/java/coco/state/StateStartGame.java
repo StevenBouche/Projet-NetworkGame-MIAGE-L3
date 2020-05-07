@@ -9,46 +9,20 @@ import java.io.IOException;
 public class StateStartGame extends StateGameUI {
 
     public StateStartGame(ControllerGameUI controller) {
-        super(controller);
+         super(controller,true, true);
     }
 
     @Override
     public void execute() {
-
+        stateButton();
     }
 
     @Override
-    public void loadSubScene() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("panneau.fxml"));
-        controller.manager = new ControllerSceneRectancle();
-        fxmlLoader.setController(controller.manager);
-        try {
-            controller.root = fxmlLoader.load();
-            controller.subScene.setRoot(controller.root);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    protected void stateButton() {
+        controller.buttonSetEnigm.setDisable(!buttonDisable);
+        controller.buttonShowEnigm.setDisable(buttonDisable);
+        controller.buttonReset.setDisable(buttonDisable);
+        controller.clientChoic.setVisible(true);
+        controller.clientChoic.setDisable(choicePlayerDisible);
     }
-
-    @Override
-    public void loadButtons() {
-
-    }
-
-    @Override
-    public void loadCBD() {
-
-    }
-
-    @Override
-    public void loadSwitch() {
-
-    }
-
-    @Override
-    public void loadScoreBoard() {
-
-    }
-
-
 }

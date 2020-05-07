@@ -9,9 +9,11 @@ module org.miage.interfaceFX {
     exports controllerJavafx;
     exports network.main;
     exports coco.controller;
+    exports coco.state;
     exports coco;
     opens network.main to javafx.graphics;
     opens controllerJavafx to javafx.graphics;
     opens coco.controller to javafx.graphics;
+    opens coco.state to javafx.graphics;
     opens coco to javafx.graphics;
 }

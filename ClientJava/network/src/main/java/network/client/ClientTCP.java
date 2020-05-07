@@ -40,6 +40,7 @@ public class ClientTCP implements Runnable, INotifyState {
         managerTCP.eventManager.OnEvent(ListPlayerGame.class, ProtocolEventsTCP.NOTIFYLOBBYPLAYER, new DataListenerTCP<ListPlayerGame>() {
             @Override
             public void onData(ListPlayerGame var) {
+                System.out.println("EVENT PLAYER HAVE JOIN OR LEAVE OR READY");
                 if(notifier != null) notifier.notifyReceiveListPlayer(var);
             }
         });

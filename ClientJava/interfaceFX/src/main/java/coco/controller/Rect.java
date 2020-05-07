@@ -9,19 +9,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 
 public class Rect{
-    int id;
-    int x;
-    int y;
-    Color c;
-    Character l;
-    Rectangle r1;
-    Rectangle r2;
-    StateOfRect state;
-    Pane p;
+    public int id;
+    public int x;
+    public int y;
+    public Color c;
+    //Character l;
+    public Rectangle r1;
+    public Rectangle r2;
+    public StateOfRect state;
+    public Pane p;
+    public Label l;
+    public Map<Integer, Label> listCharEnigm;
 
     private char ch;
 
@@ -34,9 +37,19 @@ public class Rect{
         p = pane;
         state = StateOfRect.NULL;
         ch = '~';
+        this.l = new Label();
+        this.l.setPrefWidth(19);
+        this.l.setPrefHeight(35);
+        this.l.setLayoutY((y + 1));
+        this.l.setLayoutX((x + 1));
+        this.l.setAlignment(Pos.CENTER);
     }
 
+    public void setLabel(Map<Integer, Label> listCharEnigm){
+        listCharEnigm.put(this.id, this.l);
+        p.getChildren().add(this.l);
 
+    }
 
     public void addLettreToRect(Character lettre){
 
@@ -58,31 +71,35 @@ public class Rect{
         p.getChildren().add(r2);
     }
 
+
+
     /**
      * Appel la méthode qui affiche les lettres
      */
-    public void drawLetter(){
+    public void drawLetter(Map<Integer, Label> listCharEnigm){
         if(state == StateOfRect.LETTRE_BLOCKED){
             Timer t = new Timer();
             Timeline timeline = new Timeline(new KeyFrame(
                     Duration.millis(1500),
-                    ae -> displayLetter()));
+                    ae -> displayLetter(listCharEnigm)));
             timeline.play();
         }
         else if(state == StateOfRect.LETTRE_SHOW){
-            displayLetter();
+            displayLetter(listCharEnigm);
         }
     }
 
     /**
      * According to the state of the box the letter I display differently
      */
-    public void displayLetter(){
+    public void displayLetter(Map<Integer, Label> listCharEnigm){
         if(ch != '~') {
             if (state == StateOfRect.LETTRE_BLOCKED) {
                 setColor(Color.WHITE);
                 state = StateOfRect.LETTRE_SHOW;
             }
+            listCharEnigm.get(this.id).setText("" + ch);
+            /*
             Label l = new Label();
             l.setPrefWidth(19);
             l.setPrefHeight(35);
@@ -91,6 +108,9 @@ public class Rect{
             l.setAlignment(Pos.CENTER);
             l.setText("" + ch);
             p.getChildren().add(l);
+            listCharEnigm.put(this.id, l);
+
+             */
         }
     }
 
@@ -107,20 +127,22 @@ public class Rect{
 
 /**------------------------- Getter and Setter : -------------*/
 
-    public void setLetter(char c){
+    public void setLetter(char c, Map<Integer, Label> listCharEnigm){
         ch = c;
-        state = StateOfRect.LETTRE_HIDDEN;
-        if(ch == ' ') state = StateOfRect.SPACE;
-        if(ch == '!' || ch == '?' || ch == '\'' || ch == '-') {
-            Label l = new Label();
-            l.setPrefWidth(19);
-            l.setPrefHeight(35);
-            l.setLayoutY((y + 1));
-            l.setLayoutX((x + 1));
-            l.setAlignment(Pos.CENTER);
-            l.setText("" + ch);
-            p.getChildren().add(l);
+
+        if(ch != '~') {
+            state = StateOfRect.LETTRE_HIDDEN;
+            if (ch == ' ') state = StateOfRect.SPACE;
+            if (ch == '!' || ch == '?' || ch == '\'' || ch == '-') {
+                this.l.setText("" + ch);
+            }
         }
+        else{
+            this.l.setText("");
+            state = StateOfRect.NULL;
+        }
+
+        listCharEnigm.put(this.id, this.l);
     }
 
     public char getLetter(){

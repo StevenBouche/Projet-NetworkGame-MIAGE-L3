@@ -11,7 +11,7 @@
     <artifactId>interfaceFX</artifactId>
     <version>1.0</version>
 
-    <dependencies>
+    <dependencies> 
         <dependency>
             <groupId>com.jfoenix</groupId>
             <artifactId>jfoenix</artifactId>

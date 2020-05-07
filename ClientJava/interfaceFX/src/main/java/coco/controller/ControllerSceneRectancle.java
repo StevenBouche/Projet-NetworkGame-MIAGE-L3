@@ -27,6 +27,7 @@ public class ControllerSceneRectancle implements Initializable {
     Map<Integer, Rect> mapRect;
     Map<Integer, Label> mapEnigm;
     Map<Integer, Boolean> mapVisibilityEnigm;
+    Map<Integer, Label> listCharEnigm;
     String e;
     String[] wordsEnigm;
     List<String> listeLigne = new ArrayList<>();
@@ -39,15 +40,17 @@ public class ControllerSceneRectancle implements Initializable {
 
 
     public ControllerSceneRectancle(){
-        mapRect = new HashMap<>();
+        this.mapRect = new HashMap<>();
         mapEnigm = new HashMap<>();
         mapVisibilityEnigm = new HashMap<>();
+        listCharEnigm = new HashMap<>();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        resetPanneau(0, 51);
-        e = "";
+        setPanneau(0, 51);
+        this.e = "";
+
 
     }
 
@@ -59,19 +62,19 @@ public class ControllerSceneRectancle implements Initializable {
         List<Integer> posRecurrenceLetter = new ArrayList<>();
         nbrOccurence = 0;
 
-        mapRect.forEach((idR, r) ->{
+        this.mapRect.forEach((idR, r) ->{
             if(r.getLetter() == l) {
                 nbrOccurence++;
-                mapRect.get(idR).setColor(Color.BLUE);
-                mapRect.get(idR).setStat(StateOfRect.LETTRE_BLOCKED);
-                mapRect.get(idR).drawLetter();
+                this.mapRect.get(idR).setColor(Color.BLUE);
+                this.mapRect.get(idR).setStat(StateOfRect.LETTRE_BLOCKED);
+                this.mapRect.get(idR).drawLetter(listCharEnigm);
             }
         });
         if(nbrOccurence == 0){
-            mapRect.forEach((idR, r) ->{
+            this.mapRect.forEach((idR, r) ->{
                 if(r.getStat() == StateOfRect.NULL || r.getStat() == StateOfRect.SPACE) {
-                    mapRect.get(idR).setColor(Color.RED);
-                    mapRect.get(idR).resetColor();
+                    this.mapRect.get(idR).setColor(Color.RED);
+                    this.mapRect.get(idR).resetColor();
                 }
             });
 
@@ -86,7 +89,7 @@ public class ControllerSceneRectancle implements Initializable {
      * @param clientProp s the proposition of player
      */
     public void compareProp(String clientProp) {
-            mapRect.forEach((id, r) ->{
+            this.mapRect.forEach((id, r) ->{
                 if(r.getStat() == StateOfRect.NULL || r.getStat() == StateOfRect.SPACE) {
                     if (e.equals(clientProp)) {
                         r.setColor(Color.GREEN);
@@ -105,9 +108,9 @@ public class ControllerSceneRectancle implements Initializable {
      *
      */
     public void displayEnigm(){
-        mapRect.forEach((id, r) ->{
+        this.mapRect.forEach((id, r) ->{
             r.setStat(StateOfRect.LETTRE_SHOW);
-            r.drawLetter();
+            r.drawLetter(listCharEnigm);
         });
     }
 
@@ -116,7 +119,7 @@ public class ControllerSceneRectancle implements Initializable {
      * @param enigm
      */
     public void setEnigm(String enigm){
-        e = enigm;
+        this.e = enigm;
         String actualLigneW = "";
         int sizeLine = 0;
         nbrLigne = 1;
@@ -136,7 +139,7 @@ public class ControllerSceneRectancle implements Initializable {
             }
         }
         listeLigne.add(nbrLigne-1, actualLigneW);
-        int cpt = 1;
+        int cpt = 0;
         /** Browse the created lines */
         for(String Ligne : listeLigne){
             setLigne(Ligne, cpt, nbrLigne);
@@ -156,12 +159,12 @@ public class ControllerSceneRectancle implements Initializable {
         if(nbrLigne == 2) {
             if(numLigne == 0) {
                 for (int i = 0; i < ligne.length(); i++) {
-                    mapRect.get(12 + i).setLetter(ligne.charAt(i));
+                    this.mapRect.get(12 + i).setLetter(ligne.charAt(i), listCharEnigm);
                 }
             }
             else {
                 for (int i = 0; i < ligne.length(); i++) {
-                    mapRect.get(26 + i).setLetter(ligne.charAt(i));
+                    this.mapRect.get(26 + i).setLetter(ligne.charAt(i), listCharEnigm);
                 }
             }
         }
@@ -169,25 +172,34 @@ public class ControllerSceneRectancle implements Initializable {
         else{
             if(numLigne == 0) {
                 for (int i = 0; i < ligne.length(); i++) {
-                    mapRect.get(i).setLetter(ligne.charAt(i));
+                    this.mapRect.get(i).setLetter(ligne.charAt(i), listCharEnigm);
                 }
             }
             else if(numLigne == 1) {
                 for (int i = 0; i < ligne.length(); i++) {
-                    mapRect.get(12 + i).setLetter(ligne.charAt(i));
+                    this.mapRect.get(12 + i).setLetter(ligne.charAt(i), listCharEnigm);
                 }
             }
             else if(numLigne == 2) {
                 for (int i = 0; i < ligne.length(); i++) {
-                    mapRect.get(26 + i).setLetter(ligne.charAt(i));
+                    this.mapRect.get(26 + i).setLetter(ligne.charAt(i), listCharEnigm);
                 }
             }
             else {
                 for (int i = 0; i < ligne.length(); i++) {
-                    mapRect.get(40 + i).setLetter(ligne.charAt(i));
+                    this.mapRect.get(40 + i).setLetter(ligne.charAt(i), listCharEnigm);
                 }
             }
         }
+    }
+
+    public void resetPanneau(){
+        this.mapRect.forEach((idR, r)->{
+            r.setColor(Color.AQUAMARINE);
+            listCharEnigm.clear();
+            r.setLetter('~', listCharEnigm);
+            //listCharEnigm.get(idR).
+        });
     }
 
     /**This function set up the enigm board case
@@ -195,7 +207,7 @@ public class ControllerSceneRectancle implements Initializable {
      * @param idStart id of first case
      * @param idFinish id of last case
      */
-    private void resetPanneau(int idStart, int idFinish) {
+    private void setPanneau(int idStart, int idFinish) {
         int CoordRectX = 21;
         int CoordRectY = 0;
         for(int cpt = idStart; cpt < (idFinish + 1); cpt++){
@@ -214,9 +226,9 @@ public class ControllerSceneRectancle implements Initializable {
             }
 
             Rect rTest = new Rect(cpt, pane,  CoordRectX, CoordRectY);
-            mapRect.put(cpt, rTest);
+            this.mapRect.put(cpt, rTest);
             rTest.drawRect();
-
+            this.mapRect.get(cpt).setLabel(listCharEnigm);
             CoordRectX += 21;
         };
     }
@@ -226,9 +238,9 @@ public class ControllerSceneRectancle implements Initializable {
      *
      */
     public void setRectWithLetter(){
-        mapRect.forEach((id, rect) ->{
-            if(mapRect.get(id).getLetter() != ' ' && mapRect.get(id).getLetter() != '~'){
-                mapRect.get(id).setColor(Color.WHITE);
+        this.mapRect.forEach((id, rect) ->{
+            if(this.mapRect.get(id).getLetter() != ' ' && this.mapRect.get(id).getLetter() != '~'){
+                this.mapRect.get(id).setColor(Color.WHITE);
             }
         });
     }
@@ -238,7 +250,7 @@ public class ControllerSceneRectancle implements Initializable {
      * @return the String of enigm
      */
     public String getEnigme(){
-        return e;
+        return this.e;
     }
 
 

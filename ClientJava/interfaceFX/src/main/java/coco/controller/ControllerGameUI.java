@@ -1,24 +1,20 @@
 package coco.controller;
 
-import coco.state.StateGameUI;
-import coco.state.StateStartGame;
+import coco.state.*;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TouchEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
 
@@ -45,19 +41,24 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public Button validChoice;
     @FXML
     public CheckBox switchVoyCons;
+    @FXML
+    public Pane weelPane;
+
+    @FXML
+    public TableView<PlayerData> tableView;
 
     /** other declaration */
     //for loadButtons
-    public Button button1;
-    public Button button2;
-    public Button button3;
+    public Button buttonSetEnigm;
+    public Button buttonShowEnigm;
+    public Button buttonReset;
+    public Button validLetter;
     public int posFound;
     //for loadCBD()
     public ChoiceBox cbdV;
     public ChoiceBox cbdC;
     //for loadScoreBoard()
-    public List<Label> listPlayersScore;
-    public Label textSxoreB;
+    public Label displayTheme;
     public Label displayManche;
     int manche;
 
@@ -70,12 +71,13 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public ControllerSceneRectancle manager;
     public Parent root;
 
+    public List<PlayerData> listPlayerData;
+
     ClientTCP client;
     Thread clientThread;
     StateGameUI stateUI;
 
     public ControllerGameUI(ClientTCP client, Thread clientThread) {
-        stateUI = new StateStartGame(this);
         this.client = client;
         this.clientThread = clientThread;
         if(this.client != null) this.client.setNotifierGame(this);
@@ -84,18 +86,26 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("hello");
         switchActive = false;
         try {
-            stateUI.loadSubScene();
+            loadSubScene();
             loadButtons();
             loadCBD();
             loadSwitch();
             loadScoreBoard();
+            setAndExecuteState(new StateStartGame(this));
+            setAndExecuteState(new StateEnigme(this));
+            setAndExecuteState(new StateNotCurrentPlayerRound(this));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void setAndExecuteState(StateGameUI state){
+        stateUI = state;
+        stateUI.execute();
+    }
+
 
     /**
      * This function set up enigm board
@@ -120,50 +130,43 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
      */
     private void loadButtons() throws IOException {
         //1ST BUTTON
-        button1 = new Button();
-        button1.setText("Set Enigm");
-        zoneButtons.getChildren().add(button1);
-        button1.setOnMouseReleased(new EventHandler<MouseEvent>(){
+        buttonSetEnigm = new Button();
+        buttonSetEnigm.setText("Set Enigm");
+        buttonSetEnigm.setTranslateY(30);
+        zoneButtons.getChildren().add(buttonSetEnigm);
+        buttonSetEnigm.setOnMouseReleased(new EventHandler<MouseEvent>(){
             public void handle(MouseEvent me){
 
-                manager.setEnigm("PETIT OISEAU SUR L'EAU");
-                manager.setRectWithLetter();
+                //manager.setEnigm("PETIT OISEAU SUR L'EAU");
+                //manager.setRectWithLetter();
+
                 System.out.println("b1 pressed");
-                clientChoic.setVisible(true);
+                //clientChoic.setVisible(true);
             }
         });
 
         //2ND BUTTON
-        button2 = new Button();
-        button2.setText("Show enigm");
-        button2.setTranslateY(30);
-        zoneButtons.getChildren().add(button2);
-        button2.setOnMouseReleased(new EventHandler<MouseEvent>(){
+        buttonShowEnigm = new Button();
+        buttonShowEnigm.setText("Show enigm");
+        buttonShowEnigm.setTranslateX(95);
+        buttonShowEnigm.setTranslateY(30);
+        zoneButtons.getChildren().add(buttonShowEnigm);
+        buttonShowEnigm.setOnMouseReleased(new EventHandler<MouseEvent>(){
             public void handle(MouseEvent me){
-
                 manager.displayEnigm();
                 System.out.println("b2 pressed");
             }
         });
 
         //3RD BUTTON
-        button3 = new Button();
-        button3.setText("Show letter");
-        button3.setTranslateX(100);
-        zoneButtons.getChildren().add(button3);
-        List<Character> listeLettersFound = new ArrayList<>();
-        listeLettersFound.add('E');
-        listeLettersFound.add('A');
-        listeLettersFound.add('I');
-        listeLettersFound.add('S');
-        posFound = 0;
-        button3.setOnMouseReleased(new EventHandler<MouseEvent>(){
+        buttonReset = new Button();
+        buttonReset.setText("Reset");
+        buttonReset.setTranslateX(200);
+        buttonReset.setTranslateY(30);
+        zoneButtons.getChildren().add(buttonReset);
+        buttonReset.setOnMouseReleased(new EventHandler<MouseEvent>(){
             public void handle(MouseEvent me){
-
-                manager.displayLetter(listeLettersFound.get(posFound));
-                if(posFound < 3) {
-                    posFound++;
-                }
+                manager.resetPanneau();
                 System.out.println("b3 pressed");
             }
         });
@@ -174,6 +177,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
      * and set default letter chosen
      */
     public void loadSwitch(){
+        switchVoyCons.setTranslateX(200);
+        switchVoyCons.setTranslateY(-60);
         switchVoyCons.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -194,8 +199,15 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         cbdC = new ChoiceBox();
         cbdV = new ChoiceBox();
 
-        cbdC.setTranslateX(250);
-        cbdV.setTranslateX(250);
+        cbdC.setTranslateX(220);
+        cbdV.setTranslateX(220);
+        cbdC.setPrefWidth(75);
+        cbdV.setPrefHeight(50);
+        cbdC.setPrefHeight(50);
+        cbdV.setPrefWidth(75);
+        proposEnigm.setTranslateY(-25);
+        proposEnigm.setPrefWidth(200);
+        proposEnigm.setPrefHeight(50);
 
         cbdV.getItems().addAll(" ", "A", "E", "I", "O", "U", "Y");
 
@@ -204,15 +216,19 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         clientChoic.getChildren().add(cbdC);
         clientChoic.getChildren().add(cbdV);
 
-        /** set Event to propose the letter chosen */
-        validChoice.setOnMouseReleased(new EventHandler<MouseEvent>(){
-            public void handle(MouseEvent me){
-                /** If player propose enigme */
-                if(proposEnigm.getText().length() > 0){
-                    manager.compareProp(proposEnigm.getText());
+        validLetter = new Button();
+        validLetter.setText("LETTRE");
+        validLetter.setTranslateX(220);
+        validLetter.setTranslateY(58);
+        validLetter.setPrefWidth(75);
+        clientChoic.getChildren().add(validLetter);
 
-                }
-                else{
+        validChoice.setText("ENIGME");
+        validChoice.setPrefWidth(200);
+
+        /** set Event to propose the enigm chosen */
+        validLetter.setOnMouseReleased(new EventHandler<MouseEvent>(){
+            public void handle(MouseEvent me){
                     /** Compare state of switch button v/c */
                     if(switchActive){
                         char charCb = cbdV.getValue().toString().charAt(0);
@@ -228,9 +244,17 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
                     /** When the sending has been done */
                     cbdC.setValue(" ");
                     cbdV.setValue(" ");
-                }
+                    System.out.println("client submit letter");
+            }
 
-                System.out.println("client submit");
+        });
+
+        /** set Event to propose the enigm chosen */
+        validChoice.setOnMouseReleased(new EventHandler<MouseEvent>(){
+            public void handle(MouseEvent me){
+                /** If player propose enigme */
+                manager.compareProp(proposEnigm.getText());
+                System.out.println("client submit enigm");
             }
         });
         /** Set visibility of ChoiceBoxs */
@@ -244,30 +268,77 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
      */
     public void loadScoreBoard(){
         /** create the display round */
-        listPlayersScore = new ArrayList<>();
         displayManche = new Label();
-        displayManche.setTranslateX(5);
+        displayManche.setTranslateX(450);
         displayManche.setTranslateY(15);
         displayManche.setAlignment(Pos.CENTER);
         setManche(1);
         scoreBoard.getChildren().add(displayManche);
 
-        /** Create Label for player's name and for cash players */
-        for(int i = 0; i <3; i++){
-            /** name */
-            textSxoreB = new Label();
-            textSxoreB.setTranslateX(5);
-            textSxoreB.setTranslateY(30*(i+2));
-            textSxoreB.setText("Player " + (i+1));
-            scoreBoard.getChildren().add(textSxoreB);
-            /** cash */
-            textSxoreB = new Label();
-            textSxoreB.setTranslateX(50);
-            textSxoreB.setTranslateY(30*(i+2)+15);
-            listPlayersScore.add(i, textSxoreB);
-            addCashPlayer(i+1, 0);
-            scoreBoard.getChildren().add(textSxoreB);
-        }
+        displayTheme = new Label();
+        //displayTheme.setTranslateX(25);
+        displayTheme.setTranslateY(15);
+        displayTheme.setPrefWidth(380);
+        displayTheme.setAlignment(Pos.CENTER);
+        displayTheme.setText("");
+        scoreBoard.getChildren().add(displayTheme);
+        updateThemeEnigm("Mon theme");
+
+        initTable();
+    }
+
+    public void initTable(){
+        tableView.setEditable(false);
+
+        TableColumn<PlayerData,String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("namePlayer"));
+
+        TableColumn<PlayerData,Integer> cashColumn = new TableColumn<>("Cash");
+        cashColumn.setCellValueFactory(new PropertyValueFactory<>("cashPlayer"));
+
+        tableView.getColumns().add(nameColumn);
+        tableView.getColumns().add(cashColumn);
+
+        listPlayerData = new ArrayList<>();
+        PlayerData p1 = new PlayerData();
+        p1.namePlayer = "coco";
+        p1.cashPlayer = 0;
+        listPlayerData.add(p1);
+        PlayerData p2 = new PlayerData();
+        p2.namePlayer = "steven";
+        p2.cashPlayer = 0;
+        listPlayerData.add(p2);
+        PlayerData p3 = new PlayerData();
+        p3.namePlayer = "pierre";
+        //p3.cashPlayer = 0;
+        listPlayerData.add(p3);
+        resetCashPlayer(2, 0);
+        updateNamePlayer(0, "Aramand");
+        addCashPlayer(1, 150);
+        updateTable(listPlayerData);
+    }
+
+    public void updateNamePlayer(int id, String nP){
+        listPlayerData.get(id).namePlayer = nP;
+    }
+
+    public void addCashPlayer(int id, int newCash){
+        listPlayerData.get(id).cashPlayer += newCash;
+    }
+
+    public void resetCashPlayer(int id, int newCash){
+        listPlayerData.get(id).cashPlayer = newCash;
+    }
+
+    public void updateTable(List<PlayerData> list){
+        Platform.runLater(() -> {
+            ObservableList<PlayerData> listO = FXCollections.observableArrayList(list);
+            tableView.setItems(listO);
+        });
+    }
+
+    public void updateThemeEnigm(String theme){
+        displayTheme.setText(theme);
     }
 
     /**
@@ -298,105 +369,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         displayManche.setText("Manche n°" + manche);
     }
 
-    /**
-     * This function set the cash of player
-     *
-     * @param numPlayer is the id of the player
-     * @param cash is the total cash of player
-     */
-    public void addCashPlayer(int numPlayer, int cash){
-        listPlayersScore.get(numPlayer-1).setText("Cash " + cash);
-    }
 
     @Override
     public void receiveLetterFromServer(String str) {
 
     }
 
-/*--------------------------------useless
-    public void setCheckBox(int i, CheckBox cb){
-        if(i < (65+7)){
-            cb.setTranslateX(230 + ((i-65)*40));
-        }
-        else if(i < (65+14) && i > (65+6)){
-            cb.setTranslateX(230 + ((i-65-7)*40));
-            cb.setTranslateY(30);
-        }
-        else if(i < (65+21) && i > (65+13)){
-            cb.setTranslateX(230 + ((i-65-14)*40));
-            cb.setTranslateY(60);
-        }
-        else if(i < (65+26) && i > (65+20)){
-            cb.setTranslateX(230 + ((i-65-21)*40));
-            cb.setTranslateY(90);
-        }
-    }
-
-
-    public void actionSwitch(){
-        listCheckbox.forEach(cbx ->{
-            if(switchActive ){
-                if(cbx.getText().equals("A") ||
-                        cbx.getText().equals("E") || cbx.getText().equals("I") ||
-                        cbx.getText().equals("O") || cbx.getText().equals("U") ||
-                        cbx.getText().equals("Y")) {
-                    cbx.setVisible(true);
-                }
-                else{
-                    cbx.setVisible(false);
-                }
-            }
-            else{
-                if(!cbx.getText().equals("A") &&
-                        !cbx.getText().equals("E") && !cbx.getText().equals("I") &&
-                        !cbx.getText().equals("O") && !cbx.getText().equals("U") &&
-                        !cbx.getText().equals("Y")) {
-                    cbx.setVisible(true);
-                }
-                else {
-                    cbx.setVisible(false);
-                }
-            }
-        });
-
-    }
-
-    public void loadChoiceClient(){
-        listCheckbox = new ArrayList<>();
-        for(int i = 65; i< (65+26); i++){
-            chB = new CheckBox();
-            char c = (char) i;
-            chB.setText("" + c);
-            chB.setId("" + c);
-            chB.setPrefSize(10,10);
-            chB.setVisible(false);
-
-
-            setCheckBox(i, chB);
-            clientChoic.getChildren().add(chB);
-            listCheckbox.add((i-65), chB);
-        }
-        listCheckbox.forEach(cb ->{
-            cb.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    System.out.println(cb.getText().charAt(0));
-                    char charCb = cb.getText().charAt(0);
-
-                    manager.displayLetter(charCb);
-                    if(manager.getLetterIsFind()){
-                        cb.setTextFill(Color.GREEN);
-                        manager.setLetterIsFind(false);
-                    }
-                    else{
-                        cb.setTextFill(Color.RED);
-                    }
-                }
-            });
-        });
-
-
-    }
-
- */
 }
