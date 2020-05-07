@@ -1,9 +1,11 @@
 ﻿using Serveur.GameServer.CommandPack;
+using Serveur.GameServer.Enigma;
 using Serveur.GameServer.GameModel;
 using Share.Network.Message;
 using Share.Network.Message.modele;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -39,6 +41,8 @@ namespace Serveur.GameServer.Game
 
         ISenderAtClient sender;
 
+        public Dictionary<Category, Enigme> gameEnigmaPool;
+
         public GameEngine(ISenderAtClient sender)
         {
             this.sender = sender;
@@ -47,6 +51,33 @@ namespace Serveur.GameServer.Game
             listIdPlayers = new List<string>();
             CM = new CommandManager(this);
             gameLoop = new GameLoop(CM);
+            CreateGameEnigmaPool();
+        }
+
+        private void CreateGameEnigmaPool()
+        {
+            if(gameEnigmaPool.Count >= 9)
+            {
+                return;
+            }
+
+            Enigme e = GetARandomEnigma();
+
+            if(!gameEnigmaPool.ContainsKey(e.category))
+            {
+                gameEnigmaPool.Add(e.category, e);
+            }
+
+            CreateGameEnigmaPool();
+        }
+
+        private Enigme GetARandomEnigma()
+        {
+            int size = EnigmePool.enigmePool.Count; //nb of category
+            int r = new Random().Next(size); //random between 0 and nb of category
+            int r2 = new Random().Next(EnigmePool.enigmePool.Values.ToList<List<Enigme>>()[r].Count); //random between 0 and nb of list<Enigme>.size on the specified category
+
+            return EnigmePool.enigmePool.Values.ToList<List<Enigme>>()[r][r2];
         }
 
         public void addCallbackPlayerJoined(notifyPlayerJoined x)

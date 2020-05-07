@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Share.Network.Message.modele;
+using System;
 using System.Collections.Generic;
 
 namespace Serveur.GameServer.Enigma
