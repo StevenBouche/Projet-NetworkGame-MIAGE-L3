@@ -52,7 +52,8 @@ namespace Serveur.GameServer.Game
             //Sub on events to receive data
             network.OnEvent<String>(ProtocolEventsTCP<String>.IDENTITY, OnIdentityReceived);
             network.OnEvent<Boolean>(ProtocolEventsTCP<Boolean>.NOTIFYPLAYERREADY, OnReadyReceived);
-            network.OnEvent<String>(ProtocolEventsTCP<Boolean>.PROPOSALRESPONSE, OnProposalResponse);
+            network.OnEvent<String>(ProtocolEventsTCP<String>.PROPOSALRESPONSE, OnProposalResponse);
+
             //Start thread network
             threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
