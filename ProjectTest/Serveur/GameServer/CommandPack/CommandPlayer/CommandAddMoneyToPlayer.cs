@@ -22,6 +22,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         public override void onExecute()
         {
+
             Context.listPlayers.TryGetValue(id, out Joueur j);
             j.cagnotte.Montant_Manche += amount;
 

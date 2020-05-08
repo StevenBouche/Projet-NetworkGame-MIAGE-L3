@@ -34,6 +34,7 @@ public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
         PROTOCOL SEND AND RECEIVE
      */
     public static ProtocolEventsTCP<ChoiceStep> CHOICESTEP = new ProtocolEventsTCP<ChoiceStep>("CHOICESTEP");
+    public static ProtocolEventsTCP<String> ASKFORALETTER = new ProtocolEventsTCP<String>("ASKFORALETTER");
 
     private ProtocolEventsTCP(String name){
         super(name);

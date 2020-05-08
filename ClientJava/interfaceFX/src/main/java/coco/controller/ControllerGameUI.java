@@ -472,6 +472,34 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         stop();
     }
 
+    @Override
+    public void receiveFromServeurAskForALetter(String var) {
+        Platform.runLater(() -> {
+            //todo popup coco
+            setAndExecuteState(new StateAskALetterWheel(this,false,false));
+        });
+    }
+
+    @Override
+    public void receiveFromServeurBadAskForALetter(String id) {
+        String idP = id;
+        Platform.runLater(() -> {
+            PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
+            log("BAD LETTER "+p.namePlayer);
+            setAndExecuteState(new StateStartRound(this, idP)); //todo rename
+        });
+    }
+
+    @Override
+    public void receiveFromServeurGoodAskForALetter(String id, String var) {
+        String idP = id;
+        Platform.runLater(() -> {
+            PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
+            log("GOOD LETTER "+p.namePlayer);
+            setAndExecuteState(new StateStartRound(this,idP)); //todo rename
+        });
+    }
+
     public void stop() {
         if(!alreadyStop) {
             cancelTimerTask();

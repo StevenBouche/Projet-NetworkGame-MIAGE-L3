@@ -72,6 +72,12 @@ public class ClientTCP implements Runnable, INotifyState {
                 if(notifierGame != null) notifierGame.receiveFromServeurPlayerMoneyInfo(var);
             }
         });
+        managerTCP.eventManager.OnEvent(String.class, ProtocolEventsTCP.ASKFORALETTER, new DataListenerTCP<String>() {
+            @Override
+            public void onData(String var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurAskForALetter(var);
+            }
+        });
 
     }
 

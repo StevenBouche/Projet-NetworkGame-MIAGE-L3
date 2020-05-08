@@ -42,7 +42,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 {
                     HandleProposition();
                 }
-                else if (Data.choiceStep.Equals(ChoiceStepEnum.TURNWHEEL.ToString()) && HaveConsonneEnigma()) //if want turnwheel and have consonne in enigma
+                else if (Data.choiceStep.Equals(ChoiceStepEnum.TURNWHEEL.ToString()) && !HaveConsonneEnigma()) //if want turnwheel and have consonne in enigma
                 {
                     commandManager.TriggerWheelTurn();
                 }
