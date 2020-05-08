@@ -33,7 +33,8 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             {
                 if(idClient != null)
                 {
-                    SendClientBadResponse(idClient);
+                    Proposal p = new Proposal(idClient, Data);
+                    SendClientBadResponse(p);
                 }
                 Data = null;
                 WaitReceiveClient();
@@ -54,6 +55,40 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             Context.CurrentPlayer = Context.listPlayers[this.idClient];
             Context.CurrentPosPlayer = Context.listIdPlayers.IndexOf(this.idClient);
 
+            Proposal p = new Proposal(idClient, Data);
+            SendClientGoodResponse(p);
+            SendNotifyCurrentPlayer();
+
+
+            throw new NotImplementedException();
+
+        }
+
+        private void SendClientBadResponse(Proposal p)
+        {
+            
+            PacketMessage<Proposal> msg = new PacketMessage<Proposal>()
+            {
+                evt = ProtocolEventsTCP<Proposal>.BADPROPOSALRESPONSE.eventName,
+                data = p
+            };
+            Context.SendAllClient(msg);
+            idClient = null;
+        }
+
+        private void SendClientGoodResponse(Proposal p)
+        {
+
+            PacketMessage<Proposal> msg = new PacketMessage<Proposal>()
+            {
+                evt = ProtocolEventsTCP<Proposal>.GOODPROPOSALRESPONSE.eventName,
+                data = p
+            };
+            Context.SendAllClient(msg);
+        }
+
+        private void SendNotifyCurrentPlayer()
+        {
             PacketMessage<String> msg = new PacketMessage<String>()
             {
                 evt = ProtocolEventsTCP<String>.NOTIFYCURRENTPLAYER.eventName,
@@ -61,21 +96,6 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             };
 
             Context.SendAllClient(msg);
-
-            throw new NotImplementedException();
-
-        }
-
-        private void SendClientBadResponse(String id)
-        {
-            
-            PacketMessage<String> msg = new PacketMessage<String>()
-            {
-                evt = ProtocolEventsTCP<String>.BADPROPOSALRESPONSE.eventName,
-                data = id
-            };
-            Context.SendAllClient(msg);
-            idClient = null;
         }
 
         public override void NotifyReceiveClient(String data, string id)
@@ -95,6 +115,8 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 evt = ProtocolEventsTCP<Enigme>.ACTIONENIGMERAPIDE.eventName,
                 data = e
             };
+
+            Console.WriteLine(e.toString());
             Context.SendAllClient(msg);
             Context.gameEnigmaPool.Remove(e.category);
         }

@@ -27,8 +27,8 @@ namespace Share.Network.Protocol
         /*
         *  PROTOCOL GAME SEND
         */
-        public static ProtocolEventsTCP<String> BADPROPOSALRESPONSE = new ProtocolEventsTCP<String>("BADPROPOSALRESPONSE");
-        public static ProtocolEventsTCP<String> GOODPROPOSALRESPONSE = new ProtocolEventsTCP<String>("BADPROPOSALRESPONSE");
+        public static ProtocolEventsTCP<Proposal> BADPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("BADPROPOSALRESPONSE");
+        public static ProtocolEventsTCP<Proposal> GOODPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("GOODPROPOSALRESPONSE");
         public static ProtocolEventsTCP<Enigme> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMERAPIDE");
         public static ProtocolEventsTCP<Enigme> ACTIONENIGMEPRINCIPALE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMEPRINCIPALE");
         public static ProtocolEventsTCP<String> NOTIFYCURRENTPLAYER = new ProtocolEventsTCP<String>("NOTIFYCURRENTPLAYER");
