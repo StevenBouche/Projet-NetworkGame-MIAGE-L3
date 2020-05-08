@@ -33,7 +33,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 data = pInfo
             };
 
-            Context.SendClient(msg, id);
+            Context.SendAllClient(msg);
         }
     }
 }
