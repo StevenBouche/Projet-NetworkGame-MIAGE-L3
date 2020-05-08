@@ -89,6 +89,7 @@ public class ControllerRoot implements Initializable, INotifyEventUI {
     public void stop() {
         if(manager != null) manager.stop();
         if(managerLobbiesGame != null) managerLobbiesGame.stop();
+        if(managerGameUI != null) managerGameUI.stop();
     }
 
     public void startSceneGame(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId) {

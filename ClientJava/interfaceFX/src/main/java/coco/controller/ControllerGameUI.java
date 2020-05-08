@@ -74,6 +74,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public Parent root;
 
     Timer timerAnimLetter;
+    TimerTask taskTimer;
 
     /** Data comming from lobby**/
     public DataLoadGame dataLoad;
@@ -301,6 +302,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     @Override
     public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
+        taskTimer.cancel();
+        timerAnimLetter.cancel();
         String idLocal = id;
         Platform.runLater(() -> {
             handlerRound.setIdPlayerHaveProposal(idLocal);
@@ -376,40 +379,28 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     public void animShowLetter(){
 
-        mapRectWithLetter.forEach((id, r)->{
+  /*      mapRectWithLetter.forEach((id, r)->{
             System.out.println("id : " + id + ", letter : " + r.getLetter());
-        });
-
-        timerAnimLetter.schedule( new TimerTask() {
-                    @Override
-                    public void run() {
-                        tryshowRandomLetter(timerAnimLetter);
-                    }
-                }, 0, 2000);
+        });*/
+        taskTimer = new TimerTask() {
+            @Override
+            public void run() {
+                tryshowRandomLetter(timerAnimLetter);
+            }
+        };
+        timerAnimLetter.schedule(taskTimer, 100, 2000);
 
     }
 
     public void tryshowRandomLetter(Timer t){
-
-   /*     int sizeRectWithLetter = mapRectWithLetter.size();
-        Random rdm = new Random();
-        int randomLetterId = rdm.nextInt(sizeRectWithLetter);*/
+        System.out.println("TASK");
         Enigme e = handlerEnigme.getCurrentEnigme();
         if(e == null) return; //todo bug quand on recois l'enigme d'apres currentEnigme = null a test
-
         if(!e.order.isEmpty()){
             char c = e.order.remove(0);
             manager.displayLetter(c);
-       //     displayLetter(c);
             chekIfEnigmIsShow(t);
         }
-   /*     if(mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_HIDDEN ||
-                mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_SPECIAL){
-
-
-
-        }*/
-
     }
 
     public void displayLetter(int idL){
@@ -421,6 +412,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     public boolean allIsShow;
     public void chekIfEnigmIsShow(Timer t){
+
         allIsShow = true;
         mapRectWithLetter.forEach((rId, r)->{
             if(mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_HIDDEN ||
@@ -428,9 +420,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
                 allIsShow = false;
             }
         });
-        if(allIsShow){
-            t.cancel();
-        }
     }
 
     private void loadBackGround() {
@@ -450,6 +439,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         // set background
         board.setBackground(background);
 
+    }
+
+    public void stop() {
+        dataLoad.client.stop();
     }
 }
 
