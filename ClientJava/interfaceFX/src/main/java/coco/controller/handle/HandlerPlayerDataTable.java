@@ -25,31 +25,41 @@ public class HandlerPlayerDataTable {
     public void updateDataPlayer(PlayerMoneyInfo var) {
         PlayerData p = getPlayerData(var.id);
         if(p!=null){
-            p.cashPlayerRound = var.CagnotteRound;
-        //    p.cashPlayerTotal = var.CagnotteTotal; todo
+            p.cashRound = var.CagnotteRound;
+            p.cashTotal = 0; //todo
             updateTable(this.listPlayerData);
         }
     }
 
    private void initTable(){
         tableView.setEditable(false);
+
+       TableColumn<PlayerData,String> idColumn = new TableColumn<>("ID");
+       idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
         TableColumn<PlayerData,String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("namePlayer"));
-        TableColumn<PlayerData,Integer> cashColumn = new TableColumn<>("Cash");
-        cashColumn.setCellValueFactory(new PropertyValueFactory<>("cashPlayerRound"));
-       TableColumn<PlayerData,Integer> cashColumnTot = new TableColumn<>("Cash");
-       cashColumn.setCellValueFactory(new PropertyValueFactory<>("cashPlayerTotal"));
-        tableView.getColumns().add(nameColumn);
-        tableView.getColumns().add(cashColumn);
-       tableView.getColumns().add(cashColumnTot);
-        updateTable(listPlayerData);
+
+        TableColumn<PlayerData,Integer> cashColumn = new TableColumn<>("CashRound");
+        cashColumn.setCellValueFactory(new PropertyValueFactory<>("cashRound"));
+
+       TableColumn<PlayerData,Integer> cashColumnTot = new TableColumn<>("CashTotal");
+       cashColumnTot.setCellValueFactory(new PropertyValueFactory<>("cashTotal"));
+
+       tableView.getColumns().addAll(nameColumn,cashColumn,cashColumnTot);
+     //   tableView.getColumns().add(cashColumn);
+     //   tableView.getColumns().add(cashColumnTot);
+       // updateTable(listPlayerData);
+       updateTable(listPlayerData);
+
     }
 
     private void updateTable(List<PlayerData> list){
-        Platform.runLater(() -> {
-            ObservableList<PlayerData> listO = FXCollections.observableArrayList(list);
-            tableView.setItems(listO);
-        });
+        tableView.getItems().clear();
+        tableView.getItems().addAll(listPlayerData);
+     /*   ObservableList<PlayerData> listO = FXCollections.observableArrayList(list);
+        tableView.setItems(listO);
+        tableView.refresh();*/
     }
 
     public PlayerData getPlayerData(String id){

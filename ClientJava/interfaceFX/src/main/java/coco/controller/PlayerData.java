@@ -4,16 +4,22 @@ public class PlayerData {
 
     public String id;
     public String namePlayer;
-    public int cashPlayerTotal;
-    public int cashPlayerRound;
+    public int cashRound;
+    public int cashTotal;
+
+    public String getId(){return id;}
     public String getNamePlayer(){
         return namePlayer;
     }
-    public int getCashPlayerTotal(){
-        return cashPlayerTotal;
+    public int getCashRound(){
+        return cashRound;
     }
-    public int getCashPlayerRound(){
-        return cashPlayerRound;
+    public int getCashTotal(){
+        return cashTotal;
+    }
+
+    public PlayerData(){
+
     }
 
 }

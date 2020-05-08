@@ -6,9 +6,9 @@ namespace Share.Network.Message.modele
 {
     public class PlayerMoneyInfo
     {
-        String id;
-        int CagnotteRound;
-        int CagnotteTotal;
+        public String id;
+        public int CagnotteRound;
+        public int CagnotteTotal;
 
         public PlayerMoneyInfo(String identifiant, int cagR, int cagT)
         {

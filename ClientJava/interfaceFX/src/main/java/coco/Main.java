@@ -97,19 +97,19 @@ public class Main extends Application {
         PlayerData p3 = new PlayerData();
         p1.namePlayer = "coco";
         p1.id = "1";
-        p1.cashPlayerRound = 0;
-        p1.cashPlayerTotal = 0;
+        p1.cashRound = 0;
+        p1.cashTotal = 0;
         p2.namePlayer = "pierre";
         p2.id = "2";
-        p2.cashPlayerRound = 0;
-        p2.cashPlayerTotal = 0;
+        p2.cashRound = 0;
+        p2.cashTotal = 0;
         p3.namePlayer = "armand";
         p3.id = "3";
         l.add(p1);
         l.add(p2);
         l.add(p3);
-        p3.cashPlayerRound = 0;
-        p3.cashPlayerTotal = 0;
+        p3.cashRound = 0;
+        p3.cashTotal = 0;
         managerGameUI = new ControllerGameUI(null,null, l, "1");
 
         fxmlLoader.setController(managerGameUI);

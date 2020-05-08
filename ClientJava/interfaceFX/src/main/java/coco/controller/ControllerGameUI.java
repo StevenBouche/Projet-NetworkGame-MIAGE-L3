@@ -301,9 +301,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     @Override
     public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
+        String idLocal = id;
         Platform.runLater(() -> {
+            handlerRound.setIdPlayerHaveProposal(idLocal);
             manager.compareProp(proposal); // couleur vert
-            handlerRound.setIdPlayerHaveProposal(id);
             manager.displayEnigm(); // montre toute l'enigme
             PlayerData p = handlerPlayerDataTable.getPlayerData(id);
             log("Good response from "+p.namePlayer+" : "+proposal);
@@ -343,7 +344,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             log("SET NEW ENIGME");
             preSetEnigm();
         });
-
     }
 
     @Override

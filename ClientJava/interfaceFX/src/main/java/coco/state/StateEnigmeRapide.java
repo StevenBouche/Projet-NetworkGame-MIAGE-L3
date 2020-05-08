@@ -20,7 +20,7 @@ public class StateEnigmeRapide extends StateGameUI {
     }
 
     private void setEnigme() {
-      //  controller.preSetEnigm();
+        controller.preSetEnigm();
     }
 
     @Override
