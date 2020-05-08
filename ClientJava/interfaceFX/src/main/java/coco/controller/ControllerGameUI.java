@@ -1,6 +1,7 @@
 package coco.controller;
 
 import coco.state.*;
+import controllerJavafx.LoaderRessource;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -10,14 +11,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
@@ -55,6 +57,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public TextArea log;
     @FXML
     public Label displayTheme; //for loadScoreBoard()
+    @FXML
+    public AnchorPane board;
 
     /** Element dynamic with code */
     public Button buttonSetEnigm; //for loadButtons
@@ -114,6 +118,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             loadCBD();
             loadSwitch();
             initTable();
+            loadBackGround();
+            displayTheme.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
         } catch (IOException e) {
             e.printStackTrace();
@@ -488,6 +494,25 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         if(allIsShow){
             t.cancel();
         }
+    }
+
+    private void loadBackGround() {
+
+        Image image = LoaderRessource.getInstance().wheelBackground;
+
+        // create a background image
+        BackgroundImage backgroundimage = new BackgroundImage(image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        // create Background
+        Background background = new Background(backgroundimage);
+
+        // set background
+        board.setBackground(background);
+
     }
 }
 
