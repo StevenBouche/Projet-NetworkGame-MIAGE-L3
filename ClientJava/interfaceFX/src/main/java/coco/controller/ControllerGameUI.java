@@ -1,6 +1,8 @@
 package coco.controller;
 
 import coco.state.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +16,11 @@ import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.util.Duration;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
 import network.message.PacketMessage;
@@ -23,9 +29,7 @@ import network.tcp.ProtocolEventsTCP;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
@@ -49,6 +53,9 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @FXML
     public TableView<PlayerData> tableView;
 
+    @FXML
+    public TableView<CurrentResponseData> tableViewResponse;
+
     /** Element dynamic with code */
     public Button buttonSetEnigm; //for loadButtons
     public Button buttonShowEnigm;
@@ -59,6 +66,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public ChoiceBox<String> cbdC;
     public Label displayTheme; //for loadScoreBoard()
     public Label displayManche;
+    public String currentEnigmeLabel;
+    public int nbrRectWithLetter;
 
     /** My current state **/
     StateGameUI stateUI;
@@ -73,6 +82,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     /** Current Data Game **/
     public List<PlayerData> listPlayerData;
+    public List<CurrentResponseData> listResponsePlayerData;
     Enigme currentEnigme;
     String myId;
     String currentPlayerId;
@@ -84,6 +94,11 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         this.client = client;
         this.clientThread = clientThread;
         this.listPlayerData = data;
+        this.listResponsePlayerData = new ArrayList<>();
+        CurrentResponseData playersResponse = new CurrentResponseData();
+        playersResponse.namePlayer = "nobody";
+        playersResponse.currentResponse = "-";
+        listResponsePlayerData.add(playersResponse);
         if(this.client != null) this.client.setNotifierGame(this);
     }
 
@@ -96,6 +111,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             loadCBD();
             loadSwitch();
             loadScoreBoard();
+            initCurrentPlayerResponse();
             setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,6 +135,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         root = fxmlLoader.load();
         subScene.setRoot(root);
     }
+
 
     /**
      * This function set 3 buttons
@@ -299,6 +316,26 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
         initTable();
     }
+    public void initCurrentPlayerResponse(){
+        tableViewResponse.setEditable(false);
+
+        TableColumn<CurrentResponseData,String> namePColumn = new TableColumn<>("Name");
+        namePColumn.setCellValueFactory(new PropertyValueFactory<>("namePlayer"));
+
+        TableColumn<CurrentResponseData,String> repsonseColumn = new TableColumn<>("CurrentResponse");
+        repsonseColumn.setCellValueFactory(new PropertyValueFactory<>("currentResponse"));
+
+        tableViewResponse.getColumns().add(namePColumn);
+        tableViewResponse.getColumns().add(repsonseColumn);
+        updateTableResponse(listResponsePlayerData);
+    }
+
+    public void updateTableResponse(List<CurrentResponseData> list){
+        Platform.runLater(() -> {
+            ObservableList<CurrentResponseData> listO = FXCollections.observableArrayList(list);
+            tableViewResponse.setItems(listO);
+        });
+    }
 
     public void initTable(){
         tableView.setEditable(false);
@@ -369,23 +406,127 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @Override
     public void startActionEnigmeRapide(Enigme varE) {
         currentEnigme = varE;
+        currentEnigmeLabel = currentEnigme.label;
         Platform.runLater(() -> {
             // todo change state of UI on rapid enigma
             setAndExecuteState(new StateEnigmeRapide(this));
             //todo handle enigme => panneau enigme
+            setAndExecuteState(new StateAnimEnigmRapide(this));
         });
     }
 
+    int cpt;
     @Override
-    public void receiveFromServeurBadProposalResponse(String var) {
+    public void receiveFromServeurBadProposalResponse(String var, String badReponse) {
         idPlayerHaveBadProposal = var;
         //todo
         Platform.runLater(() -> {
             // OBLIGATOIRE LORS DE MODIFICATION DE QUELQUE CHOSE DE GRAPHIQUE CAR CELA VIENT DU RESEAU
+            manager.compareProp(badReponse);
+            listResponsePlayerData.get(0).currentResponse = badReponse;
+            listResponsePlayerData.get(0).namePlayer = idPlayerHaveBadProposal;
+            updateTableResponse(listResponsePlayerData);
+            cpt = 0;
+            tableView.getItems().forEach((player)->{
+                if(player.id == idPlayerHaveBadProposal){
+                    drawAnimationBadResponsePlayer(cpt);
+                    //tableViewResponse.setBackground(Background.getClassCssMetaData(Paint(Color.RED)));
+                    cpt++;
+                }
+            });
         });
     }
 
-    //TODO GOOD REPONSE
+    private void drawAnimationBadResponsePlayer(int cpt) {
+        //tableView.getColumns().get(1).getCe
+    }
 
+    //TODO GOOD REPONSE
+    @Override
+    public void receiveFromServeurGoodProposalResponse(String var) {
+        idPlayerHaveBadProposal = var;
+        //todo
+        Platform.runLater(() -> {
+            // OBLIGATOIRE LORS DE MODIFICATION DE QUELQUE CHOSE DE GRAPHIQUE CAR CELA VIENT DU RESEAU
+            manager.compareProp("null");
+        });
+    }
+
+
+    public void preSetEnigm() {
+        manager.getEnigme();
+        manager.setEnigm(currentEnigmeLabel);//"PETIT OISEAU SUR L'EAU"
+        manager.setRectWithLetter();
+    }
+
+    public void animationDisplayLetters() {
+
+    }
+
+    public Map<Integer, Rect> mapRectWithLetter;
+    public void animEnigmRapide() {
+        mapRectWithLetter = new HashMap<>();
+        nbrRectWithLetter = 0;
+        manager.mapRect.forEach((idR, r)->{
+            if(manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_HIDDEN ||
+                    manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_SPECIAL ){
+                nbrRectWithLetter++;
+                mapRectWithLetter.put(nbrRectWithLetter, r);
+            }
+        });
+
+        animShowLetter();
+    }
+
+    public void animShowLetter(){
+
+        mapRectWithLetter.forEach((id, r)->{
+            System.out.println("id : " + id + ", letter : " + r.getLetter());
+        });
+
+        Timer timer;
+        timer = new Timer();
+        timer.schedule( new TimerTask() {
+                    @Override
+                    public void run() {
+                        tryshowRandomLetter(timer);
+                    }
+                }, 100, 2000);
+    }
+
+    public void tryshowRandomLetter(Timer t){
+        int sizeRectWithLetter = mapRectWithLetter.size();
+        Random rdm = new Random();
+        int randomLetterId = rdm.nextInt(sizeRectWithLetter);
+        if(mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_HIDDEN ||
+                mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_SPECIAL){
+
+            displayLetter(randomLetterId+1);
+            chekIfEnigmIsShow(t);
+
+        }
+
+    }
+
+    public void displayLetter(int idL){
+        Platform.runLater(() -> {
+            // OBLIGATOIRE LORS DE MODIFICATION DE QUELQUE CHOSE DE GRAPHIQUE CAR CELA VIENT DU RESEAU
+            manager.displayLetter(mapRectWithLetter.get(idL).getLetter());
+        });
+    }
+
+    public boolean allIsShow;
+    public void chekIfEnigmIsShow(Timer t){
+        allIsShow = true;
+        mapRectWithLetter.forEach((rId, r)->{
+            if(mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_HIDDEN ||
+                    mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_SPECIAL){
+                allIsShow = false;
+            }
+        });
+        if(allIsShow){
+            t.cancel();
+        }
+    }
 }
 

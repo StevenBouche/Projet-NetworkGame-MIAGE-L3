@@ -29,5 +29,10 @@
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy></TableView>
+      <TableView fx:id="tableViewResponse" layoutX="169.0" layoutY="311.0" prefHeight="75.0" prefWidth="225.0">
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
    </children>
 </AnchorPane>

@@ -37,6 +37,7 @@ public class ControllerSceneRectancle implements Initializable {
 
     @FXML
     public Pane pane;
+    public int ifFirstLetter;
 
 
     public ControllerSceneRectancle(){
@@ -49,7 +50,6 @@ public class ControllerSceneRectancle implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setPanneau(0, 51);
-        this.e = "";
 
 
     }
@@ -123,7 +123,7 @@ public class ControllerSceneRectancle implements Initializable {
         String actualLigneW = "";
         int sizeLine = 0;
         nbrLigne = 1;
-        wordsEnigm = e.split("\\s");
+        wordsEnigm = this.e.split("\\s");
         /** Create the enigm display lines */
         for(String word : wordsEnigm){
 
@@ -156,7 +156,7 @@ public class ControllerSceneRectancle implements Initializable {
      */
     public void setLigne(String ligne, int numLigne, int nbrLigne){
         /** If == 2 we draw in the 2 center lines */
-        if(nbrLigne == 2) {
+        if(nbrLigne <= 2) {
             if(numLigne == 0) {
                 for (int i = 0; i < ligne.length(); i++) {
                     this.mapRect.get(12 + i).setLetter(ligne.charAt(i), listCharEnigm);

@@ -9,7 +9,7 @@ public class StateEnigme extends StateGameUI {
 
     @Override
     public void execute() {
-        controller.manager.setEnigm("PETIT OISEAU SUR L'EAU");
-        controller.manager.setRectWithLetter();
+        //controller.manager.setEnigm("PETIT OISEAU SUR L'EAU");
+        //controller.manager.setRectWithLetter();
     }
 }
