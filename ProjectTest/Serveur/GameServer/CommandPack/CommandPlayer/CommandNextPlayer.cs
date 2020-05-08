@@ -1,5 +1,7 @@
 ﻿using Serveur.GameServer.Game;
 using Serveur.GameServer.GameModel;
+using Share.Network.Message;
+using Share.Network.Protocol;
 using System;
 
 namespace Serveur.GameServer.CommandPack.CommandPlayer
@@ -32,13 +34,18 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 Context.CurrentPlayer = j;
             }
 
-            //TODO notify client for new Player Game
             SendNotifyNewCurrentPlayer();
         }
 
         private void SendNotifyNewCurrentPlayer()
         {
-            throw new NotImplementedException();
+            PacketMessage<String> msg = new PacketMessage<String>()
+            {
+                evt = ProtocolEventsTCP<String>.NOTIFYCURRENTPLAYER.eventName,
+                data = Context.CurrentPlayer.id
+            };
+
+            Context.SendAllClient(msg);
         }
 
     }

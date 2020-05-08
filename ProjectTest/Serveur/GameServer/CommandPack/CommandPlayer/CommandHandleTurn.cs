@@ -63,7 +63,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         private void HandleProposition()
         {
-            Enigme e = Context.gameEnigmaPool.Values.ToList<Enigme>()[0];
+            Enigme e = Context.CurrentEnigma;
             if (!e.label.Equals(Data.proposal))
             {
                 Context.NotifyPlayerHaveWinRound(idClient); // notify player win round

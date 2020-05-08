@@ -1,16 +1,10 @@
 ﻿using Serveur.GameServer.CommandPack.ReceiverNetwork;
-using Serveur.GameServer.Enigma;
 using Serveur.GameServer.Game;
 using Share.Network.Message;
 using Share.Network.Message.modele;
 using Share.Network.Protocol;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Threading;
-using System.Timers;
 
 namespace Serveur.GameServer.CommandPack.CommandPlayer
 {
@@ -42,31 +36,21 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             
             Console.WriteLine("\n Reponse valide par : " + this.idClient + "\n");
             
-
             SendGoodResponse();
-            //bien recu les données
-
         }
 
         private void SendGoodResponse()
         {
-            //Sets the current player with the one that has won the quick enigma
-            //Sending an event to notify this player has the upper hand
             Context.CurrentPlayer = Context.listPlayers[this.idClient];
             Context.CurrentPosPlayer = Context.listIdPlayers.IndexOf(this.idClient);
 
             Proposal p = new Proposal(idClient, Data);
             SendClientGoodResponse(p);
             SendNotifyCurrentPlayer();
-
-
-            throw new NotImplementedException();
-
         }
 
         private void SendClientBadResponse(Proposal p)
         {
-            
             PacketMessage<Proposal> msg = new PacketMessage<Proposal>()
             {
                 evt = ProtocolEventsTCP<Proposal>.BADPROPOSALRESPONSE.eventName,
@@ -78,7 +62,6 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         private void SendClientGoodResponse(Proposal p)
         {
-
             PacketMessage<Proposal> msg = new PacketMessage<Proposal>()
             {
                 evt = ProtocolEventsTCP<Proposal>.GOODPROPOSALRESPONSE.eventName,

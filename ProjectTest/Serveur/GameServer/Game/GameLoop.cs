@@ -56,7 +56,6 @@ namespace Serveur.GameServer.Game
         {
             commandManager.TriggerHandleTurn(); //trigger handler for turn of one player
             commandManager.TriggerNextPlayer(); //sets the next player 
-            isEnignaDiscovered = true; //todo remove
         }
 
         public void ExecuteFinalRound()

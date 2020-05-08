@@ -1,6 +1,8 @@
 ﻿using Serveur.GameServer.CommandPack.ReceiverNetwork;
 using Serveur.GameServer.Game;
+using Share.Network.Message;
 using Share.Network.Message.modele;
+using Share.Network.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,14 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             e = Context.gameEnigmaPool.Values.ToList<Enigme>()[0];
             Context.CurrentEnigma = e;
             Context.letterBuyInARound = new List<String>();
+
+            PacketMessage<Enigme> msg = new PacketMessage<Enigme>()
+            {
+                evt = ProtocolEventsTCP<Enigme>.ACTIONENIGMEPRINCIPALE.eventName,
+                data = e
+            };
+
+            Context.SendAllClient(msg);
         }
     }
 }
