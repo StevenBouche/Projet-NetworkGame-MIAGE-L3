@@ -381,6 +381,19 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         animShowLetter();
     }
 
+    public void animEnigmRound() {
+        mapRectWithLetter = new HashMap<>();
+        nbrRectWithLetter = 0;
+        manager.mapRect.forEach((idR, r)->{
+            if(manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_HIDDEN ||
+                    manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_SPECIAL ){
+                nbrRectWithLetter++;
+                mapRectWithLetter.put(nbrRectWithLetter, r);
+            }
+        });
+
+    }
+
     public void animShowLetter(){
 
   /*      mapRectWithLetter.forEach((id, r)->{
