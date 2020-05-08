@@ -4,6 +4,7 @@ using Serveur.GameServer.Game;
 using Share.Network.Message;
 using Share.Network.Protocol;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Serveur.GameServer.CommandPack.CommandPlayer
@@ -14,21 +15,21 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         public override void onExecute()
         {
-            SendALetterAsked();
+            SendALetterAsked(); // notify client he need choice a letter 
 
-
-            WaitReceiveClient();
-
-            if (Context.CurrentEnigma.label.Contains(Data))
+            WaitReceiveClient(); // waiting choice player
+             
+            // if enigma containe letter and is not a vowel and is not already buy
+            if (Context.CurrentEnigma.label.Contains(Data) && !isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data)) //TODO Verifier que la consonne n'est pas déjà proposée
             {
-                this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data);
+                Context.letterBuyInARound.Add(Data); // Add letter to already buy
+                this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data); 
                 commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager, nbOfOccurrences));
             }
             else
             {
-                Console.WriteLine("La lettre n'est pas contenue dans l'enigme, c'est au joueur suivant \n");
+                Console.WriteLine("La lettre n'est pas contenue dans l'enigme ou est une voyelle, c'est au joueur suivant \n");
             }
-
         }
 
         private void SendALetterAsked()
@@ -37,7 +38,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             PacketMessage<String> msg = new PacketMessage<String>()
             {
                 evt = ProtocolEventsTCP<String>.ASKFORALETTER.eventName,
-                data = "Please enter a letter"
+                data = "Entrez une consonne"
             };
 
             Context.SendClient(msg, id);
@@ -55,6 +56,17 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 }
             }
             return count;
+        }
+
+        private Boolean isAVowel(char letter)
+        {
+            var vowels = new HashSet<char> { 'A', 'E', 'I', 'O', 'U', 'Y' };
+
+            if (vowels.Contains(letter))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

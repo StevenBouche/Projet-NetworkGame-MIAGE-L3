@@ -21,6 +21,7 @@ namespace Serveur.GameServer.Game
         ServerTCP network;
         Thread threadNetwork;
         GameEngine gameManager;
+        Thread executeGame;
         protected ManualResetEvent allDone = new ManualResetEvent(false);
         String id; 
 
@@ -32,7 +33,7 @@ namespace Serveur.GameServer.Game
         {
             this.id = id;
             network = new ServerTCP(port,this);
-            gameManager = new GameEngine(this);
+            gameManager = new GameEngine(this,ref allDone);
             helperLobby = new HelperLobby(ref gameManager,ref network,ref allDone);
             InitEventAndStartServerTCP();
         }
@@ -59,10 +60,16 @@ namespace Serveur.GameServer.Game
             //event game choice client
             network.OnEvent<String>(ProtocolEventsTCP<String>.PROPOSALRESPONSE, OnProposalResponse);
             network.OnEvent<String>(ProtocolEventsTCP<String>.ASKFORALETTER, OnLetterProposed);
+            network.OnEvent<ChoiceStep>(ProtocolEventsTCP<ChoiceStep>.CHOICESTEP, OnChoiceStep);
 
             //Start thread network
             threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
+        }
+
+        private void OnChoiceStep(ChoiceStep obj, string id)
+        {
+            gameManager.NotifyReceivePlayer(obj, id);
         }
 
         private void OnLetterProposed(String letter, String id)
@@ -86,10 +93,23 @@ namespace Serveur.GameServer.Game
             }
 
             notifyGameIsReady();
-            gameManager.Play();
 
+            //execute game in other thread to cancel game if we want
+            executeGame = new Thread(new ThreadStart(gameManager.Play)); 
+            executeGame.Start(); //start play
 
-            //todo prevenir que je termine le server ou Reset ou choix ?
+            // reveiller par le threas game quand fini ou stop
+            while (gameManager.gameState != GameState.FINISHED || gameManager.gameState != GameState.STOP) 
+            {
+                allDone.Reset();
+                allDone.WaitOne();
+            }
+
+            if (executeGame.IsAlive) executeGame.Abort(); // to cancel thread
+            executeGame.Join();
+
+            //STOP SERVER or RESET SERVER or WANT REPLAY GAME WITH SAME PLAYER ?
+            throw new NotImplementedException();
 
         }
 

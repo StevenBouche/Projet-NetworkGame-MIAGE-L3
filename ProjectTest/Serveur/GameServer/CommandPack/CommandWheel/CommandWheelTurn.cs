@@ -31,8 +31,6 @@ namespace Serveur.GameServer.CommandPack.CommandWheel
             else
             {
                 Console.WriteLine("Je suis tombé sur autre chose que banqueroute ou passe, je demande une lettre");
-                
-                //TODO : Recevoir choix client entre Lettre et Enigme complète
                 commandManager.TriggerCommand(new CommandAskForALetter(Context, commandManager));
             }
             

@@ -42,6 +42,7 @@ public class Main extends Application {
 
     private void loadPrimaryScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("gameUI.fxml"));
+
         List<PlayerData> l = new ArrayList<>();
         PlayerData p1 = new PlayerData();
         PlayerData p2 = new PlayerData();
@@ -59,6 +60,7 @@ public class Main extends Application {
         l.add(p3);
         p3.cashPlayer = 0;
         managerGameUI = new ControllerGameUI(null,null, l, "1");
+
         fxmlLoader.setController(managerGameUI);
         root = fxmlLoader.load();
     }

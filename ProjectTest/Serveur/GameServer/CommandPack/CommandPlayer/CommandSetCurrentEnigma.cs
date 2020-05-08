@@ -17,8 +17,8 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         public override void onExecute()
         {
             e = Context.gameEnigmaPool.Values.ToList<Enigme>()[0];
-
             Context.CurrentEnigma = e;
+            Context.letterBuyInARound = new List<String>();
         }
     }
 }

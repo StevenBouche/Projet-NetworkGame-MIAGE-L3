@@ -21,25 +21,23 @@ namespace Serveur.GameServer.CommandPack
             engine = context;
         }
 
-        public void OnEndExecute<T>(Command<T> command) where T : GameEngine
+        public void TriggerHandleTurn()
         {
-            stack.TryPop(out Command<GameEngine> cmdPop);
-            if (cmdPop != null)
-            {
-                //todo
-            }
-           
-        }
-
-        public void TriggerCommand(Command<GameEngine> cmd)
-        {
-            stack.Push(cmd);
-            cmd.Trigger();
+            this.TriggerCommand(new CommandHandleTurn(engine,this));
         }
 
         public void TriggerWheelTurn()
         {
             this.TriggerCommand(new CommandWheelTurn(engine, this));
+        }
+
+        internal void TriggerProposalEnigmaRound(string idClient, string proposal)
+        {
+            throw new NotImplementedException();
+        }
+        internal void TriggerActivePlayerWantBuyAVoy(string idClient, string voy)
+        {
+            throw new NotImplementedException();
         }
 
         public void TriggerNextPlayer()
@@ -67,14 +65,24 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandCurrentCaseAction(engine, this));
         }
 
-        public void TriggerActivePlayer()
-        {
-            this.TriggerCommand(new CommandGetPlayerActif(engine, this));
-        }
-
         public void TriggerCurrentEnigma()
         {
             this.TriggerCommand(new CommandSetCurrentEnigma(engine, this));
+        }
+
+        public void TriggerCommand(Command<GameEngine> cmd)
+        {
+            stack.Push(cmd);
+            cmd.Trigger();
+        }
+
+        public void OnEndExecute<T>(Command<T> command) where T : GameEngine
+        {
+            stack.TryPop(out Command<GameEngine> cmdPop);
+            if (cmdPop != null)
+            {
+                Console.WriteLine("ERROR ON STACK COMMAND MANAGER");
+            }
         }
 
         public void NotifyLastCommandReceivePlayer<T>(T obj, string id)

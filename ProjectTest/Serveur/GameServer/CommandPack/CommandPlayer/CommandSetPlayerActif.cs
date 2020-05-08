@@ -28,17 +28,6 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         {
             sendQuickEnigma();
             Console.WriteLine("\n En attente du gagnant de l'enigme rapide");
-            /*  //Un joueur aléatoire découvre l'énigme, il prend la main
-              Random r = new Random();
-              int RandParam = r.Next(3);
-              String id = Context.listIdPlayers.ToArray()[RandParam];
-              Context.CurrentPlayer = Context.listPlayers[id];
-              Context.CurrentPosPlayer = RandParam;
-              */
-
-            /*Context.listIdPlayers.RemoveAt(RandParam);
-            Context.listIdPlayers.Insert(0, id);
-            Context.CurrentPosPlayer = 0*/
 
             while (!e.label.Equals(Data))
             {
@@ -52,6 +41,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             
             Console.WriteLine("\n Reponse valide par : " + this.idClient + "\n");
             Context.CurrentPlayer = Context.listPlayers[this.idClient];
+            Context.CurrentPosPlayer = Context.listIdPlayers.IndexOf(this.idClient);
 
             SendGoodResponse();
             //bien recu les données

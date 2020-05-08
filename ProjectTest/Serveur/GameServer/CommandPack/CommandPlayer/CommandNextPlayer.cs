@@ -14,6 +14,8 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         {
             int pos = Context.CurrentPosPlayer;
 
+            //TODO VERIFIER BUG ? 
+
             if (pos + 1 >= Context.listIdPlayers.Count)
             {
                 pos = 0;
@@ -29,7 +31,16 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 Context.listPlayers.TryGetValue(Context.listIdPlayers[pos], out Joueur j);
                 Context.CurrentPlayer = j;
             }
-            
+
+            //TODO notify client for new Player Game
+            SendNotifyNewCurrentPlayer();
         }
+
+        private void SendNotifyNewCurrentPlayer()
+        {
+            throw new NotImplementedException();
+        }
+
     }
+
 }

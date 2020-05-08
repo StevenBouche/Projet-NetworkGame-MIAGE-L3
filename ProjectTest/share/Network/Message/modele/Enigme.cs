@@ -25,7 +25,7 @@ namespace Share.Network.Message.modele
         {
             int count = 0;
 
-            var vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u', 'y' };
+            var vowels = new HashSet<char> { 'A', 'E', 'I', 'O', 'U', 'Y' };
 
             for(int i =0; i<label.Length; i++)
             {
