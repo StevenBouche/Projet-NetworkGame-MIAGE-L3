@@ -2,6 +2,7 @@
 using Serveur.GameServer.CommandPack.ReceiverNetwork;
 using Serveur.GameServer.Game;
 using Share.Network.Message;
+using Share.Network.Message.modele;
 using Share.Network.Protocol;
 using System;
 using System.Collections.Generic;
@@ -23,13 +24,41 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             if (Context.CurrentEnigma.label.Contains(Data) && !isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data))
             {
                 Context.letterBuyInARound.Add(char.Parse(Data)); // Add letter to already buy TODO : test char.Parse(Data)
-                this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data); 
+                this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data);
+                SendGoodLetter();
                 commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager, nbOfOccurrences));
             }
             else
             {
+                SendBadLetter();
                 Console.WriteLine("La lettre n'est pas contenue dans l'enigme ou est une voyelle, c'est au joueur suivant \n");
             }
+        }
+
+        private void SendGoodLetter()
+        {
+            Proposal p = new Proposal(idClient, Data);
+
+            PacketMessage<Proposal> msg = new PacketMessage<Proposal>()
+            {
+                evt = ProtocolEventsTCP<Proposal>.GOODPROPOSALLETTER.eventName,
+                data = p 
+            };
+
+            Context.SendAllClient(msg);
+        }
+
+        private void SendBadLetter()
+        {
+            Proposal p = new Proposal(idClient, Data);
+
+            PacketMessage<Proposal> msg = new PacketMessage<Proposal>()
+            {
+                evt = ProtocolEventsTCP<Proposal>.BADPROPOSALLETTER.eventName,
+                data = p
+            };
+
+            Context.SendAllClient(msg);
         }
 
         private void SendALetterAsked()
