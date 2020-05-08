@@ -22,6 +22,7 @@ public class LoaderRessource {
 
     public Image wheelBackground;
     public Media wheelFortuneMp3;
+    public Media soundBetter;
 
     private LoaderRessource(){
         loadWheelImage();
@@ -30,7 +31,9 @@ public class LoaderRessource {
 
     private void loadMp3() {
         String str = getClass().getClassLoader().getResource("wheel.mp3").getPath();
+        String str2 = getClass().getClassLoader().getResource("Better.mp3").getPath();
         wheelFortuneMp3 = new Media(new File(str).toURI().toString());
+        soundBetter = new Media(new File(str2).toURI().toString());
     }
 
     private void loadWheelImage() {

@@ -302,10 +302,14 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     @Override
     public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
-        taskTimer.cancel();
-        timerAnimLetter.cancel();
         String idLocal = id;
         Platform.runLater(() -> {
+            timerAnimLetter.cancel();
+            boolean b = taskTimer.cancel();
+        /*    while(!b){
+                b = taskTimer.cancel();
+            }*/
+            log("State timer : "+taskTimer.cancel());
             handlerRound.setIdPlayerHaveProposal(idLocal);
             manager.compareProp(proposal); // couleur vert
             manager.displayEnigm(); // montre toute l'enigme
@@ -385,7 +389,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         taskTimer = new TimerTask() {
             @Override
             public void run() {
-                tryshowRandomLetter(timerAnimLetter);
+                if(allIsShow) cancel();
+                else tryshowRandomLetter(timerAnimLetter);
             }
         };
         timerAnimLetter.schedule(taskTimer, 100, 2000);
@@ -412,7 +417,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     public boolean allIsShow;
     public void chekIfEnigmIsShow(Timer t){
-
         allIsShow = true;
         mapRectWithLetter.forEach((rId, r)->{
             if(mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_HIDDEN ||

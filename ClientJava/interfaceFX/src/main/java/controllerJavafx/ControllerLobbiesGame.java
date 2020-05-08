@@ -86,8 +86,15 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
             @Override
             public void run() {
                 MediaPlayer mediaPlayer = new MediaPlayer(LoaderRessource.getInstance().wheelFortuneMp3);
+                MediaPlayer mediaPlayer2 = new MediaPlayer(LoaderRessource.getInstance().soundBetter);
                 mediaPlayer.play();
-                t.cancel();
+                try {
+                    Thread.sleep((long)mediaPlayer.getStopTime().toMillis());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                mediaPlayer2.play();
+                cancel();
             }
         }, 0, 2000);
 

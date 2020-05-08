@@ -27,7 +27,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 evt = ProtocolEventsTCP<Enigme>.ACTIONENIGMEPRINCIPALE.eventName,
                 data = e
             };
-
+            Console.WriteLine(e.toString());
             Context.SendAllClient(msg);
         }
     }

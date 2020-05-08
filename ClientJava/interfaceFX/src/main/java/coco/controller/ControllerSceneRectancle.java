@@ -126,7 +126,7 @@ public class ControllerSceneRectancle implements Initializable {
         for(String word : wordsEnigm){
 
             sizeLine += word.length();
-            if(sizeLine > 12 ){
+            if(sizeLine > 11 ){
                 listeLigne.add(nbrLigne-1, actualLigneW);
                 sizeLine = 0;
                 nbrLigne++;
