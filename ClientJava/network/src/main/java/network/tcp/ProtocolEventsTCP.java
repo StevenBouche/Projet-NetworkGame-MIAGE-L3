@@ -1,7 +1,9 @@
 package network.tcp;
 
+import network.message.obj.ChoiceStep;
 import network.message.obj.Enigme;
 import network.message.obj.ListPlayerGame;
+import network.message.obj.Proposal;
 import network.protocol.ProtocolEvents;
 
 public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
@@ -26,11 +28,14 @@ public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
      */
     public static ProtocolEventsTCP<Enigme> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMERAPIDE");
     public static ProtocolEventsTCP<Enigme> ACTIONENIGMEPRINCIPALE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMEPRINCIPALE");
-    public static ProtocolEventsTCP<String> BADPROPOSALRESPONSE = new ProtocolEventsTCP<String>("BADPROPOSALRESPONSE");
-    public static ProtocolEventsTCP<String> GOODPROPOSALRESPONSE = new ProtocolEventsTCP<String>("GOODPROPOSALRESPONSE");
+    public static ProtocolEventsTCP<Proposal> BADPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("BADPROPOSALRESPONSE");
+    public static ProtocolEventsTCP<Proposal> GOODPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("GOODPROPOSALRESPONSE");
+    public static ProtocolEventsTCP<String> NOTIFYCURRENTPLAYER = new ProtocolEventsTCP<String>("NOTIFYCURRENTPLAYER");
 
-
-
+    /*
+        PROTOCOL SEND AND RECEIVE
+     */
+    public static ProtocolEventsTCP<ChoiceStep> CHOICESTEP = new ProtocolEventsTCP<ChoiceStep>("CHOICESTEP");
 
     private ProtocolEventsTCP(String name){
         super(name);

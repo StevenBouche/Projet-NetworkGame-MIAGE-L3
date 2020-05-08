@@ -20,7 +20,7 @@
                <font>
                   <Font size="10.0" />
                </font></CheckBox>
-            <Button layoutX="14.0" layoutY="89.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="Turn wheel" />
+            <Button fx:id="buttonWheel" layoutX="14.0" layoutY="89.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="347.0" text="Turn wheel" />
          </children>
       </Pane>
       <Pane fx:id="weelPane" layoutX="340.0" layoutY="13.0" prefHeight="156.0" prefWidth="246.0" style="-fx-background-color: gray;" />

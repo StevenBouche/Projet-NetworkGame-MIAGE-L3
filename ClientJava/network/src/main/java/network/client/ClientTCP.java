@@ -4,6 +4,7 @@ import network.message.PacketMessage;
 import network.message.obj.Enigme;
 import network.message.obj.ListPlayerGame;
 import network.message.obj.PlayerGame;
+import network.message.obj.Proposal;
 import network.protocol.Protocol;
 import network.share.DataListenerTCP;
 import network.tcp.INotifyState;
@@ -37,19 +38,28 @@ public class ClientTCP implements Runnable, INotifyState {
                 if(notifierGame != null) notifierGame.startActionEnigmeRapide(var);
             }
         });
-        managerTCP.eventManager.OnEvent(String.class, ProtocolEventsTCP.BADPROPOSALRESPONSE, new DataListenerTCP<String>() {
+        managerTCP.eventManager.OnEvent(Proposal.class, ProtocolEventsTCP.BADPROPOSALRESPONSE, new DataListenerTCP<Proposal>() {
             @Override
-            public void onData(String var) {
-                if(notifierGame != null) notifierGame.receiveFromServeurBadProposalResponse(var,"");
+            public void onData(Proposal var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurBadProposalResponse(var.id,var.proposal);
             }
         });
-        // TODO GOODPROPOSALRESPONSE PROTOCOL
-        managerTCP.eventManager.OnEvent(String.class, ProtocolEventsTCP.GOODPROPOSALRESPONSE, new DataListenerTCP<String>() {
+        managerTCP.eventManager.OnEvent(Proposal.class, ProtocolEventsTCP.GOODPROPOSALRESPONSE, new DataListenerTCP<Proposal>() {
             @Override
-            public void onData(String var) {
-                if(notifierGame != null) notifierGame.receiveFromServeurGoodProposalResponse(var);
+            public void onData(Proposal var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurGoodProposalResponse(var.id,var.proposal);
             }
         });
+        managerTCP.eventManager.OnEvent(String.class, ProtocolEventsTCP.NOTIFYCURRENTPLAYER, new DataListenerTCP<String>() {
+            @Override
+            public void onData(String var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurNotifyCurrentPlayerRound(var);
+            }
+        });
+
+
+
+   //     public static ProtocolEventsTCP<ChoiceStep> CHOICESTEP = new ProtocolEventsTCP<ChoiceStep>("CHOICESTEP");
     }
 
     private void initEventLobbyTCP() {

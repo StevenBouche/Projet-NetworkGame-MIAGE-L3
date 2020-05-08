@@ -2,8 +2,6 @@ package coco.controller;
 
 import coco.state.*;
 import controllerJavafx.LoaderRessource;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
@@ -21,8 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.util.Duration;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
 import network.message.PacketMessage;
@@ -59,6 +54,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public Label displayTheme; //for loadScoreBoard()
     @FXML
     public AnchorPane board;
+    @FXML
+    public Button buttonWheel;
 
     /** Element dynamic with code */
     public Button buttonSetEnigm; //for loadButtons
@@ -88,10 +85,11 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public List<PlayerData> listPlayerData;
     public List<CurrentResponseData> listResponsePlayerData;
     Enigme currentEnigme;
-    String myId;
+    public String myId;
     String currentPlayerId;
+
     int manche;
-    String idPlayerHaveBadProposal; /** quand recu event bad proposal set id player in this variable**/
+    String idPlayerHaveProposal; /** quand recu event bad proposal set id player in this variable**/
 
     Timer timerAnimLetter;
 
@@ -105,6 +103,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         playersResponse.namePlayer = "nobody";
         playersResponse.currentResponse = "-";
         listResponsePlayerData.add(playersResponse);
+        timerAnimLetter = new Timer();
         if(this.client != null) this.client.setNotifierGame(this);
     }
 
@@ -150,7 +149,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         root = fxmlLoader.load();
         subScene.setRoot(root);
     }
-
 
     /**
      * This function set 3 buttons
@@ -385,12 +383,12 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     int cpt;
     @Override
     public void receiveFromServeurBadProposalResponse(String var, String badReponse) {
-        idPlayerHaveBadProposal = var;
+        idPlayerHaveProposal = var;
         //todo
         Platform.runLater(() -> {
             manager.compareProp(badReponse);
             for(PlayerData p : listPlayerData){
-                if(p.id.equals(idPlayerHaveBadProposal)) {
+                if(p.id.equals(idPlayerHaveProposal)) {
                     log("Bad response from "+p.namePlayer+" : "+badReponse);
                 }
             }
@@ -406,17 +404,28 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         log.appendText(newString);
     }
 
-    //TODO GOOD REPONSE
+
     @Override
-    public void receiveFromServeurGoodProposalResponse(String var) {
-        idPlayerHaveBadProposal = var;
+    public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
+        idPlayerHaveProposal = id;
         timerAnimLetter.cancel();
+        currentPlayerId = id;
         Platform.runLater(() -> {
-            manager.compareProp("null");
+            manager.compareProp(proposal);
+            manager.displayEnigm();
             for(PlayerData p : listPlayerData){
-                if(p.id.equals(idPlayerHaveBadProposal)) log("Good response from "+p.namePlayer+" : "+currentEnigme.label);
+                if(p.id.equals(idPlayerHaveProposal)) log("Good response from "+p.namePlayer+" : "+proposal);
             }
-            setAndExecuteState(new StateStartRound(this)); //todo handle enigme => panneau enigme
+        });
+    }
+
+    @Override
+    public void receiveFromServeurNotifyCurrentPlayerRound(String var) {
+        Platform.runLater(() -> {
+            for(PlayerData p : listPlayerData){
+                if(p.id.equals(var)) log("Current player is "+p.namePlayer);
+            }
+            setAndExecuteState(new StateStartRound(this,var)); //todo rename
         });
     }
 
@@ -450,13 +459,12 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             System.out.println("id : " + id + ", letter : " + r.getLetter());
         });
 
-        timerAnimLetter = new Timer();
         timerAnimLetter.schedule( new TimerTask() {
                     @Override
                     public void run() {
                         tryshowRandomLetter(timerAnimLetter);
                     }
-                }, 100, 2000);
+                }, 0, 2000);
 
     }
 

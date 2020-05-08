@@ -6,7 +6,7 @@ public interface INotifyPlayersGame {
 
     void startActionEnigmeRapide(Enigme var);
     void receiveFromServeurBadProposalResponse(String currentPlayer, String barRep);
-
-    void receiveFromServeurGoodProposalResponse(String var);
+    void receiveFromServeurGoodProposalResponse(String id, String var);
+    void receiveFromServeurNotifyCurrentPlayerRound(String var);
 
 }
