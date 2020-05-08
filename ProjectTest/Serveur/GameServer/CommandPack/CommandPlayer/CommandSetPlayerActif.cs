@@ -44,6 +44,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             Context.CurrentPlayer = Context.listPlayers[this.idClient];
             Context.CurrentPosPlayer = Context.listIdPlayers.IndexOf(this.idClient);
 
+            commandManager.TriggerAddRoundMoneyToPlayer(this.idClient, 500);
             Proposal p = new Proposal(idClient, Data);
             SendClientGoodResponse(p);
             SendNotifyCurrentPlayer();
