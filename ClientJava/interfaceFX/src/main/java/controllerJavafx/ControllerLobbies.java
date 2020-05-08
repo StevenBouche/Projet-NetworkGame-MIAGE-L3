@@ -9,8 +9,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import network.message.PacketMessage;
@@ -42,6 +44,8 @@ public class ControllerLobbies implements Initializable {
     public Button buttonRefresh;
     @FXML
     public TextField name;
+    @FXML
+    public AnchorPane mainPane;
 
     ClientUDP server;
     Thread threadServer;
@@ -55,6 +59,7 @@ public class ControllerLobbies implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        loadBackGround();
         stateDisconnected();
         initTable();
         initButton();
@@ -64,6 +69,25 @@ public class ControllerLobbies implements Initializable {
         } catch (SocketException | UnknownHostException e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadBackGround() {
+
+        Image image = LoaderRessource.getInstance().wheelBackground;
+
+        // create a background image
+        BackgroundImage backgroundimage = new BackgroundImage(image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        // create Background
+        Background background = new Background(backgroundimage);
+
+        // set background
+        mainPane.setBackground(background);
+
     }
 
     private void switchSceneAndConnectToServerGame() {

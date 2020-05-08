@@ -2,6 +2,7 @@ package network.main;
 
 import coco.controller.PlayerData;
 import controllerJavafx.ControllerRoot;
+import controllerJavafx.LoaderRessource;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,6 +39,7 @@ public class Main extends Application {
     }
 
     private void loadPrimaryScene() throws IOException {
+            LoaderRessource.getInstance();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("sample.fxml"));
             managerRoot = new ControllerRoot(new IMain() {
                 @Override
