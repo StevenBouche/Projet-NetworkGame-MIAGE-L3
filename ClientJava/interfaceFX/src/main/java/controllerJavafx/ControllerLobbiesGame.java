@@ -187,7 +187,8 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
             PlayerData p2 = new PlayerData();
             p2.id = p.id;
             p2.namePlayer = p.name;
-            p2.cashPlayer = 0;
+            p2.cashPlayerRound = 0;
+            p2.cashPlayerTotal = 0;
             listData.add(p2);
         }
         return listData;

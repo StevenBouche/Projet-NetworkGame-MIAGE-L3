@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import network.message.obj.PlayerMoneyInfo;
 
 import java.util.List;
 
@@ -21,14 +22,26 @@ public class HandlerPlayerDataTable {
         initTable();
     }
 
+    public void updateDataPlayer(PlayerMoneyInfo var) {
+        PlayerData p = getPlayerData(var.id);
+        if(p!=null){
+            p.cashPlayerRound = var.CagnotteRound;
+        //    p.cashPlayerTotal = var.CagnotteTotal; todo
+            updateTable(this.listPlayerData);
+        }
+    }
+
    private void initTable(){
         tableView.setEditable(false);
         TableColumn<PlayerData,String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("namePlayer"));
         TableColumn<PlayerData,Integer> cashColumn = new TableColumn<>("Cash");
-        cashColumn.setCellValueFactory(new PropertyValueFactory<>("cashPlayer"));
+        cashColumn.setCellValueFactory(new PropertyValueFactory<>("cashPlayerRound"));
+       TableColumn<PlayerData,Integer> cashColumnTot = new TableColumn<>("Cash");
+       cashColumn.setCellValueFactory(new PropertyValueFactory<>("cashPlayerTotal"));
         tableView.getColumns().add(nameColumn);
         tableView.getColumns().add(cashColumn);
+       tableView.getColumns().add(cashColumnTot);
         updateTable(listPlayerData);
     }
 
@@ -48,12 +61,11 @@ public class HandlerPlayerDataTable {
         return null;
     }
 
-
     private void updateNamePlayer(int id, String nP){
         listPlayerData.get(id).namePlayer = nP;
     }
 
-    private void addCashPlayer(int id, int newCash){
+   /* private void addCashPlayer(int id, int newCash){
         listPlayerData.get(id).cashPlayer += newCash;
     }
 
@@ -61,8 +73,6 @@ public class HandlerPlayerDataTable {
         listPlayerData.get(id).cashPlayer = newCash;
     }
 
-
-
-
+*/
 
 }

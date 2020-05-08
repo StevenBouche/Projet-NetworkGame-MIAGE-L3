@@ -21,6 +21,7 @@ import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
 import network.message.obj.ChoiceStep;
 import network.message.obj.Enigme;
+import network.message.obj.PlayerMoneyInfo;
 
 import java.io.IOException;
 import java.net.URL;
@@ -280,8 +281,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     @Override
     public void startActionEnigmeRapide(Enigme varE) {
-        handlerEnigme.setCurrentEnigme(varE);
         Platform.runLater(() -> {
+            handlerEnigme.setCurrentEnigme(varE);
             // todo change state of UI on rapid enigma
             setAndExecuteState(new StateEnigmeRapide(this)); //todo handle enigme => panneau enigme
         });
@@ -343,6 +344,13 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             preSetEnigm();
         });
 
+    }
+
+    @Override
+    public void receiveFromServeurPlayerMoneyInfo(PlayerMoneyInfo var) {
+        Platform.runLater(() -> {
+            handlerPlayerDataTable.updateDataPlayer(var);
+        });
     }
 
     public void preSetEnigm() {

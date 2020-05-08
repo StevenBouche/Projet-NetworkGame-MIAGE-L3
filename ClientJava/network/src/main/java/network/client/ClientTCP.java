@@ -66,6 +66,12 @@ public class ClientTCP implements Runnable, INotifyState {
                 if(notifierGame != null) notifierGame.receiveFromServeurEnigmaOfRound(var);
             }
         });
+        managerTCP.eventManager.OnEvent(PlayerMoneyInfo.class, ProtocolEventsTCP.UPDATEROUNDMONEY, new DataListenerTCP<PlayerMoneyInfo>() {
+            @Override
+            public void onData(PlayerMoneyInfo var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurPlayerMoneyInfo(var);
+            }
+        });
 
     }
 

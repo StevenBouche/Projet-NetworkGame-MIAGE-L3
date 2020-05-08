@@ -2,6 +2,7 @@ package network.client;
 
 import network.message.obj.ChoiceStep;
 import network.message.obj.Enigme;
+import network.message.obj.PlayerMoneyInfo;
 
 public interface INotifyPlayersGame {
 
@@ -12,4 +13,5 @@ public interface INotifyPlayersGame {
     void receiveFromServeurChoiceStep(ChoiceStep var);
     void receiveFromServeurEnigmaOfRound(Enigme var);
 
+    void receiveFromServeurPlayerMoneyInfo(PlayerMoneyInfo var);
 }

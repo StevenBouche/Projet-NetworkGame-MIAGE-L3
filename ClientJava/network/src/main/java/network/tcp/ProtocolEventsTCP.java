@@ -1,9 +1,6 @@
 package network.tcp;
 
-import network.message.obj.ChoiceStep;
-import network.message.obj.Enigme;
-import network.message.obj.ListPlayerGame;
-import network.message.obj.Proposal;
+import network.message.obj.*;
 import network.protocol.ProtocolEvents;
 
 public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
@@ -31,6 +28,7 @@ public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
     public static ProtocolEventsTCP<Proposal> BADPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("BADPROPOSALRESPONSE");
     public static ProtocolEventsTCP<Proposal> GOODPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("GOODPROPOSALRESPONSE");
     public static ProtocolEventsTCP<String> NOTIFYCURRENTPLAYER = new ProtocolEventsTCP<String>("NOTIFYCURRENTPLAYER");
+    public static ProtocolEventsTCP<PlayerMoneyInfo> UPDATEROUNDMONEY = new ProtocolEventsTCP<PlayerMoneyInfo>("UPDATEROUNDMONEY");
 
     /*
         PROTOCOL SEND AND RECEIVE
