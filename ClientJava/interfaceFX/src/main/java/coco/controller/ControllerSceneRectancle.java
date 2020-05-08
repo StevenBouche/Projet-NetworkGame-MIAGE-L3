@@ -50,8 +50,6 @@ public class ControllerSceneRectancle implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setPanneau(0, 51);
-
-
     }
 
     /**Method displayLetter

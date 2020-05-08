@@ -7,11 +7,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import network.message.obj.Category;
 import network.message.obj.Enigme;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Main extends Application {
 
@@ -31,8 +33,21 @@ public class Main extends Application {
 
         Enigme var = new Enigme();
         var.label = "ENIGME RAPIDO !";
+        var.category = Category.CELEBRITES;
+        var.order = new ArrayList<>();
+        var.order.add('E');
+        var.order.add('N');
+        var.order.add('I');
+        var.order.add('G');
+        var.order.add('M');
+        var.order.add('R');
+        var.order.add('A');
+        var.order.add('P');
+        var.order.add('I');
+        var.order.add('D');
+        var.order.add('O');
         managerGameUI.startActionEnigmeRapide(var);
-        managerGameUI.receiveFromServeurBadProposalResponse("Coco", "null");
+        managerGameUI.receiveFromServeurBadProposalResponse("1", "Hello test c'est la mauvaise reponse");
     }
 
     @Override

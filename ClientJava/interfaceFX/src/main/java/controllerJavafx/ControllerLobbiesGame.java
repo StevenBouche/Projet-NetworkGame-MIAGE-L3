@@ -1,4 +1,6 @@
 package controllerJavafx;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ClassPathResource;
 
 import coco.controller.PlayerData;
 import javafx.application.Platform;
@@ -8,7 +10,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersLobby;
@@ -20,7 +23,10 @@ import network.message.obj.ServerGame;
 import network.tcp.ProtocolEventsTCP;
 import com.jfoenix.controls.JFXButton;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
@@ -69,6 +75,26 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
         clientThread = new Thread(client);
         clientThread.setName("Thread Client TCP");
         clientThread.start();
+        loadBackGround();
+    }
+
+    private void loadBackGround() {
+
+        Image image = LoaderRessource.getInstance().wheelBackground;
+
+        // create a background image
+        BackgroundImage backgroundimage = new BackgroundImage(image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        // create Background
+        Background background = new Background(backgroundimage);
+
+        // set background
+        mainPane.setBackground(background);
+
     }
 
     private void createItemPlayer(int i, String name, String id, boolean ready, int nbPlayerLobby){
@@ -147,6 +173,7 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
             p2.id = p.id;
             p2.namePlayer = p.name;
             p2.cashPlayer = 0;
+            listData.add(p2);
         }
         return listData;
     }

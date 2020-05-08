@@ -10,15 +10,15 @@ public class StateEnigmeRapide extends StateGameUI {
 
     @Override
     public void execute() {
-
         stateButton();
         setEnigme();
+        controller.animEnigmRapide();
     }
 
     private void setEnigme() {
         controller.preSetEnigm();
         controller.animationDisplayLetters();
-
+        controller.updateThemeEnigm();
     }
 
     @Override

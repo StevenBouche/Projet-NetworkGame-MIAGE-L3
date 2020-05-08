@@ -13,6 +13,6 @@ public class StateAnimEnigmRapide extends StateGameUI  {
     }
 
     private void animEnigmRapide() {
-        controller.animEnigmRapide();
+
     }
 }

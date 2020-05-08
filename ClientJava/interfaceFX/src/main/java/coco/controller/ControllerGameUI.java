@@ -1,6 +1,7 @@
 package coco.controller;
 
 import coco.state.*;
+import controllerJavafx.LoaderRessource;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -10,14 +11,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.util.Duration;
@@ -29,6 +31,7 @@ import network.tcp.ProtocolEventsTCP;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ControllerGameUI implements Initializable, INotifyPlayersGame {
@@ -41,8 +44,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @FXML
     public Pane clientChoic;
     @FXML
-    public Pane scoreBoard;
-    @FXML
     public TextField proposEnigm;
     @FXML
     public Button validChoice;
@@ -52,9 +53,12 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public Pane weelPane;
     @FXML
     public TableView<PlayerData> tableView;
-
     @FXML
-    public TableView<CurrentResponseData> tableViewResponse;
+    public TextArea log;
+    @FXML
+    public Label displayTheme; //for loadScoreBoard()
+    @FXML
+    public AnchorPane board;
 
     /** Element dynamic with code */
     public Button buttonSetEnigm; //for loadButtons
@@ -64,7 +68,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public Boolean switchActive; //switchActive = true -> voyelle switchActive = false -> consonne
     public ChoiceBox<String> cbdV; //for loadCBD()
     public ChoiceBox<String> cbdC;
-    public Label displayTheme; //for loadScoreBoard()
+
     public Label displayManche;
     public String currentEnigmeLabel;
     public int nbrRectWithLetter;
@@ -89,6 +93,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     int manche;
     String idPlayerHaveBadProposal; /** quand recu event bad proposal set id player in this variable**/
 
+    Timer timerAnimLetter;
+
     public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId) {
         this.myId = myId;
         this.client = client;
@@ -106,16 +112,25 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         switchActive = false;
         try {
+            loadTextField();
             loadSubScene();
             loadButtons();
             loadCBD();
             loadSwitch();
-            loadScoreBoard();
-            initCurrentPlayerResponse();
+            initTable();
+            loadBackGround();
+            displayTheme.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadTextField() {
+        proposEnigm.setTextFormatter(new TextFormatter<>((change) -> {
+            change.setText(change.getText().toUpperCase());
+            return change;
+        }));
     }
 
     public void setAndExecuteState(StateGameUI state){
@@ -291,52 +306,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         System.out.println("client submit letter");
     }
 
-    /**
-     * This function set up the score Board.
-     * There are 3 player and the number of the round
-     * in the score Board.
-     */
-    public void loadScoreBoard(){
-        /** create the display round */
-        displayManche = new Label();
-        displayManche.setTranslateX(450);
-        displayManche.setTranslateY(15);
-        displayManche.setAlignment(Pos.CENTER);
-        setManche(1);
-        scoreBoard.getChildren().add(displayManche);
-
-        displayTheme = new Label();
-        //displayTheme.setTranslateX(25);
-        displayTheme.setTranslateY(15);
-        displayTheme.setPrefWidth(380);
-        displayTheme.setAlignment(Pos.CENTER);
-        displayTheme.setText("");
-        scoreBoard.getChildren().add(displayTheme);
-        updateThemeEnigm("Mon theme");
-
-        initTable();
-    }
-    public void initCurrentPlayerResponse(){
-        tableViewResponse.setEditable(false);
-
-        TableColumn<CurrentResponseData,String> namePColumn = new TableColumn<>("Name");
-        namePColumn.setCellValueFactory(new PropertyValueFactory<>("namePlayer"));
-
-        TableColumn<CurrentResponseData,String> repsonseColumn = new TableColumn<>("CurrentResponse");
-        repsonseColumn.setCellValueFactory(new PropertyValueFactory<>("currentResponse"));
-
-        tableViewResponse.getColumns().add(namePColumn);
-        tableViewResponse.getColumns().add(repsonseColumn);
-        updateTableResponse(listResponsePlayerData);
-    }
-
-    public void updateTableResponse(List<CurrentResponseData> list){
-        Platform.runLater(() -> {
-            ObservableList<CurrentResponseData> listO = FXCollections.observableArrayList(list);
-            tableViewResponse.setItems(listO);
-        });
-    }
-
     public void initTable(){
         tableView.setEditable(false);
 
@@ -371,8 +340,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         });
     }
 
-    public void updateThemeEnigm(String theme){
-        displayTheme.setText(theme);
+    public void updateThemeEnigm(){
+        if(currentEnigme.category != null) displayTheme.setText(currentEnigme.category.name());
     }
 
     /**
@@ -409,9 +378,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         currentEnigmeLabel = currentEnigme.label;
         Platform.runLater(() -> {
             // todo change state of UI on rapid enigma
-            setAndExecuteState(new StateEnigmeRapide(this));
-            //todo handle enigme => panneau enigme
-            setAndExecuteState(new StateAnimEnigmRapide(this));
+            setAndExecuteState(new StateEnigmeRapide(this)); //todo handle enigme => panneau enigme
         });
     }
 
@@ -421,37 +388,37 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         idPlayerHaveBadProposal = var;
         //todo
         Platform.runLater(() -> {
-            // OBLIGATOIRE LORS DE MODIFICATION DE QUELQUE CHOSE DE GRAPHIQUE CAR CELA VIENT DU RESEAU
             manager.compareProp(badReponse);
-            listResponsePlayerData.get(0).currentResponse = badReponse;
-            listResponsePlayerData.get(0).namePlayer = idPlayerHaveBadProposal;
-            updateTableResponse(listResponsePlayerData);
-            cpt = 0;
-            tableView.getItems().forEach((player)->{
-                if(player.id == idPlayerHaveBadProposal){
-                    drawAnimationBadResponsePlayer(cpt);
-                    //tableViewResponse.setBackground(Background.getClassCssMetaData(Paint(Color.RED)));
-                    cpt++;
+            for(PlayerData p : listPlayerData){
+                if(p.id.equals(idPlayerHaveBadProposal)) {
+                    log("Bad response from "+p.namePlayer+" : "+badReponse);
                 }
-            });
+            }
         });
     }
 
-    private void drawAnimationBadResponsePlayer(int cpt) {
-        //tableView.getColumns().get(1).getCe
+    private void log(String str){
+        String str2 = log.getText();
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        String newString = formatter.format(date)+" : "+str+"\n" + str2;
+        log.clear();
+        log.appendText(newString);
     }
 
     //TODO GOOD REPONSE
     @Override
     public void receiveFromServeurGoodProposalResponse(String var) {
         idPlayerHaveBadProposal = var;
-        //todo
+        timerAnimLetter.cancel();
         Platform.runLater(() -> {
-            // OBLIGATOIRE LORS DE MODIFICATION DE QUELQUE CHOSE DE GRAPHIQUE CAR CELA VIENT DU RESEAU
             manager.compareProp("null");
+            for(PlayerData p : listPlayerData){
+                if(p.id.equals(idPlayerHaveBadProposal)) log("Good response from "+p.namePlayer+" : "+currentEnigme.label);
+            }
+            setAndExecuteState(new StateStartRound(this)); //todo handle enigme => panneau enigme
         });
     }
-
 
     public void preSetEnigm() {
         manager.getEnigme();
@@ -474,7 +441,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
                 mapRectWithLetter.put(nbrRectWithLetter, r);
             }
         });
-
         animShowLetter();
     }
 
@@ -484,27 +450,37 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             System.out.println("id : " + id + ", letter : " + r.getLetter());
         });
 
-        Timer timer;
-        timer = new Timer();
-        timer.schedule( new TimerTask() {
+        timerAnimLetter = new Timer();
+        timerAnimLetter.schedule( new TimerTask() {
                     @Override
                     public void run() {
-                        tryshowRandomLetter(timer);
+                        tryshowRandomLetter(timerAnimLetter);
                     }
                 }, 100, 2000);
+
     }
 
     public void tryshowRandomLetter(Timer t){
-        int sizeRectWithLetter = mapRectWithLetter.size();
+
+   /*     int sizeRectWithLetter = mapRectWithLetter.size();
         Random rdm = new Random();
-        int randomLetterId = rdm.nextInt(sizeRectWithLetter);
-        if(mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_HIDDEN ||
+        int randomLetterId = rdm.nextInt(sizeRectWithLetter);*/
+
+        if(!currentEnigme.order.isEmpty()){
+            char c = currentEnigme.order.remove(0);
+            manager.displayLetter(c);
+       //     displayLetter(c);
+            chekIfEnigmIsShow(t);
+        }
+   /*     if(mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_HIDDEN ||
                 mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_SPECIAL){
 
-            displayLetter(randomLetterId+1);
-            chekIfEnigmIsShow(t);
 
-        }
+
+        }*/
+
+
+
 
     }
 
@@ -527,6 +503,25 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         if(allIsShow){
             t.cancel();
         }
+    }
+
+    private void loadBackGround() {
+
+        Image image = LoaderRessource.getInstance().wheelBackground;
+
+        // create a background image
+        BackgroundImage backgroundimage = new BackgroundImage(image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+
+        // create Background
+        Background background = new Background(backgroundimage);
+
+        // set background
+        board.setBackground(background);
+
     }
 }
 
