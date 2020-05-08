@@ -1,10 +1,7 @@
 package network.client;
 
 import network.message.PacketMessage;
-import network.message.obj.Enigme;
-import network.message.obj.ListPlayerGame;
-import network.message.obj.PlayerGame;
-import network.message.obj.Proposal;
+import network.message.obj.*;
 import network.protocol.Protocol;
 import network.share.DataListenerTCP;
 import network.tcp.INotifyState;
@@ -57,9 +54,13 @@ public class ClientTCP implements Runnable, INotifyState {
             }
         });
 
+        managerTCP.eventManager.OnEvent(ChoiceStep.class, ProtocolEventsTCP.CHOICESTEP, new DataListenerTCP<ChoiceStep>() {
+            @Override
+            public void onData(ChoiceStep var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurChoiceStep(var);
+            }
+        });
 
-
-   //     public static ProtocolEventsTCP<ChoiceStep> CHOICESTEP = new ProtocolEventsTCP<ChoiceStep>("CHOICESTEP");
     }
 
     private void initEventLobbyTCP() {

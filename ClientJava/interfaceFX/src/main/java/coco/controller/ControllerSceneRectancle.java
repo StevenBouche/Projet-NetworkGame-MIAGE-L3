@@ -56,7 +56,7 @@ public class ControllerSceneRectancle implements Initializable {
      * display choiced letter
      * @param l is the letter to display
      */
-    public void displayLetter(char l){
+    public synchronized void displayLetter(char l){
         List<Integer> posRecurrenceLetter = new ArrayList<>();
         nbrOccurence = 0;
 
@@ -86,7 +86,7 @@ public class ControllerSceneRectancle implements Initializable {
      *
      * @param clientProp s the proposition of player
      */
-    public void compareProp(String clientProp) {
+    public synchronized void compareProp(String clientProp) {
             this.mapRect.forEach((id, r) ->{
                 if(r.getStat() == StateOfRect.NULL || r.getStat() == StateOfRect.SPACE) {
                     if (e.equals(clientProp)) {
@@ -105,7 +105,7 @@ public class ControllerSceneRectancle implements Initializable {
      * letters of the enigm
      *
      */
-    public void displayEnigm(){
+    public synchronized void displayEnigm(){
         this.mapRect.forEach((id, r) ->{
             r.setStat(StateOfRect.LETTRE_SHOW);
             r.drawLetter(listCharEnigm);
@@ -116,7 +116,7 @@ public class ControllerSceneRectancle implements Initializable {
      *
      * @param enigm
      */
-    public void setEnigm(String enigm){
+    public synchronized void setEnigm(String enigm){
         this.e = enigm;
         String actualLigneW = "";
         int sizeLine = 0;
@@ -152,7 +152,7 @@ public class ControllerSceneRectancle implements Initializable {
      * @param numLigne is the numbre of the line
      * @param nbrLigne is the number total of line to display
      */
-    public void setLigne(String ligne, int numLigne, int nbrLigne){
+    public synchronized void setLigne(String ligne, int numLigne, int nbrLigne){
         /** If == 2 we draw in the 2 center lines */
         if(nbrLigne <= 2) {
             if(numLigne == 0) {
@@ -191,7 +191,7 @@ public class ControllerSceneRectancle implements Initializable {
         }
     }
 
-    public void resetPanneau(){
+    public synchronized void resetPanneau(){
         this.mapRect.forEach((idR, r)->{
             r.setColor(Color.AQUAMARINE);
             listCharEnigm.clear();

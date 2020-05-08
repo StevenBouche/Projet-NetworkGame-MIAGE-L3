@@ -5,7 +5,6 @@ import coco.state.StateGameUI;
 
 public class StateStartRound extends StateGameUI {
 
-    String idPlayerCurrent;
     Boolean stateButton;
 
     public StateStartRound(ControllerGameUI controllerGameUI, String var) {
@@ -15,6 +14,9 @@ public class StateStartRound extends StateGameUI {
 
     @Override
     public void execute() {
+        controller.currentEnigme = null;
+        controller.currentEnigmeLabel = "";
+        controller.manager.resetPanneau();
         controller.buttonSetEnigm.setDisable(stateButton);
         controller.buttonShowEnigm.setDisable(stateButton);
         controller.buttonReset.setDisable(stateButton);

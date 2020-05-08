@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
 import network.message.PacketMessage;
+import network.message.obj.ChoiceStep;
 import network.message.obj.Enigme;
 import network.tcp.ProtocolEventsTCP;
 
@@ -84,7 +85,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     /** Current Data Game **/
     public List<PlayerData> listPlayerData;
     public List<CurrentResponseData> listResponsePlayerData;
-    Enigme currentEnigme;
+    public Enigme currentEnigme;
     public String myId;
     String currentPlayerId;
 
@@ -408,11 +409,11 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @Override
     public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
         idPlayerHaveProposal = id;
-        timerAnimLetter.cancel();
         currentPlayerId = id;
         Platform.runLater(() -> {
             manager.compareProp(proposal);
             manager.displayEnigm();
+            chekIfEnigmIsShow(timerAnimLetter);
             for(PlayerData p : listPlayerData){
                 if(p.id.equals(idPlayerHaveProposal)) log("Good response from "+p.namePlayer+" : "+proposal);
             }
@@ -426,6 +427,13 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
                 if(p.id.equals(var)) log("Current player is "+p.namePlayer);
             }
             setAndExecuteState(new StateStartRound(this,var)); //todo rename
+        });
+    }
+
+    @Override
+    public void receiveFromServeurChoiceStep(ChoiceStep var) {
+        Platform.runLater(() -> {
+          log("You need to choice between buy vowel, turn wheel or proposal enigma");
         });
     }
 
