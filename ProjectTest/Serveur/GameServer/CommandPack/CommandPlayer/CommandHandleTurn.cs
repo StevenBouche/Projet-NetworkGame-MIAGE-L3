@@ -78,7 +78,27 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         public Boolean HaveConsonneEnigma()
         {
-            throw new NotImplementedException();
+            List<char> alreadyProposedLetters = Context.letterBuyInARound;
+            
+            var consonnants = new HashSet<char> { 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Z'};
+            int cpt = 0;
+            
+            foreach(char c in alreadyProposedLetters)
+            {
+                if (consonnants.Contains(c))
+                {
+                    cpt++;
+                }
+            }
+
+            if(Context.CurrentEnigma.consonantNb < cpt)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
