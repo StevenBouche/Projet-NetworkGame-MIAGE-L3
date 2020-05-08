@@ -32,6 +32,7 @@ namespace Share.Network.Protocol
         public static ProtocolEventsTCP<Enigme> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMERAPIDE");
         public static ProtocolEventsTCP<Enigme> ACTIONENIGMEPRINCIPALE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMEPRINCIPALE");
         public static ProtocolEventsTCP<String> NOTIFYCURRENTPLAYER = new ProtocolEventsTCP<String>("NOTIFYCURRENTPLAYER");
+        public static ProtocolEventsTCP<PlayerMoneyInfo> UPDATEROUNDMONEY = new ProtocolEventsTCP<PlayerMoneyInfo>("UPDATEROUNDMONEY");
 
         /*
        *  PROTOCOL GAME SEND AND RECEIVE
