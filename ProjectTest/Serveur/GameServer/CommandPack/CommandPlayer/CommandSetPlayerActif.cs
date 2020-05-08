@@ -40,8 +40,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             }
             
             Console.WriteLine("\n Reponse valide par : " + this.idClient + "\n");
-            Context.CurrentPlayer = Context.listPlayers[this.idClient];
-            Context.CurrentPosPlayer = Context.listIdPlayers.IndexOf(this.idClient);
+            
 
             SendGoodResponse();
             //bien recu les données
@@ -50,7 +49,21 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         private void SendGoodResponse()
         {
+            //Sets the current player with the one that has won the quick enigma
+            //Sending an event to notify this player has the upper hand
+            Context.CurrentPlayer = Context.listPlayers[this.idClient];
+            Context.CurrentPosPlayer = Context.listIdPlayers.IndexOf(this.idClient);
+
+            PacketMessage<String> msg = new PacketMessage<String>()
+            {
+                evt = ProtocolEventsTCP<String>.NOTIFYCURRENTPLAYER.eventName,
+                data = idClient
+            };
+
+            Context.SendAllClient(msg);
+
             throw new NotImplementedException();
+
         }
 
         private void SendClientBadResponse(String id)
