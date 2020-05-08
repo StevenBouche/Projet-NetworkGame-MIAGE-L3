@@ -10,4 +10,6 @@ public interface INotifyPlayersGame {
     void receiveFromServeurGoodProposalResponse(String id, String var);
     void receiveFromServeurNotifyCurrentPlayerRound(String var);
     void receiveFromServeurChoiceStep(ChoiceStep var);
+    void receiveFromServeurEnigmaOfRound(Enigme var);
+
 }

@@ -437,8 +437,15 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         });
     }
 
+    @Override
+    public void receiveFromServeurEnigmaOfRound(Enigme var) {
+        currentEnigme = var;
+        currentEnigmeLabel = currentEnigme.label;
+        preSetEnigm();
+    }
+
     public void preSetEnigm() {
-        manager.getEnigme();
+       // manager.getEnigme();
         manager.setEnigm(currentEnigmeLabel);//"PETIT OISEAU SUR L'EAU"
         manager.setRectWithLetter();
     }

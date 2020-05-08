@@ -60,6 +60,12 @@ public class ClientTCP implements Runnable, INotifyState {
                 if(notifierGame != null) notifierGame.receiveFromServeurChoiceStep(var);
             }
         });
+        managerTCP.eventManager.OnEvent(Enigme.class, ProtocolEventsTCP.ACTIONENIGMEPRINCIPALE, new DataListenerTCP<Enigme>() {
+            @Override
+            public void onData(Enigme var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurEnigmaOfRound(var);
+            }
+        });
 
     }
 

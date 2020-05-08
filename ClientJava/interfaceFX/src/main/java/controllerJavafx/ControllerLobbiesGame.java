@@ -1,4 +1,5 @@
 package controllerJavafx;
+import javafx.scene.media.MediaPlayer;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ClassPathResource;
 
@@ -76,6 +77,20 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
         clientThread.setName("Thread Client TCP");
         clientThread.start();
         loadBackGround();
+        loadMp3();
+    }
+
+    private void loadMp3() {
+        Timer t = new Timer();
+        t.schedule( new TimerTask() {
+            @Override
+            public void run() {
+                MediaPlayer mediaPlayer = new MediaPlayer(LoaderRessource.getInstance().wheelFortuneMp3);
+                mediaPlayer.play();
+                t.cancel();
+            }
+        }, 0, 2000);
+
     }
 
     private void loadBackGround() {

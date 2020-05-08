@@ -6,6 +6,9 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.File;
 
 public class LoaderRessource {
 
@@ -18,10 +21,16 @@ public class LoaderRessource {
     }
 
     public Image wheelBackground;
-
+    public Media wheelFortuneMp3;
 
     private LoaderRessource(){
         loadWheelImage();
+        loadMp3();
+    }
+
+    private void loadMp3() {
+        String str = getClass().getClassLoader().getResource("wheel.mp3").getPath();
+        wheelFortuneMp3 = new Media(new File(str).toURI().toString());
     }
 
     private void loadWheelImage() {

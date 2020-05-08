@@ -7,6 +7,7 @@ module org.miage.interfaceFX {
     requires org.miage.network;
     requires com.jfoenix;
     requires spring.core;
+    requires javafx.media;
     exports controllerJavafx;
     exports network.main;
     exports coco.controller;
