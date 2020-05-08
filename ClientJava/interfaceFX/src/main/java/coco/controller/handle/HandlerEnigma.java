@@ -1,5 +1,6 @@
 package coco.controller.handle;
 
+import coco.controller.ControllerSceneRectancle;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
@@ -12,9 +13,14 @@ public class HandlerEnigma {
 
     private Label displayTheme;
     private Enigme currentEnigme;
+    ControllerSceneRectancle controllerPan;
 
     public HandlerEnigma(Label displayTheme){
         this.displayTheme = displayTheme;
+    }
+
+    public void setCallbackForEnigmaChange(ControllerSceneRectancle controllerPan){
+        this.controllerPan = controllerPan;
     }
 
     public Enigme getCurrentEnigme(){

@@ -17,7 +17,7 @@ public class StateStartRound extends StateGameUI {
     public StateStartRound(ControllerGameUI controllerGameUI, String var) {
         super(controllerGameUI,true,true);
         stateButton = !controller.handlerIdentity.myId.equals(var);
-        controller.animEnigmRound();
+     //   controller.animEnigmRound();
     }
 
     @Override

@@ -111,13 +111,13 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         switchActive = false;
         try {
+            createHandler();
             loadTextField();
             loadSubScene();
             loadButtons();
             loadCBD();
             loadSwitch();
             loadBackGround();
-            createHandler();
             setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
         } catch (IOException e) {
             e.printStackTrace();
@@ -126,6 +126,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     private void createHandler() {
         handlerEnigme = new HandlerEnigma(displayTheme);
+        handlerEnigme.setCallbackForEnigmaChange(manager);
         handlerPlayerDataTable = new HandlerPlayerDataTable(tableView,dataLoad.listPlayerData);
         handlerIdentity = new HandlerMyIdentity(dataLoad.myId);
         handlerRound = new HandlerRound(displayManche);
@@ -150,7 +151,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
      */
     private void loadSubScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("panneau.fxml"));
-        manager = new ControllerSceneRectancle();
+        manager = new ControllerSceneRectancle(handlerEnigme);
         fxmlLoader.setController(manager);
         root = fxmlLoader.load();
         subScene.setRoot(root);
@@ -356,8 +357,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public void receiveFromServeurEnigmaOfRound(Enigme var) {
         Platform.runLater(() -> {
             handlerEnigme.setCurrentEnigme(var);
-            log("SET NEW ENIGME");
             preSetEnigm();
+            log("SET NEW ENIGME");
         });
     }
 

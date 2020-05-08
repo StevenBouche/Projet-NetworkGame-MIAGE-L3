@@ -1,5 +1,6 @@
 package coco.controller;
 
+import coco.controller.handle.HandlerEnigma;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -28,9 +29,9 @@ public class ControllerSceneRectancle implements Initializable {
     Map<Integer, Label> mapEnigm;
     Map<Integer, Boolean> mapVisibilityEnigm;
     Map<Integer, Label> listCharEnigm;
-    String e;
+
     String[] wordsEnigm;
-    List<String> listeLigne = new ArrayList<>();
+    List<String> listeLigne;
     int nbrLigne;
 
     int nbrOccurence;
@@ -39,8 +40,19 @@ public class ControllerSceneRectancle implements Initializable {
     public Pane pane;
     public int ifFirstLetter;
 
+    private HandlerEnigma handlerEnigma;
 
-    public ControllerSceneRectancle(){
+    public ControllerSceneRectancle(HandlerEnigma handlerEnigma){
+        initScene();
+        this.mapRect = new HashMap<>();
+        mapEnigm = new HashMap<>();
+        mapVisibilityEnigm = new HashMap<>();
+        listCharEnigm = new HashMap<>();
+        this.handlerEnigma = handlerEnigma;
+    }
+
+    private void initScene() {
+        listeLigne = new ArrayList<>();
         this.mapRect = new HashMap<>();
         mapEnigm = new HashMap<>();
         mapVisibilityEnigm = new HashMap<>();
@@ -89,7 +101,7 @@ public class ControllerSceneRectancle implements Initializable {
     public void compareProp(String clientProp) {
             this.mapRect.forEach((id, r) ->{
                 if(r.getStat() == StateOfRect.NULL || r.getStat() == StateOfRect.SPACE) {
-                    if (e.equals(clientProp)) {
+                    if (handlerEnigma.getCurrentEnigmeLabel().equals(clientProp)) {
                         r.setColor(Color.GREEN);
                         r.resetColor();
                     } else {
@@ -117,11 +129,11 @@ public class ControllerSceneRectancle implements Initializable {
      * @param enigm
      */
     public void setEnigm(String enigm){
-        this.e = enigm;
+
         String actualLigneW = "";
         int sizeLine = 0;
         nbrLigne = 1;
-        wordsEnigm = this.e.split("\\s");
+        wordsEnigm = enigm.split("\\s");
         /** Create the enigm display lines */
         for(String word : wordsEnigm){
 
@@ -192,13 +204,18 @@ public class ControllerSceneRectancle implements Initializable {
     }
 
     public void resetPanneau(){
-        listeLigne = new ArrayList<>();
+        pane.getChildren().clear();
+        initScene();
+        setPanneau(0, 51);
+/*
         this.mapRect.forEach((idR, r)->{
             r.setColor(Color.AQUAMARINE);
             listCharEnigm.clear();
             r.setLetter('~', listCharEnigm);
             //listCharEnigm.get(idR).
         });
+
+        initScene();*/
     }
 
     /**This function set up the enigm board case
@@ -243,14 +260,5 @@ public class ControllerSceneRectancle implements Initializable {
             }
         });
     }
-
-    /**this function return the enigm
-     *
-     * @return the String of enigm
-     */
-    public String getEnigme(){
-        return this.e;
-    }
-
 
 }
