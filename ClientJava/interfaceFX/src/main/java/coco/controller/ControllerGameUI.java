@@ -1,34 +1,32 @@
 package coco.controller;
 
+import coco.controller.handle.HandlerEnigma;
+import coco.controller.handle.HandlerMyIdentity;
+import coco.controller.handle.HandlerPlayerDataTable;
+import coco.controller.handle.HandlerRound;
 import coco.state.*;
 import controllerJavafx.LoaderRessource;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
-import network.message.PacketMessage;
 import network.message.obj.ChoiceStep;
 import network.message.obj.Enigme;
-import network.tcp.ProtocolEventsTCP;
 
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
@@ -66,46 +64,40 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public Boolean switchActive; //switchActive = true -> voyelle switchActive = false -> consonne
     public ChoiceBox<String> cbdV; //for loadCBD()
     public ChoiceBox<String> cbdC;
-
     public Label displayManche;
-    public String currentEnigmeLabel;
-    public int nbrRectWithLetter;
 
-    /** My current state **/
-    StateGameUI stateUI;
+    public int nbrRectWithLetter; // ?
 
     /** Sub Scene Element **/
     public ControllerSceneRectancle manager;
     public Parent root;
 
-    /** Client Network**/
-    public ClientTCP client;
-    Thread clientThread;
-
-    /** Current Data Game **/
-    public List<PlayerData> listPlayerData;
-    public List<CurrentResponseData> listResponsePlayerData;
-    public Enigme currentEnigme;
-    public String myId;
-    String currentPlayerId;
-
-    int manche;
-    String idPlayerHaveProposal; /** quand recu event bad proposal set id player in this variable**/
-
     Timer timerAnimLetter;
 
+    /** Data comming from lobby**/
+    public DataLoadGame dataLoad;
+
+    /** Handler UI **/
+    public HandlerEnigma handlerEnigme ;
+    public HandlerPlayerDataTable handlerPlayerDataTable;
+    public HandlerMyIdentity handlerIdentity;
+    public HandlerRound handlerRound;
+
+    /** My current state **/
+    StateGameUI stateUI;
+
     public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId) {
-        this.myId = myId;
-        this.client = client;
-        this.clientThread = clientThread;
-        this.listPlayerData = data;
-        this.listResponsePlayerData = new ArrayList<>();
-        CurrentResponseData playersResponse = new CurrentResponseData();
-        playersResponse.namePlayer = "nobody";
-        playersResponse.currentResponse = "-";
-        listResponsePlayerData.add(playersResponse);
+        buildDataLoad(client,clientThread,data,myId);
         timerAnimLetter = new Timer();
-        if(this.client != null) this.client.setNotifierGame(this);
+    }
+
+    private void buildDataLoad(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId) {
+        dataLoad = new DataLoadGame();
+        dataLoad.client = client;
+        dataLoad.clientThread = clientThread;
+        dataLoad.listPlayerData = data;
+        dataLoad.myId = myId;
+        if(client != null) client.setNotifierGame(this); //sub event client tcp
     }
 
     @Override
@@ -117,13 +109,19 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             loadButtons();
             loadCBD();
             loadSwitch();
-            initTable();
             loadBackGround();
-            displayTheme.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+            createHandler();
             setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void createHandler() {
+        handlerEnigme = new HandlerEnigma(displayTheme);
+        handlerPlayerDataTable = new HandlerPlayerDataTable(tableView,dataLoad.listPlayerData);
+        handlerIdentity = new HandlerMyIdentity(dataLoad.myId);
+        handlerRound = new HandlerRound(displayManche);
     }
 
     private void loadTextField() {
@@ -261,43 +259,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         changeChoiceB(cbdV, cbdC);
     }
 
-    public void initTable(){
-        tableView.setEditable(false);
-
-        TableColumn<PlayerData,String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("namePlayer"));
-
-        TableColumn<PlayerData,Integer> cashColumn = new TableColumn<>("Cash");
-        cashColumn.setCellValueFactory(new PropertyValueFactory<>("cashPlayer"));
-
-        tableView.getColumns().add(nameColumn);
-        tableView.getColumns().add(cashColumn);
-
-        updateTable(listPlayerData);
-    }
-
-    public void updateNamePlayer(int id, String nP){
-        listPlayerData.get(id).namePlayer = nP;
-    }
-
-    public void addCashPlayer(int id, int newCash){
-        listPlayerData.get(id).cashPlayer += newCash;
-    }
-
-    public void resetCashPlayer(int id, int newCash){
-        listPlayerData.get(id).cashPlayer = newCash;
-    }
-
-    public void updateTable(List<PlayerData> list){
-        Platform.runLater(() -> {
-            ObservableList<PlayerData> listO = FXCollections.observableArrayList(list);
-            tableView.setItems(listO);
-        });
-    }
-
-    public void updateThemeEnigm(){
-        if(currentEnigme.category != null) displayTheme.setText(currentEnigme.category.name());
-    }
 
     /**
      * This function set the visibility of
@@ -317,20 +278,9 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         }
     }
 
-    /**
-     * This function set the number of the round
-     *
-     * @param numM is the number of the round
-     */
-    public void setManche(int numM){
-        manche = numM;
-        displayManche.setText("Manche n°" + manche);
-    }
-
     @Override
     public void startActionEnigmeRapide(Enigme varE) {
-        currentEnigme = varE;
-        currentEnigmeLabel = currentEnigme.label;
+        handlerEnigme.setCurrentEnigme(varE);
         Platform.runLater(() -> {
             // todo change state of UI on rapid enigma
             setAndExecuteState(new StateEnigmeRapide(this)); //todo handle enigme => panneau enigme
@@ -340,15 +290,22 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     int cpt;
     @Override
     public void receiveFromServeurBadProposalResponse(String var, String badReponse) {
-        idPlayerHaveProposal = var;
-        //todo
         Platform.runLater(() -> {
             manager.compareProp(badReponse);
-            for(PlayerData p : listPlayerData){
-                if(p.id.equals(idPlayerHaveProposal)) {
-                    log("Bad response from "+p.namePlayer+" : "+badReponse);
-                }
-            }
+            handlerRound.setIdPlayerHaveProposal(var);
+            PlayerData p = handlerPlayerDataTable.getPlayerData(var);
+            log("Bad response from "+p.namePlayer+" : "+badReponse);
+        });
+    }
+
+    @Override
+    public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
+        Platform.runLater(() -> {
+            manager.compareProp(proposal); // couleur vert
+            handlerRound.setIdPlayerHaveProposal(id);
+            manager.displayEnigm(); // montre toute l'enigme
+            PlayerData p = handlerPlayerDataTable.getPlayerData(id);
+            log("Good response from "+p.namePlayer+" : "+proposal);
         });
     }
 
@@ -361,27 +318,12 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         log.appendText(newString);
     }
 
-
-    @Override
-    public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
-        idPlayerHaveProposal = id;
-        currentPlayerId = id;
-        Platform.runLater(() -> {
-            manager.compareProp(proposal);
-            manager.displayEnigm();
-            chekIfEnigmIsShow(timerAnimLetter);
-            for(PlayerData p : listPlayerData){
-                if(p.id.equals(idPlayerHaveProposal)) log("Good response from "+p.namePlayer+" : "+proposal);
-            }
-        });
-    }
-
     @Override
     public void receiveFromServeurNotifyCurrentPlayerRound(String var) {
         Platform.runLater(() -> {
-            for(PlayerData p : listPlayerData){
-                if(p.id.equals(var)) log("Current player is "+p.namePlayer);
-            }
+            handlerRound.setCurrentPlayerId(var);
+            PlayerData p = handlerPlayerDataTable.getPlayerData(var);
+            log("Current player is "+p.namePlayer);
             setAndExecuteState(new StateStartRound(this,var)); //todo rename
         });
     }
@@ -395,19 +337,19 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     @Override
     public void receiveFromServeurEnigmaOfRound(Enigme var) {
-        currentEnigme = var;
-        currentEnigmeLabel = currentEnigme.label;
-        preSetEnigm();
+        Platform.runLater(() -> {
+            handlerEnigme.setCurrentEnigme(var);
+            log("SET NEW ENIGME");
+            preSetEnigm();
+        });
+
     }
 
     public void preSetEnigm() {
        // manager.getEnigme();
-        manager.setEnigm(currentEnigmeLabel);//"PETIT OISEAU SUR L'EAU"
+        manager.resetPanneau();
+        manager.setEnigm(handlerEnigme.getCurrentEnigmeLabel());//"PETIT OISEAU SUR L'EAU"
         manager.setRectWithLetter();
-    }
-
-    public void animationDisplayLetters() {
-
     }
 
     public Map<Integer, Rect> mapRectWithLetter;
@@ -444,9 +386,11 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
    /*     int sizeRectWithLetter = mapRectWithLetter.size();
         Random rdm = new Random();
         int randomLetterId = rdm.nextInt(sizeRectWithLetter);*/
+        Enigme e = handlerEnigme.getCurrentEnigme();
+        if(e == null) return; //todo bug quand on recois l'enigme d'apres currentEnigme = null a test
 
-        if(!currentEnigme.order.isEmpty()){
-            char c = currentEnigme.order.remove(0);
+        if(!e.order.isEmpty()){
+            char c = e.order.remove(0);
             manager.displayLetter(c);
        //     displayLetter(c);
             chekIfEnigmIsShow(t);
@@ -457,9 +401,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
 
         }*/
-
-
-
 
     }
 

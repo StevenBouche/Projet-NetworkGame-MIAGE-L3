@@ -1,0 +1,68 @@
+package coco.controller.handle;
+
+import coco.controller.PlayerData;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.List;
+
+public class HandlerPlayerDataTable {
+
+    private TableView<PlayerData> tableView;
+    public List<PlayerData> listPlayerData;
+
+    public HandlerPlayerDataTable(TableView<PlayerData> tableView, List<PlayerData> listPlayerData){
+        this.tableView = tableView;
+        this.listPlayerData = listPlayerData;
+        initTable();
+    }
+
+   private void initTable(){
+        tableView.setEditable(false);
+        TableColumn<PlayerData,String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("namePlayer"));
+        TableColumn<PlayerData,Integer> cashColumn = new TableColumn<>("Cash");
+        cashColumn.setCellValueFactory(new PropertyValueFactory<>("cashPlayer"));
+        tableView.getColumns().add(nameColumn);
+        tableView.getColumns().add(cashColumn);
+        updateTable(listPlayerData);
+    }
+
+    private void updateTable(List<PlayerData> list){
+        Platform.runLater(() -> {
+            ObservableList<PlayerData> listO = FXCollections.observableArrayList(list);
+            tableView.setItems(listO);
+        });
+    }
+
+    public PlayerData getPlayerData(String id){
+        for(PlayerData p : listPlayerData){
+            if(p.id.equals(id)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+
+    private void updateNamePlayer(int id, String nP){
+        listPlayerData.get(id).namePlayer = nP;
+    }
+
+    private void addCashPlayer(int id, int newCash){
+        listPlayerData.get(id).cashPlayer += newCash;
+    }
+
+    private void resetCashPlayer(int id, int newCash){
+        listPlayerData.get(id).cashPlayer = newCash;
+    }
+
+
+
+
+
+}

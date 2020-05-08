@@ -13,14 +13,11 @@ public class StateStartRound extends StateGameUI {
 
     public StateStartRound(ControllerGameUI controllerGameUI, String var) {
         super(controllerGameUI,true,true);
-        stateButton = !controller.myId.equals(var);
+        stateButton = !controller.handlerIdentity.myId.equals(var);
     }
 
     @Override
     public void execute() {
-        controller.currentEnigme = null;
-        controller.currentEnigmeLabel = "";
-        controller.manager.resetPanneau();
         controller.buttonSetEnigm.setDisable(stateButton);
         controller.buttonShowEnigm.setDisable(stateButton);
         controller.buttonReset.setDisable(stateButton);

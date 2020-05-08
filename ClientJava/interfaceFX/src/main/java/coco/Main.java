@@ -4,6 +4,7 @@ import coco.controller.ControllerGameUI;
 import coco.controller.PlayerData;
 import coco.state.StateStartRound;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -47,6 +48,7 @@ public class Main extends Application {
         var.order.add('I');
         var.order.add('D');
         var.order.add('O');
+        managerGameUI.receiveFromServeurEnigmaOfRound(var);
         managerGameUI.startActionEnigmeRapide(var);
     //    managerGameUI.receiveFromServeurBadProposalResponse("1", "Hello test c'est la mauvaise reponse");
      //   Thread.sleep(3000);
@@ -54,11 +56,27 @@ public class Main extends Application {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 managerGameUI.receiveFromServeurGoodProposalResponse("1","ENIGME RAPIDO !");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                managerGameUI.receiveFromServeurEnigmaOfRound(var);
+
+
+           /*     managerGameUI.receiveFromServeurNotifyCurrentPlayerRound("1");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+
             }
         });
         t.start();

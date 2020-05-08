@@ -79,7 +79,7 @@ namespace Serveur.GameServer.CommandPack
         public void OnEndExecute<T>(Command<T> command) where T : GameEngine
         {
             stack.TryPop(out Command<GameEngine> cmdPop);
-            if (cmdPop != null)
+            if (cmdPop == null)
             {
                 Console.WriteLine("ERROR ON STACK COMMAND MANAGER");
             }

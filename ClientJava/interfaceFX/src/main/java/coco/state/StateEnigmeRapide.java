@@ -20,9 +20,7 @@ public class StateEnigmeRapide extends StateGameUI {
     }
 
     private void setEnigme() {
-        controller.preSetEnigm();
-        controller.animationDisplayLetters();
-        controller.updateThemeEnigm();
+      //  controller.preSetEnigm();
     }
 
     @Override
@@ -66,7 +64,7 @@ public class StateEnigmeRapide extends StateGameUI {
         PacketMessage<String> msg = new PacketMessage<>();
         msg.evt = ProtocolEventsTCP.PROPOSALRESPONSE.eventName;
         msg.data = controller.proposEnigm.getText().trim();
-        controller.client.sendMsg(msg);
+        controller.dataLoad.client.sendMsg(msg);
     }
 
     private void handlePropositionLetter() {
