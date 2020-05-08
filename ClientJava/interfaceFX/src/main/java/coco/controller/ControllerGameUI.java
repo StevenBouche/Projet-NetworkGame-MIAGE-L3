@@ -441,7 +441,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
                 mapRectWithLetter.put(nbrRectWithLetter, r);
             }
         });
-
         animShowLetter();
     }
 
@@ -462,16 +461,26 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     public void tryshowRandomLetter(Timer t){
-        int sizeRectWithLetter = mapRectWithLetter.size();
+
+   /*     int sizeRectWithLetter = mapRectWithLetter.size();
         Random rdm = new Random();
-        int randomLetterId = rdm.nextInt(sizeRectWithLetter);
-        if(mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_HIDDEN ||
+        int randomLetterId = rdm.nextInt(sizeRectWithLetter);*/
+
+        if(!currentEnigme.order.isEmpty()){
+            char c = currentEnigme.order.remove(0);
+            manager.displayLetter(c);
+       //     displayLetter(c);
+            chekIfEnigmIsShow(t);
+        }
+   /*     if(mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_HIDDEN ||
                 mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_SPECIAL){
 
-            displayLetter(randomLetterId+1);
-            chekIfEnigmIsShow(t);
 
-        }
+
+        }*/
+
+
+
 
     }
 

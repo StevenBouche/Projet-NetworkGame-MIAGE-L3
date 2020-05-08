@@ -34,6 +34,18 @@ public class Main extends Application {
         Enigme var = new Enigme();
         var.label = "ENIGME RAPIDO !";
         var.category = Category.CELEBRITES;
+        var.order = new ArrayList<>();
+        var.order.add('E');
+        var.order.add('N');
+        var.order.add('I');
+        var.order.add('G');
+        var.order.add('M');
+        var.order.add('R');
+        var.order.add('A');
+        var.order.add('P');
+        var.order.add('I');
+        var.order.add('D');
+        var.order.add('O');
         managerGameUI.startActionEnigmeRapide(var);
         managerGameUI.receiveFromServeurBadProposalResponse("1", "Hello test c'est la mauvaise reponse");
     }
