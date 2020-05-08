@@ -12,7 +12,7 @@ namespace Share.Network.Message.modele
         public int size;
         public int consonantNb;
         public int vowelNb;
-        public char[] order;
+        public List<char> order;
 
         public Enigme(String labelE, Category categoryE)
         {
@@ -20,7 +20,7 @@ namespace Share.Network.Message.modele
             this.category = categoryE;
             this.size = label.Length;
             this.vowelNb = calculateVowelNb(label);
-            this.consonantNb = size - vowelNb;
+            this.consonantNb = size - vowelNb - getNbOfSpace(label);
             this.order = determineOrder(label);
         }
 
@@ -41,33 +41,64 @@ namespace Share.Network.Message.modele
             return count;
         }
 
-        private char[] determineOrder(String label)
+        private int getNbOfSpace(String label)
         {
-            char[] uniqueLetters = { };
+            int res=0;
+            
+            for(int i = 0; i<label.Length; i++)
+            {
+                if(label[i] == ' ')
+                {
+                    res++;
+                }
+            }
+
+            return res;
+        }
+
+        private List<char> determineOrder(String label)
+        {
+            List<char> uniqueLetters = new List<char>();
             
 
-            //Gather all differents letters in res[]
+            //Gather all differents letters in uniqueLetters
             for(int i=0; i<label.Length; i++)
-            {
-                if (!uniqueLetters.Contains(label[i]))
+            {   
+                if (!uniqueLetters.Contains(label[i]) && label[i] != ' ')
                 {
-                    uniqueLetters[i] = label[i];
+                    uniqueLetters.Add(label[i]);
                 }
             }
             
             Random r = new Random();
-            int randPos;
-            char[] randomArray = new char[uniqueLetters.Length];
 
-            //Shuffle res[] in randomArray[]
-            for (int i = uniqueLetters.Length; i>= 1; i--)
+            //Shuffle uniqueLetter
+            int n = uniqueLetters.Count;
+            while (n > 1)
             {
-                randPos = r.Next(1, i + 1) - 1;
-                randomArray[i - 1] = uniqueLetters[randPos];
-                uniqueLetters[randPos] = uniqueLetters[i - 1];
+                n--;
+                int k = r.Next(n + 1);
+                char value = uniqueLetters[k];
+                uniqueLetters[k] = uniqueLetters[n];
+                uniqueLetters[n] = value;
             }
 
-            return randomArray;
+            return uniqueLetters;
+        }
+
+        public String toString()
+        {
+            String o = "";
+
+            foreach(char c in this.order)
+            {
+                o += c + ", ";
+            }
+            
+            String l = "Engime label : " + this.label + " Category " + this.category + " Taille : " + this.size + "\n";
+            String l2 = " Nb consonnes : " + this.consonantNb + " Nb voyelles : " + this.vowelNb + " Ordre : " + o;
+            
+            return l + l2;
         }
 
     }

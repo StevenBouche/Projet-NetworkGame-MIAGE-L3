@@ -95,6 +95,8 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 evt = ProtocolEventsTCP<Enigme>.ACTIONENIGMERAPIDE.eventName,
                 data = e
             };
+
+            Console.WriteLine(e.toString());
             Context.SendAllClient(msg);
             Context.gameEnigmaPool.Remove(e.category);
         }
