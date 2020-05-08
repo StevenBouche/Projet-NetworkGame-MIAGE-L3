@@ -79,7 +79,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public Parent root;
 
     /** Client Network**/
-    ClientTCP client;
+    public ClientTCP client;
     Thread clientThread;
 
     /** Current Data Game **/
@@ -257,52 +257,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         validChoice.setText("ENIGME");
         validChoice.setPrefWidth(200);
 
-        /** set Event to propose the enigm chosen */
-        validLetter.setOnMouseReleased(new EventHandler<MouseEvent>(){
-            public void handle(MouseEvent me){
-                handlePropositionLetter();
-                me.consume();
-            }
-        });
-
-        /** set Event to propose the enigm chosen */
-        validChoice.setOnMouseReleased(new EventHandler<MouseEvent>(){
-            public void handle(MouseEvent me){
-               handlePropositionEnigma();
-               me.consume();
-            }
-        });
         /** Set visibility of ChoiceBoxs */
         changeChoiceB(cbdV, cbdC);
-    }
-
-    private void handlePropositionEnigma() {
-
-        /** If player propose enigme */
-        manager.compareProp(proposEnigm.getText());
-        System.out.println("client submit enigm");
-
-        /** Send at server my proposal string **/
-        PacketMessage<String> msg = new PacketMessage<>();
-        msg.evt = ProtocolEventsTCP.PROPOSALRESPONSE.eventName;
-        msg.data = proposEnigm.getText().trim();
-        client.sendMsg(msg);
-    }
-
-    private void handlePropositionLetter() {
-        /** Compare state of switch button v/c */
-        if(switchActive){
-            char charCb = cbdV.getValue().toString().charAt(0);
-            manager.displayLetter(charCb);
-        }
-        else{
-            char charCb = cbdC.getValue().toString().charAt(0);
-            manager.displayLetter(charCb);
-        }
-        /** When the sending has been done */
-        cbdC.setValue(" ");
-        cbdV.setValue(" ");
-        System.out.println("client submit letter");
     }
 
     public void initTable(){
