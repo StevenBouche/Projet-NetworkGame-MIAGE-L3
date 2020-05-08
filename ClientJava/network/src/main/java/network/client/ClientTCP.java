@@ -40,10 +40,16 @@ public class ClientTCP implements Runnable, INotifyState {
         managerTCP.eventManager.OnEvent(String.class, ProtocolEventsTCP.BADPROPOSALRESPONSE, new DataListenerTCP<String>() {
             @Override
             public void onData(String var) {
-                if(notifierGame != null) notifierGame.receiveFromServeurBadProposalResponse(var);
+                if(notifierGame != null) notifierGame.receiveFromServeurBadProposalResponse(var,"");
             }
         });
         // TODO GOODPROPOSALRESPONSE PROTOCOL
+        managerTCP.eventManager.OnEvent(String.class, ProtocolEventsTCP.GOODPROPOSALRESPONSE, new DataListenerTCP<String>() {
+            @Override
+            public void onData(String var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurGoodProposalResponse(var);
+            }
+        });
     }
 
     private void initEventLobbyTCP() {

@@ -1,6 +1,8 @@
 package coco.controller;
 
 import coco.state.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +16,11 @@ import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.util.Duration;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
 import network.message.PacketMessage;
@@ -23,9 +29,8 @@ import network.tcp.ProtocolEventsTCP;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
@@ -37,8 +42,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @FXML
     public Pane clientChoic;
     @FXML
-    public Pane scoreBoard;
-    @FXML
     public TextField proposEnigm;
     @FXML
     public Button validChoice;
@@ -48,6 +51,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public Pane weelPane;
     @FXML
     public TableView<PlayerData> tableView;
+    @FXML
+    public TextArea log;
+    @FXML
+    public Label displayTheme; //for loadScoreBoard()
 
     /** Element dynamic with code */
     public Button buttonSetEnigm; //for loadButtons
@@ -57,8 +64,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public Boolean switchActive; //switchActive = true -> voyelle switchActive = false -> consonne
     public ChoiceBox<String> cbdV; //for loadCBD()
     public ChoiceBox<String> cbdC;
-    public Label displayTheme; //for loadScoreBoard()
+
     public Label displayManche;
+    public String currentEnigmeLabel;
+    public int nbrRectWithLetter;
 
     /** My current state **/
     StateGameUI stateUI;
@@ -73,17 +82,25 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     /** Current Data Game **/
     public List<PlayerData> listPlayerData;
+    public List<CurrentResponseData> listResponsePlayerData;
     Enigme currentEnigme;
     String myId;
     String currentPlayerId;
     int manche;
     String idPlayerHaveBadProposal; /** quand recu event bad proposal set id player in this variable**/
 
+    Timer timerAnimLetter;
+
     public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId) {
         this.myId = myId;
         this.client = client;
         this.clientThread = clientThread;
         this.listPlayerData = data;
+        this.listResponsePlayerData = new ArrayList<>();
+        CurrentResponseData playersResponse = new CurrentResponseData();
+        playersResponse.namePlayer = "nobody";
+        playersResponse.currentResponse = "-";
+        listResponsePlayerData.add(playersResponse);
         if(this.client != null) this.client.setNotifierGame(this);
     }
 
@@ -91,15 +108,23 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         switchActive = false;
         try {
+            loadTextField();
             loadSubScene();
             loadButtons();
             loadCBD();
             loadSwitch();
-            loadScoreBoard();
+            initTable();
             setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadTextField() {
+        proposEnigm.setTextFormatter(new TextFormatter<>((change) -> {
+            change.setText(change.getText().toUpperCase());
+            return change;
+        }));
     }
 
     public void setAndExecuteState(StateGameUI state){
@@ -119,6 +144,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         root = fxmlLoader.load();
         subScene.setRoot(root);
     }
+
 
     /**
      * This function set 3 buttons
@@ -274,32 +300,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         System.out.println("client submit letter");
     }
 
-    /**
-     * This function set up the score Board.
-     * There are 3 player and the number of the round
-     * in the score Board.
-     */
-    public void loadScoreBoard(){
-        /** create the display round */
-        displayManche = new Label();
-        displayManche.setTranslateX(450);
-        displayManche.setTranslateY(15);
-        displayManche.setAlignment(Pos.CENTER);
-        setManche(1);
-        scoreBoard.getChildren().add(displayManche);
-
-        displayTheme = new Label();
-        //displayTheme.setTranslateX(25);
-        displayTheme.setTranslateY(15);
-        displayTheme.setPrefWidth(380);
-        displayTheme.setAlignment(Pos.CENTER);
-        displayTheme.setText("");
-        scoreBoard.getChildren().add(displayTheme);
-        updateThemeEnigm("Mon theme");
-
-        initTable();
-    }
-
     public void initTable(){
         tableView.setEditable(false);
 
@@ -334,8 +334,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         });
     }
 
-    public void updateThemeEnigm(String theme){
-        displayTheme.setText(theme);
+    public void updateThemeEnigm(){
+        if(currentEnigme.category != null) displayTheme.setText(currentEnigme.category.name());
     }
 
     /**
@@ -369,23 +369,125 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @Override
     public void startActionEnigmeRapide(Enigme varE) {
         currentEnigme = varE;
+        currentEnigmeLabel = currentEnigme.label;
         Platform.runLater(() -> {
             // todo change state of UI on rapid enigma
-            setAndExecuteState(new StateEnigmeRapide(this));
-            //todo handle enigme => panneau enigme
+            setAndExecuteState(new StateEnigmeRapide(this)); //todo handle enigme => panneau enigme
         });
     }
 
+    int cpt;
     @Override
-    public void receiveFromServeurBadProposalResponse(String var) {
+    public void receiveFromServeurBadProposalResponse(String var, String badReponse) {
         idPlayerHaveBadProposal = var;
         //todo
         Platform.runLater(() -> {
-            // OBLIGATOIRE LORS DE MODIFICATION DE QUELQUE CHOSE DE GRAPHIQUE CAR CELA VIENT DU RESEAU
+            manager.compareProp(badReponse);
+            for(PlayerData p : listPlayerData){
+                if(p.id.equals(idPlayerHaveBadProposal)) {
+                    log("Bad response from "+p.namePlayer+" : "+badReponse);
+                }
+            }
         });
     }
 
-    //TODO GOOD REPONSE
+    private void log(String str){
+        String str2 = log.getText();
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        String newString = formatter.format(date)+" : "+str+"\n" + str2;
+        log.clear();
+        log.appendText(newString);
+    }
 
+    //TODO GOOD REPONSE
+    @Override
+    public void receiveFromServeurGoodProposalResponse(String var) {
+        idPlayerHaveBadProposal = var;
+        timerAnimLetter.cancel();
+        Platform.runLater(() -> {
+            manager.compareProp("null");
+            for(PlayerData p : listPlayerData){
+                if(p.id.equals(idPlayerHaveBadProposal)) log("Good response from "+p.namePlayer+" : "+currentEnigme.label);
+            }
+            setAndExecuteState(new StateStartRound(this)); //todo handle enigme => panneau enigme
+        });
+    }
+
+    public void preSetEnigm() {
+        manager.getEnigme();
+        manager.setEnigm(currentEnigmeLabel);//"PETIT OISEAU SUR L'EAU"
+        manager.setRectWithLetter();
+    }
+
+    public void animationDisplayLetters() {
+
+    }
+
+    public Map<Integer, Rect> mapRectWithLetter;
+    public void animEnigmRapide() {
+        mapRectWithLetter = new HashMap<>();
+        nbrRectWithLetter = 0;
+        manager.mapRect.forEach((idR, r)->{
+            if(manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_HIDDEN ||
+                    manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_SPECIAL ){
+                nbrRectWithLetter++;
+                mapRectWithLetter.put(nbrRectWithLetter, r);
+            }
+        });
+
+        animShowLetter();
+    }
+
+    public void animShowLetter(){
+
+        mapRectWithLetter.forEach((id, r)->{
+            System.out.println("id : " + id + ", letter : " + r.getLetter());
+        });
+
+        timerAnimLetter = new Timer();
+        timerAnimLetter.schedule( new TimerTask() {
+                    @Override
+                    public void run() {
+                        tryshowRandomLetter(timerAnimLetter);
+                    }
+                }, 100, 2000);
+
+    }
+
+    public void tryshowRandomLetter(Timer t){
+        int sizeRectWithLetter = mapRectWithLetter.size();
+        Random rdm = new Random();
+        int randomLetterId = rdm.nextInt(sizeRectWithLetter);
+        if(mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_HIDDEN ||
+                mapRectWithLetter.get(randomLetterId+1).getStat() == StateOfRect.LETTRE_SPECIAL){
+
+            displayLetter(randomLetterId+1);
+            chekIfEnigmIsShow(t);
+
+        }
+
+    }
+
+    public void displayLetter(int idL){
+        Platform.runLater(() -> {
+            // OBLIGATOIRE LORS DE MODIFICATION DE QUELQUE CHOSE DE GRAPHIQUE CAR CELA VIENT DU RESEAU
+            manager.displayLetter(mapRectWithLetter.get(idL).getLetter());
+        });
+    }
+
+    public boolean allIsShow;
+    public void chekIfEnigmIsShow(Timer t){
+        allIsShow = true;
+        mapRectWithLetter.forEach((rId, r)->{
+            if(mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_HIDDEN ||
+                    mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_SPECIAL){
+                allIsShow = false;
+            }
+        });
+        if(allIsShow){
+            t.cancel();
+        }
+    }
 }
 

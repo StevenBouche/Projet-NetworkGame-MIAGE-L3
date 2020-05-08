@@ -78,7 +78,6 @@ public class Rect{
      */
     public void drawLetter(Map<Integer, Label> listCharEnigm){
         if(state == StateOfRect.LETTRE_BLOCKED){
-            Timer t = new Timer();
             Timeline timeline = new Timeline(new KeyFrame(
                     Duration.millis(1500),
                     ae -> displayLetter(listCharEnigm)));
@@ -99,18 +98,7 @@ public class Rect{
                 state = StateOfRect.LETTRE_SHOW;
             }
             listCharEnigm.get(this.id).setText("" + ch);
-            /*
-            Label l = new Label();
-            l.setPrefWidth(19);
-            l.setPrefHeight(35);
-            l.setLayoutY((y + 1));
-            l.setLayoutX((x + 1));
-            l.setAlignment(Pos.CENTER);
-            l.setText("" + ch);
-            p.getChildren().add(l);
-            listCharEnigm.put(this.id, l);
 
-             */
         }
     }
 
@@ -135,6 +123,9 @@ public class Rect{
             if (ch == ' ') state = StateOfRect.SPACE;
             if (ch == '!' || ch == '?' || ch == '\'' || ch == '-') {
                 this.l.setText("" + ch);
+            }
+            else{
+                state = StateOfRect.LETTRE_SPECIAL;
             }
         }
         else{

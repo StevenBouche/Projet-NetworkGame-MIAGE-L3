@@ -173,6 +173,7 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
             p2.id = p.id;
             p2.namePlayer = p.name;
             p2.cashPlayer = 0;
+            listData.add(p2);
         }
         return listData;
     }
