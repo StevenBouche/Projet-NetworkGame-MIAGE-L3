@@ -12,6 +12,7 @@ public interface INotifyPlayersGame {
     void receiveFromServeurNotifyCurrentPlayerRound(String var);
     void receiveFromServeurChoiceStep(ChoiceStep var);
     void receiveFromServeurEnigmaOfRound(Enigme var);
-
     void receiveFromServeurPlayerMoneyInfo(PlayerMoneyInfo var);
+    
+    void notifyDisconnect();
 }

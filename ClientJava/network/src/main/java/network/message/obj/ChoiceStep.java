@@ -1,12 +1,5 @@
 package network.message.obj;
 
-enum ChoiceStepEnum
-{
-    PROPOSAL,
-    BUYVOY,
-    TURNWHEEL
-}
-
 public class ChoiceStep
 {
     public String choiceStep;

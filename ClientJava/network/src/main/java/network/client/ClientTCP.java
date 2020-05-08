@@ -128,6 +128,7 @@ public class ClientTCP implements Runnable, INotifyState {
     @Override
     public void onDisconnect() {
         if(notifier != null) notifier.notifyDisconnect();
+        if(notifierGame != null) notifierGame.notifyDisconnect();
     }
 
     public void stop() {

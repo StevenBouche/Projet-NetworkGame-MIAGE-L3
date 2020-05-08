@@ -5,6 +5,9 @@ import coco.state.StateGameUI;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import network.message.PacketMessage;
+import network.message.obj.Choice;
+import network.message.obj.ChoiceStep;
+import network.message.obj.ChoiceStepEnum;
 import network.tcp.ProtocolEventsTCP;
 
 public class StateStartRound extends StateGameUI {
@@ -45,14 +48,42 @@ public class StateStartRound extends StateGameUI {
             }
         });
 
+        controller.buttonWheel.setOnMouseReleased(new EventHandler<MouseEvent>(){
+            public void handle(MouseEvent me){
+                handleTurnWheel();
+                me.consume();
+            }
+        });
+
+    }
+
+    private void handleTurnWheel() {
+        ChoiceStep ch = new ChoiceStep();
+        ch.choiceStep = ChoiceStepEnum.TURNWHEEL.name();
+        PacketMessage<ChoiceStep> msg = new PacketMessage<>();
+        msg.evt = ProtocolEventsTCP.CHOICESTEP.eventName;
+        msg.data = ch;
+        controller.dataLoad.client.sendMsg(msg);
     }
 
     private void handlePropositionEnigma() {
-
+        ChoiceStep ch = new ChoiceStep();
+        ch.choiceStep = ChoiceStepEnum.PROPOSAL.name();
+        ch.proposal = controller.proposEnigm.getText();
+        PacketMessage<ChoiceStep> msg = new PacketMessage<>();
+        msg.evt = ProtocolEventsTCP.CHOICESTEP.eventName;
+        msg.data = ch;
+        controller.dataLoad.client.sendMsg(msg);
     }
 
     private void handlePropositionLetter() {
-
+        ChoiceStep ch = new ChoiceStep();
+        ch.choiceStep = ChoiceStepEnum.BUYVOY.name();
+        ch.voy = controller.cbdV.getValue();
+        PacketMessage<ChoiceStep> msg = new PacketMessage<>();
+        msg.evt = ProtocolEventsTCP.CHOICESTEP.eventName;
+        msg.data = ch;
+        controller.dataLoad.client.sendMsg(msg);
     }
 
 }

@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
+import network.main.IMain;
 import network.message.obj.ChoiceStep;
 import network.message.obj.Enigme;
 import network.message.obj.PlayerMoneyInfo;
@@ -87,10 +88,14 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     /** My current state **/
     StateGameUI stateUI;
+    IMain main;
+    boolean alreadyStop;
 
-    public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId) {
+    public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId, IMain main) {
+        alreadyStop = false;
         buildDataLoad(client,clientThread,data,myId);
         timerAnimLetter = new Timer();
+        this.main = main;
     }
 
     private void buildDataLoad(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId) {
@@ -304,11 +309,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
         String idLocal = id;
         Platform.runLater(() -> {
-            timerAnimLetter.cancel();
-            boolean b = taskTimer.cancel();
-        /*    while(!b){
-                b = taskTimer.cancel();
-            }*/
             log("State timer : "+taskTimer.cancel());
             handlerRound.setIdPlayerHaveProposal(idLocal);
             manager.compareProp(proposal); // couleur vert
@@ -316,6 +316,14 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             PlayerData p = handlerPlayerDataTable.getPlayerData(id);
             log("Good response from "+p.namePlayer+" : "+proposal);
         });
+    }
+
+    private void cancelTimerTask(){
+        timerAnimLetter.cancel();
+        boolean b = taskTimer.cancel();
+        /*    while(!b){
+                b = taskTimer.cancel();
+            }*/
     }
 
     private void log(String str){
@@ -445,8 +453,20 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     }
 
+    @Override
+    public void notifyDisconnect() {
+        stop();
+    }
+
     public void stop() {
-        dataLoad.client.stop();
+        if(!alreadyStop) {
+            cancelTimerTask();
+            dataLoad.client.stop();
+            Platform.runLater(() -> {
+                main.backToMainLobbies();
+            });
+            alreadyStop = true;
+        }
     }
 }
 

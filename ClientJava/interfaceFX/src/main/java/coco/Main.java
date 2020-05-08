@@ -110,7 +110,7 @@ public class Main extends Application {
         l.add(p3);
         p3.cashRound = 0;
         p3.cashTotal = 0;
-        managerGameUI = new ControllerGameUI(null,null, l, "1");
+        managerGameUI = new ControllerGameUI(null,null, l, "1",null);
 
         fxmlLoader.setController(managerGameUI);
         root = fxmlLoader.load();
