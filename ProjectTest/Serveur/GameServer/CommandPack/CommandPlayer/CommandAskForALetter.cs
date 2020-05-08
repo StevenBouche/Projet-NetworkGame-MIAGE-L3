@@ -19,10 +19,10 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
             WaitReceiveClient(); // waiting choice player
              
-            // if enigma containe letter and is not a vowel and is not already buy
-            if (Context.CurrentEnigma.label.Contains(Data) && !isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data)) //TODO Verifier que la consonne n'est pas déjà proposée
+            // if enigma containe letter and is not a vowel and is not already bought
+            if (Context.CurrentEnigma.label.Contains(Data) && !isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data))
             {
-                Context.letterBuyInARound.Add(Data); // Add letter to already buy
+                Context.letterBuyInARound.Add(char.Parse(Data)); // Add letter to already buy TODO : test char.Parse(Data)
                 this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data); 
                 commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager, nbOfOccurrences));
             }

@@ -45,7 +45,7 @@ namespace Serveur.GameServer.Game
         public Dictionary<Category, Enigme> gameEnigmaPool;
 
         public Enigme CurrentEnigma;
-        public List<String> letterBuyInARound;
+        public List<char> letterBuyInARound;
 
         private ManualResetEvent allDoneServer;
         public GameEngine(ISenderAtClient sender, ref ManualResetEvent allDone)
@@ -55,7 +55,7 @@ namespace Serveur.GameServer.Game
             this.wheel = new Roue(false);
             this.listPlayers = new Dictionary<string, Joueur>();
             this.listIdPlayers = new List<string>();
-            this.letterBuyInARound = new List<String>();
+            this.letterBuyInARound = new List<char>();
             this.CM = new CommandManager(this);
             this.gameLoop = new GameLoop(CM);
             this.gameEnigmaPool = new Dictionary<Category, Enigme>();

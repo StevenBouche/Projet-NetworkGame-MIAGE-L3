@@ -20,7 +20,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         {
             e = Context.gameEnigmaPool.Values.ToList<Enigme>()[0];
             Context.CurrentEnigma = e;
-            Context.letterBuyInARound = new List<String>();
+            Context.letterBuyInARound = new List<char>();
 
             PacketMessage<Enigme> msg = new PacketMessage<Enigme>()
             {
