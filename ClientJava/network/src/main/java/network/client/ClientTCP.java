@@ -91,6 +91,7 @@ public class ClientTCP implements Runnable, INotifyState {
             }
         });
 
+    //    public static ProtocolEventsTCP<int> SENDCASEVALUE = new ProtocolEventsTCP<int>("SENDCASEVALUE");
     }
 
     private void initEventLobbyTCP() {

@@ -17,6 +17,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
 import network.main.IMain;
@@ -25,6 +27,9 @@ import network.message.obj.DataMoneyInfo;
 import network.message.obj.Enigme;
 import network.message.obj.PlayerMoneyInfo;
 
+import javafx.scene.*;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -32,7 +37,6 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 
 public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
@@ -63,6 +67,9 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public ChoiceBox<String> cbdC;
     @FXML
     public Button validLetter;
+
+ //   final WebView browser = new WebView();
+   // public WebEngine webEngine;
 
     public Boolean switchActive; //switchActive = true -> voyelle switchActive = false -> consonne
 
@@ -118,6 +125,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             loadSwitch();
             loadBackGround();
             setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
+            loadWebWheel();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -383,7 +391,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         String idP = id;
         Platform.runLater(() -> {
             PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
-            log(idP+" GOOD LETTER "+p.namePlayer);
+            log(var+" GOOD LETTER "+p.namePlayer);
             manager.displayLetter(var.charAt(0));
             setAndExecuteState(new StateRound(this,idP)); //todo rename
         });
@@ -403,6 +411,14 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             }
             alreadyStop = true;
         }
+    }
+
+
+    private void loadWebWheel() {
+
+   /*     URL str = getClass().getClassLoader().getResource("javascript-winwheel-master/examples/wheel_of_fortune/index.html");
+        webEngine = browser.getEngine();
+        if(str != null) webEngine.load(str.getPath());*/
     }
 
 

@@ -8,12 +8,10 @@ namespace Share.Network.Message.modele
     {
         public List<PlayerMoneyInfo> ListInfo;
         
-
         public DataMoneyInfo()
         {
             ListInfo = new List<PlayerMoneyInfo>();
         }
-
 
         public void AddInfo(params PlayerMoneyInfo[] p)
         {
@@ -22,5 +20,7 @@ namespace Share.Network.Message.modele
                 ListInfo.Add(pm);
             }
         }
+
     }
+
 }
