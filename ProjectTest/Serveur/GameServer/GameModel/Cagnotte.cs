@@ -6,10 +6,10 @@ namespace Serveur.GameServer.GameModel
 {
     public class Cagnotte : IComparable
     {
-        int _montant_Total;
-        int _montant_Manche;
-        int _montant_Caverne;
-        Voyage _voyage;
+        public int _montant_Total;
+        public int _montant_Manche;
+        public int _montant_Caverne;
+        public Voyage _voyage;
 
 
         public Cagnotte()
