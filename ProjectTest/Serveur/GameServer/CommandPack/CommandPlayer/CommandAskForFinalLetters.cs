@@ -15,6 +15,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         public override void onExecute()
         {
+
             SendAskForFinalLetters(); // notify client he need choice 4 letters 
 
             WaitReceiveClient(); // waiting choice player
@@ -65,7 +66,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 data = p
             };
 
-            Context.SendClient(msg, idClient);
+            Context.SendAllClient(msg);
         }
 
         private void SendBadLetter(char c)
@@ -78,7 +79,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 data = p
             };
 
-            Context.SendClient(msg, idClient);
+            Context.SendAllClient(msg);
         }
     }
 }

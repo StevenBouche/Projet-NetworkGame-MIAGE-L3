@@ -11,4 +11,8 @@ public class ProposalLetter {
         this.letter = c;
     }
 
+    public ProposalLetter()
+    {
+
+    }
 }

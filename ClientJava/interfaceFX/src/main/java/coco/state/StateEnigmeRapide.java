@@ -66,6 +66,7 @@ public class StateEnigmeRapide extends StateGameUI {
         msg.evt = ProtocolEventsTCP.PROPOSALRESPONSE.eventName;
         msg.data = controller.proposEnigm.getText().trim();
         controller.dataLoad.client.sendMsg(msg);
+        controller.proposEnigm.setText("");
     }
 
     private void handlePropositionLetter() {

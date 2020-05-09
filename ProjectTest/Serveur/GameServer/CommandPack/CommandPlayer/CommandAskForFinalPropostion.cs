@@ -54,7 +54,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         private void SendAskForProposal()
         {
             String s = "Proposez une énigme, vous avez 10 secondes";
-            Proposal p = new Proposal(idClient, s);
+            Proposal p = new Proposal(Context.CurrentPlayer.id, s);
 
             PacketMessage<Proposal> msg = new PacketMessage<Proposal>()
             {
@@ -62,7 +62,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 data = p
             };
 
-            Context.SendClient(msg, idClient);
+            Context.SendClient(msg, Context.CurrentPlayer.id);
         }
     }
 }

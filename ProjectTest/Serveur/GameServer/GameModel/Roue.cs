@@ -67,7 +67,7 @@ namespace Serveur.GameServer.GameModel
         public void Fill_Final()
         {
             Reset();
-            int index = 8;
+            int index = 7;
             for (int i = 0; i <= 9; i++)
             {
                 Cases.Add(new Case(TypeCase.FINAL, (int)Enum.GetValues(typeof(Cash)).GetValue(index)));

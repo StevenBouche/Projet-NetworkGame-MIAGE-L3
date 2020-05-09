@@ -89,6 +89,7 @@ public class StateRound extends StateGameUI {
         msg.evt = ProtocolEventsTCP.CHOICESTEP.eventName;
         msg.data = ch;
         controller.dataLoad.client.sendMsg(msg);
+        controller.proposEnigm.setText("");
     }
 
     private void handlePropositionLetter() {

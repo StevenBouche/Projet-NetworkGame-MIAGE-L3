@@ -104,12 +104,9 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                     elem.Value.cagnotte.Montant_Total += elem.Value.cagnotte.Montant_Manche;
                    
                 }
-
                 elem.Value.cagnotte.Montant_Manche = 0;
-
-            //    commandManager.TriggerUpdateMoney();
-          
             }
+            commandManager.TriggerUpdateMoney();
         }
 
         private void EndTurn()

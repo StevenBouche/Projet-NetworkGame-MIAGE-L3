@@ -35,7 +35,8 @@ namespace Share.Network.Event
 
                 if (p.Count == 3 && p["evt"] != null && p["data"] != null && p["id"] != null)
                 {
-                    ((dynamic)mapEvents[p["evt"].ToString()]).OnReceive(p["data"], p["id"]);
+                    dynamic d = mapEvents[p["evt"].ToString()];
+                    if(d!=null) d.OnReceive(p["data"], p["id"]);
                 }
             }
             allDone.WaitOne();

@@ -23,17 +23,25 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             Context.gameEnigmaPool.Remove(e.category);
 
             String idWinner = DetermineWinner();
-
-            FinalInfo finalInfo = new FinalInfo(idWinner, e);
-
-            PacketMessage<FinalInfo> msg = new PacketMessage<FinalInfo>()
+            if (Context.CurrentPlayer != null)
             {
-                evt = ProtocolEventsTCP<FinalInfo>.ACTIONENIGMEFINALE.eventName,
-                data = finalInfo
-            };
 
-            Console.WriteLine(e.toString());
-            Context.SendAllClient(msg);
+                FinalInfo finalInfo = new FinalInfo(idWinner, e);
+
+                PacketMessage<FinalInfo> msg = new PacketMessage<FinalInfo>()
+                {
+                    evt = ProtocolEventsTCP<FinalInfo>.ACTIONENIGMEFINALE.eventName,
+                    data = finalInfo
+                };
+
+                Console.WriteLine(e.toString());
+                Context.SendAllClient(msg);
+            }
+            else
+            {
+                Console.WriteLine("Error ?");
+            }
+           
         }
 
         private String DetermineWinner()
@@ -53,7 +61,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                     entry.Value.cagnotte.Montant_Total = 0;
                 }
             }
-            
+            Context.CurrentPlayer = j;
             return j.id;
         }
     }

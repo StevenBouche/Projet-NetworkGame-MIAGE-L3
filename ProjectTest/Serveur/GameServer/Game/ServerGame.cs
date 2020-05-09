@@ -63,9 +63,28 @@ namespace Serveur.GameServer.Game
             network.OnEvent<String>(ProtocolEventsTCP<String>.ASKFORALETTER, OnLetterProposed);
             network.OnEvent<ChoiceStep>(ProtocolEventsTCP<ChoiceStep>.CHOICESTEP, OnChoiceStep);
 
+            network.OnEvent<FinalLetters>(ProtocolEventsTCP<FinalLetters>.ASKFORFINALLETTER, OnReceiveAskForALetter );
+            network.OnEvent<Proposal>(ProtocolEventsTCP<Proposal>.ASKFORFINALPROPOSITION, OnReceiveAskForFinalProposition);
+            network.OnEvent<String>(ProtocolEventsTCP<String>.ASKFORIDPLAYER, OnAskForIdPlayer);
+       
             //Start thread network
-            threadNetwork = new Thread(new ThreadStart(network.Run));
+        threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
+        }
+
+        private void OnAskForIdPlayer(string obj, string id)
+        {
+            gameManager.NotifyReceivePlayer(obj, id);
+        }
+
+        private void OnReceiveAskForFinalProposition(Proposal obj, string id)
+        {
+            gameManager.NotifyReceivePlayer(obj, id);
+        }
+
+        private void OnReceiveAskForALetter(FinalLetters obj, string id)
+        {
+            gameManager.NotifyReceivePlayer(obj, id);
         }
 
         private void OnChoiceStep(ChoiceStep obj, string id)
@@ -122,7 +141,6 @@ namespace Serveur.GameServer.Game
                 {
                     network.disconnectClient(elem.Value.id);
                 }
-
             }
 
             //reset gameManager ?

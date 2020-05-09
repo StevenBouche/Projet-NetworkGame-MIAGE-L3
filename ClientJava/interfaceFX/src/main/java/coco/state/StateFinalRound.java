@@ -134,6 +134,7 @@ public class StateFinalRound extends StateGameUI {
             msg.evt = ProtocolEventsTCP.ASKFORFINALPROPOSITION.eventName;
             msg.data = var;
             controller.dataLoad.client.sendMsg(msg);
+            controller.proposEnigm.setText("");
         }
     }
 }
