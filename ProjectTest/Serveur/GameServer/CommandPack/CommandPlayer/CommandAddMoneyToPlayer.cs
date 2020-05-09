@@ -26,15 +26,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             Context.listPlayers.TryGetValue(id, out Joueur j);
             j.cagnotte.Montant_Manche += amount;
 
-            PlayerMoneyInfo pInfo = new PlayerMoneyInfo(id, j.cagnotte.Montant_Manche, j.cagnotte.Montant_Total);
-
-            PacketMessage<PlayerMoneyInfo> msg = new PacketMessage<PlayerMoneyInfo>()
-            {
-                evt = ProtocolEventsTCP<PlayerMoneyInfo>.UPDATEROUNDMONEY.eventName,
-                data = pInfo
-            };
-
-            Context.SendAllClient(msg);
+            commandManager.TriggerUpdateMoney();
         }
     }
 }

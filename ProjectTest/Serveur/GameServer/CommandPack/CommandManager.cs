@@ -26,6 +26,11 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandHandleTurn(engine,this));
         }
 
+        public void TriggerHoldUp()
+        {
+            this.TriggerCommand(new CommandHoldUp(engine, this));
+        }
+
         public void TriggerWheelTurn()
         {
             this.TriggerCommand(new CommandWheelTurn(engine, this));
@@ -75,7 +80,6 @@ namespace Serveur.GameServer.CommandPack
         {
             this.TriggerCommand(new CommandUpdateMoney(engine, this));
         }
-
 
         public void TriggerCommand(Command<GameEngine> cmd)
         {

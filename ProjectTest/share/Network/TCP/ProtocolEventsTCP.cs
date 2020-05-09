@@ -43,6 +43,7 @@ namespace Share.Network.Protocol
        */
         public static ProtocolEventsTCP<ChoiceStep> CHOICESTEP = new ProtocolEventsTCP<ChoiceStep>("CHOICESTEP");
         public static ProtocolEventsTCP<String> ASKFORALETTER = new ProtocolEventsTCP<String>("ASKFORALETTER");
+        public static ProtocolEventsTCP<String> ASKFORIDPLAYER = new ProtocolEventsTCP<String>("ASKFORIDPLAYER");
 
 
         private ProtocolEventsTCP(String name) : base(name){ }
