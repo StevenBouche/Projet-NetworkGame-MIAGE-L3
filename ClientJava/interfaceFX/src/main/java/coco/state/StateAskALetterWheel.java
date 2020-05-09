@@ -17,14 +17,13 @@ public class StateAskALetterWheel extends StateGameUI {
 
     @Override
     public void execute() {
-
-        controller.buttonSetEnigm.setDisable(true);
-    //    controller.clientChoic.setDisable(true);
         controller.cbdV.setDisable(true);
         controller.cbdC.setDisable(false);
-        controller.switchVoyCons.setDisable(true);
+        controller.switchVoyCons.setDisable(false);
         controller.validLetter.setDisable(false);
         controller.buttonWheel.setDisable(true);
+        controller.proposEnigm.setDisable(true);
+        controller.validChoice.setDisable(true);
         initButton();
     }
 

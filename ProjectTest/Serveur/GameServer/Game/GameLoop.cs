@@ -25,6 +25,7 @@ namespace Serveur.GameServer.Game
 
             if (roundsNb < 4)
             {
+                isEnignaDiscovered = false;
                 Console.WriteLine("Manche : " + roundsNb + 1);
                 ExecuteQuickRound();
                 commandManager.TriggerCurrentEnigma();
@@ -44,6 +45,7 @@ namespace Serveur.GameServer.Game
         {
             if (isEnignaDiscovered)
             {
+                //TODO REMOVE
                 roundsNb++;
                 return;
             }
@@ -54,8 +56,9 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteTurn()
         {
+           // isEnignaDiscovered = true; cheat mod
             commandManager.TriggerHandleTurn(); //trigger handler for turn of one player
-            commandManager.TriggerNextPlayer(); //sets the next player 
+            if (!isEnignaDiscovered) commandManager.TriggerNextPlayer(); //sets the next player 
         }
 
         public void ExecuteFinalRound()
@@ -72,7 +75,6 @@ namespace Serveur.GameServer.Game
         {
             // TRIGGER COMMAND WIN ROUND FOR AN ACTION
             isEnignaDiscovered = true;
-            throw new NotImplementedException();
         }
     }
 }

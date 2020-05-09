@@ -48,6 +48,10 @@ namespace Serveur.GameServer.Game
         public List<char> letterBuyInARound;
 
         private ManualResetEvent allDoneServer;
+
+        public Boolean endTurn = false;
+
+
         public GameEngine(ISenderAtClient sender, ref ManualResetEvent allDone)
         {
             this.sender = sender;
@@ -70,7 +74,7 @@ namespace Serveur.GameServer.Game
                 this.gameState = GameState.FINISHED;
                 allDoneServer.Set();
             }
-            catch (ThreadAbortException)
+            catch (ThreadInterruptedException)
             {
                 Console.WriteLine("THREAD GAME HAS ABORD");
             }

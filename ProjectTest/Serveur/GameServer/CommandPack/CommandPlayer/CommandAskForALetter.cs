@@ -1,5 +1,6 @@
 ﻿using Serveur.GameServer.CommandPack.CommandCase;
 using Serveur.GameServer.CommandPack.ReceiverNetwork;
+using Serveur.GameServer.Enigma;
 using Serveur.GameServer.Game;
 using Share.Network.Message;
 using Share.Network.Message.modele;
@@ -12,6 +13,9 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 {
     public class CommandAskForALetter : CommandReceiverClient<String>
     {
+
+        private int nb;
+
         public CommandAskForALetter(GameEngine context, CommandManager CM) : base(context, CM) { }
 
         public override void onExecute()
@@ -21,15 +25,21 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             WaitReceiveClient(); // waiting choice player
              
             // if enigma containe letter and is not a vowel and is not already bought
-            if (Context.CurrentEnigma.label.Contains(Data) && !isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data))
+            if (Context.CurrentEnigma.label.Contains(Data) && !EnigmePool.isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data))
             {
-                Context.letterBuyInARound.Add(char.Parse(Data)); // Add letter to already buy TODO : test char.Parse(Data)
-                this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data);
+                char d = char.Parse(Data);
+                Context.letterBuyInARound.Add(d); 
+                this.nb = EnigmePool.GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, d);
+                if(this.nb == 0)
+                {
+                    throw new Exception(" ERREUR : contenu dans la phrase, pas une voyelle ni deja acheter mais Conciderer comme bonne proposition");
+                }
                 SendGoodLetter();
-                commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager, nbOfOccurrences));
+                commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager, nb));
             }
             else
             {
+                Context.endTurn = true;
                 SendBadLetter();
                 Console.WriteLine("La lettre n'est pas contenue dans l'enigme ou est une voyelle, c'est au joueur suivant \n");
             }
@@ -64,38 +74,16 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         private void SendALetterAsked()
         {
             String id = Context.CurrentPlayer.id;
+            String str = "Entrez une consonne";
             PacketMessage<String> msg = new PacketMessage<String>()
             {
                 evt = ProtocolEventsTCP<String>.ASKFORALETTER.eventName,
-                data = "Entrez une consonne"
+                data = str
             };
 
             Context.SendClient(msg, id);
         }
 
-        private int GetNbOfOccurencesInEnigma(String label, String letter)
-        {
-            int count = 0;
-
-            for(int i = 0; i < label.Length; i++)
-            {
-                if(label[i].Equals(letter))
-                {
-                    count++;
-                }
-            }
-            return count;
-        }
-
-        private Boolean isAVowel(char letter)
-        {
-            var vowels = new HashSet<char> { 'A', 'E', 'I', 'O', 'U', 'Y' };
-
-            if (vowels.Contains(letter))
-            {
-                return true;
-            }
-            return false;
-        }
+       
     }
 }

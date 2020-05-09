@@ -12,6 +12,8 @@ import javafx.util.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Rect{
     public int id;
@@ -26,7 +28,8 @@ public class Rect{
     public Label l;
     public Map<Integer, Label> listCharEnigm;
 
-    private char ch;
+    public char ch;
+
 
 
     public Rect(int ID, Pane pane, int coordX, int coordY){
@@ -71,47 +74,17 @@ public class Rect{
         p.getChildren().add(r2);
     }
 
-
-
-    /**
-     * Appel la méthode qui affiche les lettres
-     */
-    public void drawLetter(Map<Integer, Label> listCharEnigm){
-        if(state == StateOfRect.LETTRE_BLOCKED){
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.millis(1500),
-                    ae -> displayLetter(listCharEnigm)));
-            timeline.play();
-        }
-        else if(state == StateOfRect.LETTRE_SHOW){
-            displayLetter(listCharEnigm);
-        }
-    }
-
-    /**
-     * According to the state of the box the letter I display differently
-     */
-    public void displayLetter(Map<Integer, Label> listCharEnigm){
-        if(ch != '~') {
-            if (state == StateOfRect.LETTRE_BLOCKED) {
-                setColor(Color.WHITE);
-                state = StateOfRect.LETTRE_SHOW;
-            }
-            listCharEnigm.get(this.id).setText("" + ch);
-
-        }
-    }
-
     /**This method reste the color of rectangle t blue
      *
      */
-    public void resetColor(){
+/*    public void resetColor(){
         Timer t = new Timer();
         Timeline timeline = new Timeline(new KeyFrame(
                 Duration.millis(1500),
                 ae -> setColor(Color.AQUAMARINE)));
         timeline.play();
-    }
+
+    }*/
 
 /**------------------------- Getter and Setter : -------------*/
 

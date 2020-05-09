@@ -181,5 +181,42 @@ namespace Serveur.GameServer.Enigma
         {
 
         }
+
+        public static int GetNbOfOccurencesInEnigma(String label, char letter)
+        {
+            int count = 0;
+
+            for (int i = 0; i < label.Length; i++)
+            {
+                if (label[i] == letter)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public static Boolean isAVowel(char letter)
+        {
+            var vowels = new HashSet<char> { 'A', 'E', 'I', 'O', 'U', 'Y' };
+
+            if (vowels.Contains(letter))
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

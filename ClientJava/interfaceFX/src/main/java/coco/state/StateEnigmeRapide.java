@@ -28,8 +28,6 @@ public class StateEnigmeRapide extends StateGameUI {
         controller.buttonSetEnigm.setDisable(!buttonDisable);
         controller.buttonShowEnigm.setDisable(buttonDisable);
         controller.buttonReset.setDisable(buttonDisable);
-        controller.clientChoic.setDisable(true);
-        controller.clientChoic.setDisable(choicePlayerDisable);
         controller.cbdV.setDisable(true);
         controller.cbdC.setDisable(true);
         controller.switchVoyCons.setDisable(true);

@@ -1,6 +1,5 @@
 package network.client;
 
-import javafx.application.Platform;
 import network.message.obj.ChoiceStep;
 import network.message.obj.Enigme;
 import network.message.obj.PlayerMoneyInfo;
@@ -19,6 +18,6 @@ public interface INotifyPlayersGame {
 
     void receiveFromServeurAskForALetter(String var);
 
-    void receiveFromServeurBadAskForALetter(String id);
+    void receiveFromServeurBadAskForALetter(String id, String letter);
     void receiveFromServeurGoodAskForALetter(String id, String var);
 }

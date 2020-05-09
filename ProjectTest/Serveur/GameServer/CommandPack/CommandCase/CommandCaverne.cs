@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Serveur.GameServer.CommandPack.CommandCase
 {
-    class CommandCaverne : Command<GameEngine>
+    class CommandCaverne : CommandCase
     {
         public CommandCaverne(GameEngine context, CommandManager CM) : base(context, CM) { }
         public override void onExecute()
@@ -14,6 +14,8 @@ namespace Serveur.GameServer.CommandPack.CommandCase
             int montant = r.Next(100, 2001);
             Context.CurrentPlayer.cagnotte.Montant_Caverne += montant;
             Context.CurrentPlayer.cagnotte.Montant_Total += montant;
+
+
         }
     }
 }
