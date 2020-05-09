@@ -23,10 +23,7 @@ import javafx.scene.web.WebView;
 import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
 import network.main.IMain;
-import network.message.obj.ChoiceStep;
-import network.message.obj.DataMoneyInfo;
-import network.message.obj.Enigme;
-import network.message.obj.PlayerMoneyInfo;
+import network.message.obj.*;
 
 import javafx.scene.*;
 
@@ -68,9 +65,11 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public ChoiceBox<String> cbdC;
     @FXML
     public Button validLetter;
+    @FXML
+    public Label labelCase;
 
  //   final WebView browser = new WebView();
-   // public WebEngine webEngine;
+    // public WebEngine webEngine;
 
     public Boolean switchActive; //switchActive = true -> voyelle switchActive = false -> consonne
 
@@ -128,7 +127,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             loadCBD();
             loadSwitch();
             loadBackGround();
-            setPopup();
+        //    setPopup();
+            labelCase.setText("");
             setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
             loadWebWheel();
         } catch (IOException e) {
@@ -329,12 +329,11 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             manager.displayEnigm(); // montre toute l'enigme
             PlayerData p = handlerPlayerDataTable.getPlayerData(id);
             log("Good response from "+p.namePlayer+" : "+proposal);
-            actionPopup();
+         //   actionPopup();
         });
     }
 
     public void actionPopup(){
-
         executorPopup = Executors.newScheduledThreadPool(1);
         rootpopup.setVisible(true);
         showPopup();
@@ -342,11 +341,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             @Override
             public void run() {
                 rootpopup.setVisible(false);
+                executorPopup.shutdownNow();
             }
         };
-
         executorPopup.schedule(task1, 3, TimeUnit.SECONDS);
-
     }
 
     public void setPopup(){
@@ -443,6 +441,13 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             log(var+" GOOD LETTER "+p.namePlayer);
             manager.displayLetter(var.charAt(0));
             setAndExecuteState(new StateRound(this,idP)); //todo rename
+        });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurCaseOfWheel(CaseInfo var) {
+        Platform.runLater(() -> {
+            labelCase.setText(var.value+" "+var.type);
         });
     }
 

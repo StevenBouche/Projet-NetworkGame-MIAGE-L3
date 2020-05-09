@@ -23,11 +23,12 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             SendALetterAsked(); // notify client he need choice a letter 
 
             WaitReceiveClient(); // waiting choice player
-             
+
             // if enigma containe letter and is not a vowel and is not already bought
-            if (Context.CurrentEnigma.label.Contains(Data) && !EnigmePool.isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data))
+            char d = char.Parse(Data);
+            if (Context.CurrentEnigma.label.Contains(Data) && !EnigmePool.isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(d))
             {
-                char d = char.Parse(Data);
+                
                 Context.letterBuyInARound.Add(d); 
                 this.nb = EnigmePool.GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, d);
                 if(this.nb == 0)

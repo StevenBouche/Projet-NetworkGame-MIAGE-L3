@@ -25,9 +25,10 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         {
 
             // if enigma containe letter and is a vowel and is not already bought
-            if (Context.CurrentEnigma.label.Contains(Data) && EnigmePool.isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data))
+            char d = char.Parse(Data);
+            if (Context.CurrentEnigma.label.Contains(Data) && EnigmePool.isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(d))
             {
-                char d = char.Parse(Data);
+                
                 Context.letterBuyInARound.Add(d); // Add letter to already buy TODO : test char.Parse(Data)
                 Context.CurrentPlayer.cagnotte.Montant_Manche -= 150;
                 SendGoodLetter();
@@ -69,15 +70,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         private void SendUpdateMoney()
         {
-            PlayerMoneyInfo pInfo = new PlayerMoneyInfo(id, Context.CurrentPlayer.cagnotte.Montant_Manche, Context.CurrentPlayer.cagnotte.Montant_Total);
-
-            PacketMessage<PlayerMoneyInfo> msg = new PacketMessage<PlayerMoneyInfo>()
-            {
-                evt = ProtocolEventsTCP<PlayerMoneyInfo>.UPDATEROUNDMONEY.eventName,
-                data = pInfo
-            };
-
-            Context.SendAllClient(msg);
+            commandManager.TriggerUpdateMoney();
         }
     }
 }

@@ -180,9 +180,9 @@ namespace Serveur.GameServer.Game
             }
         }
 
-        public Boolean LetterIsAlreadyBuy(String letter)
+        public Boolean LetterIsAlreadyBuy(char letter)
         {
-            return letterBuyInARound.Where(a => a.Equals(letter)).Count() > 0;
+            return letterBuyInARound.Where(a => a == letter).Count() > 0;
         }
     }
 }

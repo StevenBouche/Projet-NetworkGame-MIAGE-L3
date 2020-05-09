@@ -1,9 +1,6 @@
 package network.client;
 
-import network.message.obj.ChoiceStep;
-import network.message.obj.DataMoneyInfo;
-import network.message.obj.Enigme;
-import network.message.obj.PlayerMoneyInfo;
+import network.message.obj.*;
 
 public interface INotifyPlayersGame {
 
@@ -14,11 +11,10 @@ public interface INotifyPlayersGame {
     void receiveFromServeurChoiceStep(ChoiceStep var);
     void receiveFromServeurEnigmaOfRound(Enigme var);
     void receiveFromServeurPlayerMoneyInfo(DataMoneyInfo var);
-    
     void notifyDisconnect();
-
     void receiveFromServeurAskForALetter(String var);
-
     void receiveFromServeurBadAskForALetter(String id, String letter);
     void receiveFromServeurGoodAskForALetter(String id, String var);
+    void receiveFromServeurCaseOfWheel(CaseInfo var);
+
 }

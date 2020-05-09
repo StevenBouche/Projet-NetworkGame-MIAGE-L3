@@ -66,7 +66,7 @@ public class ClientTCP implements Runnable, INotifyState {
                 if(notifierGame != null) notifierGame.receiveFromServeurEnigmaOfRound(var);
             }
         });
-        managerTCP.eventManager.OnEvent(DataMoneyInfo.class, ProtocolEventsTCP.UPDATEROUNDMONEY, new DataListenerTCP<DataMoneyInfo>() {
+        managerTCP.eventManager.OnEvent(DataMoneyInfo.class, ProtocolEventsTCP.UPDATEMONEYALL, new DataListenerTCP<DataMoneyInfo>() {
             @Override
             public void onData(DataMoneyInfo var) {
                 if(notifierGame != null) notifierGame.receiveFromServeurPlayerMoneyInfo(var);
@@ -88,6 +88,12 @@ public class ClientTCP implements Runnable, INotifyState {
             @Override
             public void onData(Proposal var) {
                 if(notifierGame != null) notifierGame.receiveFromServeurGoodAskForALetter(var.id,var.proposal);
+            }
+        });
+        managerTCP.eventManager.OnEvent(CaseInfo.class, ProtocolEventsTCP.SENDCASE, new DataListenerTCP<CaseInfo>() {
+            @Override
+            public void onData(CaseInfo var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurCaseOfWheel(var);
             }
         });
 

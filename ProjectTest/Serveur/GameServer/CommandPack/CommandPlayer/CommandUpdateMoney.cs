@@ -23,7 +23,6 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             SendToClient(data);
         }
 
-
         public void SendToClient(DataMoneyInfo d)
         {
             PacketMessage<DataMoneyInfo> msg = new PacketMessage<DataMoneyInfo>()

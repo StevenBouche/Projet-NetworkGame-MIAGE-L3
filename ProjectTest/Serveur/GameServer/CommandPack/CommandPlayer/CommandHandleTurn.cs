@@ -88,15 +88,8 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
                 elem.Value.cagnotte.Montant_Manche = 0;
 
-
-                //TODO FUSIONNER SEND CAR 3*3 packet a sens au lieu de 3
-             /*   PlayerMoneyInfo pInfo = new PlayerMoneyInfo(elem.Key, elem.Value.cagnotte.Montant_Manche, elem.Value.cagnotte.Montant_Total);
-                PacketMessage<PlayerMoneyInfo> msg = new PacketMessage<PlayerMoneyInfo>()
-                {
-                    evt = ProtocolEventsTCP<PlayerMoneyInfo>.UPDATEROUNDMONEY.eventName,
-                    data = pInfo
-                };
-                Context.SendAllClient(msg);*/
+            //    commandManager.TriggerUpdateMoney();
+          
             }
         }
 
