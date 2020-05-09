@@ -4,6 +4,7 @@ using Serveur.GameServer.CommandPack.ReceiverNetwork;
 using Serveur.GameServer.Game;
 using Serveur.GameServer.GameModel;
 using Share.Network.Message;
+using Share.Network.Message.modele;
 using Share.Network.Protocol;
 using System;
 using System.Collections.Generic;
@@ -38,12 +39,15 @@ namespace Serveur.GameServer.CommandPack.CommandWheel
 
         private void SendCaseToClient(String id)
         {
-            int value = Context.wheel.CurrentCase.valeur;
-            PacketMessage<int> msg = new PacketMessage<int>()
+            Case c = Context.wheel.CurrentCase;
+            CaseInfo myCaseToSend = new CaseInfo(c.valeur, c.type.ToString());
+
+            PacketMessage<CaseInfo> msg = new PacketMessage<CaseInfo>()
             {
-                evt = ProtocolEventsTCP<int>.SENDCASEVALUE.eventName,
-                data = value
+                evt = ProtocolEventsTCP<int>.SENDCASE.eventName,
+                data = myCaseToSend
             };
+
             Context.SendAllClient(msg);
         }
     }
