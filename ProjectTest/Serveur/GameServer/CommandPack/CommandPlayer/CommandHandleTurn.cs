@@ -46,12 +46,30 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 {
                     HandleProposition();
                 }
-                else if (Data.choiceStep.Equals(ChoiceStepEnum.TURNWHEEL.ToString()) && !HaveConsonneEnigma()) //if want turnwheel and have consonne in enigma
+                else if (Data.choiceStep.Equals(ChoiceStepEnum.TURNWHEEL.ToString())) //if want turnwheel and have consonne in enigma
                 {
-                    commandManager.TriggerWheelTurn();
+                    if (!HaveConsonneEnigma())
+                    {
+                        commandManager.TriggerWheelTurn();
+                    }
+                    else
+                    {
+                        SendNotifyNoMoreConsonnant();
+                    }
+                        
                 }
             }
           
+        }
+
+        private void SendNotifyNoMoreConsonnant()
+        {
+            String str = "Il n'y a plus de consonnes";
+            PacketMessage<String> msg = new PacketMessage<String>()
+            {
+                evt = ProtocolEventsTCP<String>.NOTIFYNOMORECONSONNANT.eventName,
+                data = str
+            };
         }
 
         private void SendAChoiceStep()
