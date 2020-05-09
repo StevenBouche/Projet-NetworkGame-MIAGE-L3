@@ -1,5 +1,6 @@
 ﻿using Serveur.GameServer.CommandPack.ReceiverNetwork;
 using Serveur.GameServer.Game;
+using Serveur.GameServer.GameModel;
 using Share.Network.Message;
 using Share.Network.Message.modele;
 using Share.Network.Protocol;
@@ -18,6 +19,20 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             SendAskForProposal();
 
             WaitReceiveClient();
+
+            checkProposal();
+        }
+
+        private void checkProposal()
+        {
+            Enigme e = Context.CurrentEnigma;
+
+            if (e.label.Equals(Data.proposal))
+            {
+                Context.listPlayers.TryGetValue(idClient, out Joueur j);
+                j.cagnotte.Montant_Total += Context.wheel.CurrentCase.valeur;
+                commandManager.TriggerUpdateMoney();
+            }
         }
 
         private void SendAskForProposal()
