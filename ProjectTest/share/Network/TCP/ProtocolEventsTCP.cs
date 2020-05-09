@@ -38,6 +38,7 @@ namespace Share.Network.Protocol
         public static ProtocolEventsTCP<Proposal> GOODPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("GOODPROPOSALLETTER");
         public static ProtocolEventsTCP<ProposalLetter> BADPROPOSALFINALLETTER = new ProtocolEventsTCP<ProposalLetter>("BADPROPOSALFINALLETTER");
         public static ProtocolEventsTCP<ProposalLetter> GOODPROPOSALFINALLETTER = new ProtocolEventsTCP<ProposalLetter>("GOODPROPOSALFINALLETTER");
+        public static ProtocolEventsTCP<String> NOTIFYNOMORECONSONNANT = new ProtocolEventsTCP<String>("NOTIFYNOMORECONSONNANT");
 
         /*
        *  PROTOCOL GAME SEND AND RECEIVE
