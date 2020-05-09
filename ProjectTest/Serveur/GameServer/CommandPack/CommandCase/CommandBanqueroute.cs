@@ -14,6 +14,7 @@ namespace Serveur.GameServer.CommandPack.CommandCase
         {
             Context.endTurn = true;
             Context.CurrentPlayer.cagnotte.Montant_Manche = 0;
+            commandManager.TriggerUpdateMoney();
         }
     }
 }

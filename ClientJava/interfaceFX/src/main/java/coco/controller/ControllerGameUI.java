@@ -5,6 +5,7 @@ import coco.controller.handle.HandlerMyIdentity;
 import coco.controller.handle.HandlerPlayerDataTable;
 import coco.controller.handle.HandlerRound;
 import coco.state.*;
+import com.jfoenix.controls.JFXPopup;
 import controllerJavafx.LoaderRessource;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -70,6 +71,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     public int nbrRectWithLetter; // ?
 
+    public StackPane rootpopup;
+
     /** Sub Scene Element **/
     public ControllerSceneRectancle manager;
     public Parent root;
@@ -77,6 +80,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
   //  Timer timerAnimLetter;
  //   TimerTask taskTimer;
     ScheduledExecutorService executor;
+    ScheduledExecutorService executorPopup;
 
     /** Data comming from lobby**/
     public DataLoadGame dataLoad;
@@ -117,6 +121,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             loadCBD();
             loadSwitch();
             loadBackGround();
+            setPopup();
             setAndExecuteState(new StateStartGame(this)); // todo tous doit etre desactiver et le panneau refresh
         } catch (IOException e) {
             e.printStackTrace();
@@ -316,8 +321,52 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             manager.displayEnigm(); // montre toute l'enigme
             PlayerData p = handlerPlayerDataTable.getPlayerData(id);
             log("Good response from "+p.namePlayer+" : "+proposal);
+            actionPopup();
         });
     }
+
+    public void actionPopup(){
+
+        executorPopup = Executors.newScheduledThreadPool(1);
+        rootpopup.setVisible(true);
+        showPopup();
+        Runnable task1 = new Runnable() {
+            @Override
+            public void run() {
+                rootpopup.setVisible(false);
+            }
+        };
+
+        executorPopup.schedule(task1, 3, TimeUnit.SECONDS);
+
+    }
+
+    public void setPopup(){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("dialogTest.fxml"));
+
+        try {
+            // https://stackoverflow.com/questions/12935953/javafx-class-controller-scene-reference
+            rootpopup = fxmlLoader.load();
+            JFXPopup popup = new JFXPopup(rootpopup);
+            popup.show(board, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT,
+                    (board.getWidth() - rootpopup.getPrefWidth()) / 2,
+                    (board.getHeight() - rootpopup.getPrefHeight()) / 2);
+
+            Label mess = new Label();
+            mess.setText("Message popup !");
+            mess.setTranslateY(50);
+            rootpopup.getChildren().add(mess);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showPopup() {
+
+
+    }
+
 
     @Override
     public synchronized void receiveFromServeurNotifyCurrentPlayerRound(String var) {

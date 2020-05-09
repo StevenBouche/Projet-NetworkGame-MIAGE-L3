@@ -29,16 +29,7 @@ namespace Serveur.GameServer.CommandPack.CommandCase
             {
                 Context.CurrentPlayer.cagnotte.Montant_Manche += Context.wheel.CurrentCase.valeur;
             }
-
-            PlayerMoneyInfo pInfo = new PlayerMoneyInfo(Context.CurrentPlayer.id, Context.CurrentPlayer.cagnotte.Montant_Manche, Context.CurrentPlayer.cagnotte.Montant_Total);
-
-            PacketMessage<PlayerMoneyInfo> msg = new PacketMessage<PlayerMoneyInfo>()
-            {
-                evt = ProtocolEventsTCP<PlayerMoneyInfo>.UPDATEROUNDMONEY.eventName,
-                data = pInfo
-            };
-
-            Context.SendAllClient(msg);
+            commandManager.TriggerUpdateMoney();
 
         }
     }

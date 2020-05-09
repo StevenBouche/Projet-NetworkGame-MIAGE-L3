@@ -1,5 +1,6 @@
 ﻿using Serveur.GameServer.CommandPack;
 using Serveur.GameServer.CommandPack.CommandCase;
+using Serveur.GameServer.CommandPack.CommandPlayer;
 using Serveur.GameServer.Game;
 using System;
 using System.Collections.Generic;
