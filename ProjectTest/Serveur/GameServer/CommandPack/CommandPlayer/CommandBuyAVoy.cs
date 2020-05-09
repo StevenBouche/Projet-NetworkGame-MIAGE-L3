@@ -5,6 +5,7 @@ using Share.Network.Message.modele;
 using Share.Network.Protocol;
 using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace Serveur.GameServer.CommandPack.CommandPlayer
@@ -28,7 +29,9 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             {
                 char d = char.Parse(Data);
                 Context.letterBuyInARound.Add(d); // Add letter to already buy TODO : test char.Parse(Data)
+                Context.CurrentPlayer.cagnotte.Montant_Manche -= 150;
                 SendGoodLetter();
+                SendUpdateMoney();
             }
             else
             {
@@ -59,6 +62,19 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             {
                 evt = ProtocolEventsTCP<Proposal>.BADPROPOSALLETTER.eventName,
                 data = p
+            };
+
+            Context.SendAllClient(msg);
+        }
+
+        private void SendUpdateMoney()
+        {
+            PlayerMoneyInfo pInfo = new PlayerMoneyInfo(id, Context.CurrentPlayer.cagnotte.Montant_Manche, Context.CurrentPlayer.cagnotte.Montant_Total);
+
+            PacketMessage<PlayerMoneyInfo> msg = new PacketMessage<PlayerMoneyInfo>()
+            {
+                evt = ProtocolEventsTCP<PlayerMoneyInfo>.UPDATEROUNDMONEY.eventName,
+                data = pInfo
             };
 
             Context.SendAllClient(msg);

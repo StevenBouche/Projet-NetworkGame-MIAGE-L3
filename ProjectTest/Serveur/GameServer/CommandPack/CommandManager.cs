@@ -71,6 +71,12 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandSetCurrentEnigma(engine, this));
         }
 
+        public void TriggerUpdateMoney()
+        {
+            this.TriggerCommand(new CommandUpdateMoney(engine, this));
+        }
+
+
         public void TriggerCommand(Command<GameEngine> cmd)
         {
             stack.Push(cmd);

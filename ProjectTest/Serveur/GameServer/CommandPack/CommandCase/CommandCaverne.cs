@@ -14,6 +14,8 @@ namespace Serveur.GameServer.CommandPack.CommandCase
             int montant = r.Next(100, 2001);
             Context.CurrentPlayer.cagnotte.Montant_Caverne += montant;
             Context.CurrentPlayer.cagnotte.Montant_Total += montant;
+
+
         }
     }
 }

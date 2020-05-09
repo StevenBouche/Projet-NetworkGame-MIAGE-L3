@@ -1,4 +1,7 @@
 ﻿using Serveur.GameServer.Game;
+using Share.Network.Message;
+using Share.Network.Message.modele;
+using Share.Network.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
@@ -16,7 +19,7 @@ namespace Serveur.GameServer.CommandPack.CommandCase
 
         }
 
-        public override void onExecute() // TODO UPDATE ROUND MONEY
+        public override void onExecute() 
         {
             if(nb != -1)
             {
@@ -26,7 +29,17 @@ namespace Serveur.GameServer.CommandPack.CommandCase
             {
                 Context.CurrentPlayer.cagnotte.Montant_Manche += Context.wheel.CurrentCase.valeur;
             }
-            
+
+            PlayerMoneyInfo pInfo = new PlayerMoneyInfo(Context.CurrentPlayer.id, Context.CurrentPlayer.cagnotte.Montant_Manche, Context.CurrentPlayer.cagnotte.Montant_Total);
+
+            PacketMessage<PlayerMoneyInfo> msg = new PacketMessage<PlayerMoneyInfo>()
+            {
+                evt = ProtocolEventsTCP<PlayerMoneyInfo>.UPDATEROUNDMONEY.eventName,
+                data = pInfo
+            };
+
+            Context.SendAllClient(msg);
+
         }
     }
 }

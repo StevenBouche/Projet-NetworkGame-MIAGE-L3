@@ -28,8 +28,8 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             if (Context.CurrentEnigma.label.Contains(Data) && !EnigmePool.isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data))
             {
                 char d = char.Parse(Data);
-                Context.letterBuyInARound.Add(d); // Add letter to already buy TODO : test char.Parse(Data)
-                this.nb = EnigmePool.GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, d); //TODO return 0 but 1 H les ho...
+                Context.letterBuyInARound.Add(d); 
+                this.nb = EnigmePool.GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, d);
                 if(this.nb == 0)
                 {
                     throw new Exception(" ERREUR : contenu dans la phrase, pas une voyelle ni deja acheter mais Conciderer comme bonne proposition");
