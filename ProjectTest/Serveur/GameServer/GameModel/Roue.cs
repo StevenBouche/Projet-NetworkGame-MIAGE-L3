@@ -3,14 +3,10 @@ using System.Collections.Generic;
 
 namespace Serveur.GameServer.GameModel
 {
-
     public class Roue
     {
-
         public List<Case> Cases { get; }
         public Case CurrentCase { get; set; }
-
-
 
         public Roue(bool Final)
         {
@@ -72,7 +68,7 @@ namespace Serveur.GameServer.GameModel
         {
             Reset();
             int index = 8;
-            for (int i = 0; i <= 11; i++)
+            for (int i = 0; i <= 9; i++)
             {
                 Cases.Add(new Case(TypeCase.FINAL, (int)Enum.GetValues(typeof(Cash)).GetValue(index)));
                 index++;
