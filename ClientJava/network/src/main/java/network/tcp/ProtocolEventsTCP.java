@@ -28,7 +28,7 @@ public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
     public static ProtocolEventsTCP<Proposal> BADPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("BADPROPOSALRESPONSE");
     public static ProtocolEventsTCP<Proposal> GOODPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("GOODPROPOSALRESPONSE");
     public static ProtocolEventsTCP<String> NOTIFYCURRENTPLAYER = new ProtocolEventsTCP<String>("NOTIFYCURRENTPLAYER");
-    public static ProtocolEventsTCP<PlayerMoneyInfo> UPDATEROUNDMONEY = new ProtocolEventsTCP<PlayerMoneyInfo>("UPDATEROUNDMONEY");
+    public static ProtocolEventsTCP<DataMoneyInfo> UPDATEROUNDMONEY = new ProtocolEventsTCP<DataMoneyInfo>("UPDATEROUNDMONEY");
     public static ProtocolEventsTCP<Proposal> BADPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("BADPROPOSALLETTER");
     public static ProtocolEventsTCP<Proposal> GOODPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("GOODPROPOSALLETTER");
 

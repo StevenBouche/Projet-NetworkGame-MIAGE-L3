@@ -19,20 +19,23 @@ public class StateEnigmeRapide extends StateGameUI {
         controller.animEnigmRapide();
     }
 
+    @Override
+    public void onClickOnSwitch(Boolean switchActive) {
+
+    }
+
     private void setEnigme() {
         controller.preSetEnigm();
     }
 
-    @Override
     protected void stateButton() {
-        controller.buttonSetEnigm.setDisable(!buttonDisable);
-        controller.buttonShowEnigm.setDisable(buttonDisable);
-        controller.buttonReset.setDisable(buttonDisable);
         controller.cbdV.setDisable(true);
         controller.cbdC.setDisable(true);
         controller.switchVoyCons.setDisable(true);
         controller.validLetter.setDisable(true);
         controller.buttonWheel.setDisable(true);
+        controller.proposEnigm.setDisable(false);
+        controller.validChoice.setDisable(false);
 
         /** set Event to propose the enigm chosen */
         controller.validLetter.setOnMouseReleased(new EventHandler<MouseEvent>(){

@@ -1,10 +1,6 @@
 package coco.state;
 
 import coco.controller.ControllerGameUI;
-import coco.controller.ControllerSceneRectancle;
-import javafx.fxml.FXMLLoader;
-
-import java.io.IOException;
 
 public class StateStartGame extends StateGameUI {
 
@@ -18,10 +14,18 @@ public class StateStartGame extends StateGameUI {
     }
 
     @Override
+    public void onClickOnSwitch(Boolean switchActive) {
+
+    }
+
     protected void stateButton() {
-        controller.buttonSetEnigm.setDisable(!buttonDisable);
-        controller.buttonShowEnigm.setDisable(buttonDisable);
-        controller.buttonReset.setDisable(buttonDisable);
+        controller.cbdV.setDisable(true);
+        controller.cbdC.setDisable(true);
+        controller.switchVoyCons.setDisable(true);
+        controller.validLetter.setDisable(true);
+        controller.buttonWheel.setDisable(true);
+        controller.proposEnigm.setDisable(true);
+        controller.validChoice.setDisable(true);
     }
 
 }

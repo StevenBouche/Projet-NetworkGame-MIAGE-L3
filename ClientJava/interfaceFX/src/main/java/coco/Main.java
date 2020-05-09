@@ -2,9 +2,7 @@ package coco;
 
 import coco.controller.ControllerGameUI;
 import coco.controller.PlayerData;
-import coco.state.StateStartRound;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

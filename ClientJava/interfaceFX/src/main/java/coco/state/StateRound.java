@@ -1,20 +1,18 @@
 package coco.state;
 
 import coco.controller.ControllerGameUI;
-import coco.state.StateGameUI;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import network.message.PacketMessage;
-import network.message.obj.Choice;
 import network.message.obj.ChoiceStep;
 import network.message.obj.ChoiceStepEnum;
 import network.tcp.ProtocolEventsTCP;
 
-public class StateStartRound extends StateGameUI {
+public class StateRound extends StateGameUI {
 
     Boolean stateButton;
 
-    public StateStartRound(ControllerGameUI controllerGameUI, String var) {
+    public StateRound(ControllerGameUI controllerGameUI, String var) {
         super(controllerGameUI,true,true);
         stateButton = !controller.handlerIdentity.myId.equals(var);
      //   controller.animEnigmRound();
@@ -22,14 +20,14 @@ public class StateStartRound extends StateGameUI {
 
     @Override
     public void execute() {
-     //   controller.clientChoic.setDisable(stateButton);
+
         controller.cbdV.setDisable(stateButton);
         controller.cbdC.setDisable(true);
         controller.switchVoyCons.setDisable(stateButton);
-        controller.validLetter.setDisable(stateButton);
         controller.buttonWheel.setDisable(stateButton);
         controller.proposEnigm.setDisable(stateButton);
         controller.validChoice.setDisable(stateButton);
+        controller.validLetter.setDisable(!controller.switchActive);
 
         /** set Event to propose the enigm chosen */
         controller.validLetter.setOnMouseReleased(new EventHandler<MouseEvent>(){
@@ -56,6 +54,11 @@ public class StateStartRound extends StateGameUI {
 
     }
 
+    @Override
+    public void onClickOnSwitch(Boolean switchActive) {
+        controller.validLetter.setDisable(!switchActive);
+    }
+
     private void handleTurnWheel() {
         ChoiceStep ch = new ChoiceStep();
         ch.choiceStep = ChoiceStepEnum.TURNWHEEL.name();
@@ -66,6 +69,9 @@ public class StateStartRound extends StateGameUI {
     }
 
     private void handlePropositionEnigma() {
+
+        if(controller.proposEnigm.getText().equals("")) return;
+
         ChoiceStep ch = new ChoiceStep();
         ch.choiceStep = ChoiceStepEnum.PROPOSAL.name();
         ch.proposal = controller.proposEnigm.getText();
@@ -76,6 +82,9 @@ public class StateStartRound extends StateGameUI {
     }
 
     private void handlePropositionLetter() {
+
+        if(controller.cbdV.getValue().equals(" ")) return;
+
         ChoiceStep ch = new ChoiceStep();
         ch.choiceStep = ChoiceStepEnum.BUYVOY.name();
         ch.voy = controller.cbdV.getValue();

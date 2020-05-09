@@ -23,7 +23,6 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <Pane fx:id="zoneButtons" layoutX="162.0" layoutY="352.0" prefHeight="43.0" prefWidth="112.0" visible="false" />
       <TextField fx:id="proposEnigm" layoutX="14.0" layoutY="188.0" prefHeight="50.0" prefWidth="200.0" />
       <Button fx:id="validChoice" layoutX="13.0" layoutY="244.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Validerenigme" />
       <CheckBox fx:id="switchVoyCons" layoutX="219.0" layoutY="193.0" mnemonicParsing="false" text="C/V">

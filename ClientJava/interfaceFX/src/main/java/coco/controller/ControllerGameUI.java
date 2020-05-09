@@ -21,6 +21,7 @@ import network.client.ClientTCP;
 import network.client.INotifyPlayersGame;
 import network.main.IMain;
 import network.message.obj.ChoiceStep;
+import network.message.obj.DataMoneyInfo;
 import network.message.obj.Enigme;
 import network.message.obj.PlayerMoneyInfo;
 
@@ -31,7 +32,6 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 public class ControllerGameUI implements Initializable, INotifyPlayersGame {
@@ -39,10 +39,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     /** FXML elements */
     @FXML
     public SubScene subScene;
-    @FXML
-    public Pane zoneButtons;
- //   @FXML
- //   public Pane clientChoic;
     @FXML
     public TextField proposEnigm;
     @FXML
@@ -67,11 +63,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public ChoiceBox<String> cbdC;
     @FXML
     public Button validLetter;
-
-    /** Element dynamic with code */
-    public Button buttonSetEnigm; //for loadButtons
-    public Button buttonShowEnigm;
-    public Button buttonReset;
 
     public Boolean switchActive; //switchActive = true -> voyelle switchActive = false -> consonne
 
@@ -104,14 +95,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId, IMain main) {
         alreadyStop = false;
         buildDataLoad(client,clientThread,data,myId);
-   /*     timerAnimLetter = new Timer();
-        taskTimer = new TimerTask() {
-            @Override
-            public void run() {
-                if(allIsShow) cancel();
-                else tryshowRandomLetter(timerAnimLetter);
-            }
-        };*/
         this.main = main;
     }
 
@@ -131,7 +114,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             createHandler();
             loadTextField();
             loadSubScene();
-            loadButtons();
             loadCBD();
             loadSwitch();
             loadBackGround();
@@ -175,58 +157,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     /**
-     * This function set 3 buttons
-     * 1st to set the enigm
-     * 2nd to rddisplay enigm
-     * 3rd to propose a letter (chosen in list) to show
-     *
-     * @throws IOException
-     */
-    private void loadButtons() throws IOException {
-        //1ST BUTTON
-        buttonSetEnigm = new Button();
-        buttonSetEnigm.setText("Set Enigm");
-        buttonSetEnigm.setTranslateY(30);
-        zoneButtons.getChildren().add(buttonSetEnigm);
-        buttonSetEnigm.setOnMouseReleased(new EventHandler<MouseEvent>(){
-            public void handle(MouseEvent me){
-
-                //manager.setEnigm("PETIT OISEAU SUR L'EAU");
-                //manager.setRectWithLetter();
-
-                System.out.println("b1 pressed");
-                //clientChoic.setVisible(true);
-            }
-        });
-
-        //2ND BUTTON
-        buttonShowEnigm = new Button();
-        buttonShowEnigm.setText("Show enigm");
-        buttonShowEnigm.setTranslateX(95);
-        buttonShowEnigm.setTranslateY(30);
-        zoneButtons.getChildren().add(buttonShowEnigm);
-        buttonShowEnigm.setOnMouseReleased(new EventHandler<MouseEvent>(){
-            public void handle(MouseEvent me){
-                manager.displayEnigm();
-                System.out.println("b2 pressed");
-            }
-        });
-
-        //3RD BUTTON
-        buttonReset = new Button();
-        buttonReset.setText("Reset");
-        buttonReset.setTranslateX(200);
-        buttonReset.setTranslateY(30);
-        zoneButtons.getChildren().add(buttonReset);
-        buttonReset.setOnMouseReleased(new EventHandler<MouseEvent>(){
-            public void handle(MouseEvent me){
-                manager.resetPanneau();
-                System.out.println("b3 pressed");
-            }
-        });
-    }
-
-    /**
      * This function set Event switch button voyelle / consonne
      * and set default letter chosen
      */
@@ -238,6 +168,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
                 changeChoiceB(cbdV, cbdC);
                 cbdC.setValue(" ");
                 cbdV.setValue(" ");
+                stateUI.onClickOnSwitch(switchActive);
+                mouseEvent.consume();
             }
         });
     }
@@ -248,34 +180,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
      * 2nd to voyelle
      */
     public void loadCBD(){
-
-    //    cbdC.setTranslateX(220);
-    //    cbdV.setTranslateX(220);
-     /*   cbdC.setPrefWidth(75);
-        cbdV.setPrefHeight(50);
-        cbdC.setPrefHeight(50);
-        cbdV.setPrefWidth(75);*/
-     /*   proposEnigm.setTranslateY(-25);
-        proposEnigm.setPrefWidth(200);
-        proposEnigm.setPrefHeight(50);*/
-
         cbdV.getItems().addAll(" ", "A", "E", "I", "O", "U", "Y");
-
         cbdC.getItems().addAll(" ", "B", "C", "D", "F", "G", "H", "J", "K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "W","X", "Z");
-
-    //    clientChoic.getChildren().add(cbdC);
-    //    clientChoic.getChildren().add(cbdV);
-
-     //   validLetter = new Button();
         validLetter.setText("LETTRE");
-  /*      validLetter.setTranslateX(220);
-        validLetter.setTranslateY(58);
-        validLetter.setPrefWidth(75);*/
-    //    clientChoic.getChildren().add(validLetter);
-
         validChoice.setText("ENIGME");
-    //    validChoice.setPrefWidth(200);
-
         /** Set visibility of ChoiceBoxs */
         changeChoiceB(cbdV, cbdC);
     }
@@ -299,52 +207,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         }
     }
 
-    @Override
-    public void startActionEnigmeRapide(Enigme varE) {
-        Platform.runLater(() -> {
-            handlerEnigme.setCurrentEnigme(varE);
-            // todo change state of UI on rapid enigma
-            setAndExecuteState(new StateEnigmeRapide(this)); //todo handle enigme => panneau enigme
-        });
-    }
-
-    int cpt;
-    @Override
-    public void receiveFromServeurBadProposalResponse(String var, String badReponse) {
-        Platform.runLater(() -> {
-            manager.compareProp(badReponse);
-            handlerRound.setIdPlayerHaveProposal(var);
-            PlayerData p = handlerPlayerDataTable.getPlayerData(var);
-            log("Bad response from "+p.namePlayer+" : "+badReponse);
-        });
-    }
-
-    @Override
-    public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
-        String idLocal = id;
-     //   cancelTimerTask();
-
-        Platform.runLater(() -> {
-            executor.shutdownNow();
-        //    log("State timer : "+taskTimer.cancel());
-            handlerRound.setIdPlayerHaveProposal(idLocal);
-            manager.compareProp(proposal); // couleur vert
-            manager.displayEnigm(); // montre toute l'enigme
-            PlayerData p = handlerPlayerDataTable.getPlayerData(id);
-            log("Good response from "+p.namePlayer+" : "+proposal);
-        });
-    }
-
-    private void cancelTimerTask(){
-    /*    timerAnimLetter.cancel();
-        boolean b = taskTimer.cancel();
-        timerAnimLetter.purge();
-        taskTimer.
-        /*    while(!b){
-                b = taskTimer.cancel();
-            }*/
-    }
-
     private void log(String str){
         String str2 = log.getText();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
@@ -354,43 +216,9 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         log.appendText(newString);
     }
 
-    @Override
-    public void receiveFromServeurNotifyCurrentPlayerRound(String var) {
-        Platform.runLater(() -> {
-            handlerRound.setCurrentPlayerId(var);
-            PlayerData p = handlerPlayerDataTable.getPlayerData(var);
-            log("Current player is "+p.namePlayer);
-            setAndExecuteState(new StateStartRound(this,var)); //todo rename
-        });
-    }
-
-    @Override
-    public void receiveFromServeurChoiceStep(ChoiceStep var) {
-        Platform.runLater(() -> {
-          log("You need to choice between buy vowel, turn wheel or proposal enigma");
-        });
-    }
-
-    @Override
-    public void receiveFromServeurEnigmaOfRound(Enigme var) {
-        Platform.runLater(() -> {
-            handlerEnigme.setCurrentEnigme(var);
-            preSetEnigm();
-            log("SET NEW ENIGME");
-        });
-    }
-
-    @Override
-    public void receiveFromServeurPlayerMoneyInfo(PlayerMoneyInfo var) {
-        Platform.runLater(() -> {
-            handlerPlayerDataTable.updateDataPlayer(var);
-        });
-    }
-
     public void preSetEnigm() {
-       // manager.getEnigme();
         manager.resetPanneau();
-        manager.setEnigm(handlerEnigme.getCurrentEnigmeLabel());//"PETIT OISEAU SUR L'EAU"
+        manager.setEnigm(handlerEnigme.getCurrentEnigmeLabel());
         manager.setRectWithLetter();
     }
 
@@ -408,25 +236,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         animShowLetter();
     }
 
- /*   public void animEnigmRound() {
-        mapRectWithLetter = new HashMap<>();
-        nbrRectWithLetter = 0;
-        manager.mapRect.forEach((idR, r)->{
-            if(manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_HIDDEN ||
-                    manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_SPECIAL ){
-                nbrRectWithLetter++;
-                mapRectWithLetter.put(nbrRectWithLetter, r);
-            }
-        });
-
-    }*/
-
     public void animShowLetter(){
-
-  /*      mapRectWithLetter.forEach((id, r)->{
-            System.out.println("id : " + id + ", letter : " + r.getLetter());
-        });*/
-        allIsShow = false;
 
         executor = Executors.newScheduledThreadPool(1);
 
@@ -438,8 +248,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         };
 
         executor.scheduleAtFixedRate(task1, 0, 2, TimeUnit.SECONDS);
-
-    //    timerAnimLetter.schedule(taskTimer, 100, 2000);
 
     }
 
@@ -454,24 +262,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         } else {
             executor.shutdownNow();
         }
-    }
-
-    public void displayLetter(int idL){
-        Platform.runLater(() -> {
-            // OBLIGATOIRE LORS DE MODIFICATION DE QUELQUE CHOSE DE GRAPHIQUE CAR CELA VIENT DU RESEAU
-            manager.displayLetter(mapRectWithLetter.get(idL).getLetter());
-        });
-    }
-
-    public boolean allIsShow;
-    public void chekIfEnigmIsShow(){
-        allIsShow = true;
-        mapRectWithLetter.forEach((rId, r)->{
-            if(mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_HIDDEN ||
-                    mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_SPECIAL){
-                allIsShow = false;
-            }
-        });
     }
 
     private void loadBackGround() {
@@ -494,7 +284,76 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     @Override
-    public void notifyDisconnect() {
+    public synchronized void startActionEnigmeRapide(Enigme varE) {
+        Platform.runLater(() -> {
+            handlerEnigme.setCurrentEnigme(varE);
+            // todo change state of UI on rapid enigma
+            setAndExecuteState(new StateEnigmeRapide(this)); //todo handle enigme => panneau enigme
+        });
+    }
+
+    int cpt;
+    @Override
+    public synchronized void receiveFromServeurBadProposalResponse(String var, String badReponse) {
+        Platform.runLater(() -> {
+            manager.compareProp(badReponse);
+            handlerRound.setIdPlayerHaveProposal(var);
+            PlayerData p = handlerPlayerDataTable.getPlayerData(var);
+            log("Bad response from "+p.namePlayer+" : "+badReponse);
+        });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurGoodProposalResponse(String id, String proposal) {
+        String idLocal = id;
+        //   cancelTimerTask();
+
+        Platform.runLater(() -> {
+            executor.shutdownNow();
+            //    log("State timer : "+taskTimer.cancel());
+            handlerRound.setIdPlayerHaveProposal(idLocal);
+            manager.compareProp(proposal); // couleur vert
+            manager.displayEnigm(); // montre toute l'enigme
+            PlayerData p = handlerPlayerDataTable.getPlayerData(id);
+            log("Good response from "+p.namePlayer+" : "+proposal);
+        });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurNotifyCurrentPlayerRound(String var) {
+        Platform.runLater(() -> {
+            handlerRound.setCurrentPlayerId(var);
+            PlayerData p = handlerPlayerDataTable.getPlayerData(var);
+            log("Current player is "+p.namePlayer);
+            setAndExecuteState(new StateRound(this,var)); //todo rename
+        });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurChoiceStep(ChoiceStep var) {
+        Platform.runLater(() -> {
+            log("You need to choice between buy vowel, turn wheel or proposal enigma");
+        });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurEnigmaOfRound(Enigme var) {
+        Platform.runLater(() -> {
+            handlerEnigme.setCurrentEnigme(var);
+            preSetEnigm();
+            log("SET NEW ENIGME");
+        });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurPlayerMoneyInfo(DataMoneyInfo var) {
+        Platform.runLater(() -> {
+            handlerPlayerDataTable.updateDataPlayer(var);
+        });
+    }
+
+    @Override
+    public synchronized void notifyDisconnect() {
         stop();
         Platform.runLater(() -> {
             main.backToMainLobbies();
@@ -502,7 +361,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     @Override
-    public void receiveFromServeurAskForALetter(String var) {
+    public synchronized void receiveFromServeurAskForALetter(String var) {
         Platform.runLater(() -> {
             //todo popup coco
             setAndExecuteState(new StateAskALetterWheel(this,false,false));
@@ -510,23 +369,23 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     @Override
-    public void receiveFromServeurBadAskForALetter(String id, String var) {
+    public synchronized void receiveFromServeurBadAskForALetter(String id, String var) {
         String idP = id;
         Platform.runLater(() -> {
             PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
             log(var+" : BAD LETTER "+p.namePlayer);
-            setAndExecuteState(new StateStartRound(this, idP)); //todo rename
+            setAndExecuteState(new StateRound(this, idP)); //todo rename
         });
     }
 
     @Override
-    public void receiveFromServeurGoodAskForALetter(String id, String var) {
+    public synchronized void receiveFromServeurGoodAskForALetter(String id, String var) {
         String idP = id;
         Platform.runLater(() -> {
             PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
             log(idP+" GOOD LETTER "+p.namePlayer);
             manager.displayLetter(var.charAt(0));
-            setAndExecuteState(new StateStartRound(this,idP)); //todo rename
+            setAndExecuteState(new StateRound(this,idP)); //todo rename
         });
     }
 
@@ -534,14 +393,42 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         if(!alreadyStop) {
             manager.stopExecutorAnimationRect();
             executor.shutdownNow();
+            dataLoad.client.stop();
+            dataLoad.clientThread.interrupt();
             try {
+                dataLoad.clientThread.join();
                 executor.awaitTermination(10,TimeUnit.SECONDS);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            dataLoad.client.stop();
             alreadyStop = true;
         }
     }
+
+
+ /*   public void animEnigmRound() {
+        mapRectWithLetter = new HashMap<>();
+        nbrRectWithLetter = 0;
+        manager.mapRect.forEach((idR, r)->{
+            if(manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_HIDDEN ||
+                    manager.mapRect.get(idR).getStat() == StateOfRect.LETTRE_SPECIAL ){
+                nbrRectWithLetter++;
+                mapRectWithLetter.put(nbrRectWithLetter, r);
+            }
+        });
+
+    }*/
+
+  /*  public boolean allIsShow;
+    public void chekIfEnigmIsShow(){
+        allIsShow = true;
+        mapRectWithLetter.forEach((rId, r)->{
+            if(mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_HIDDEN ||
+                    mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_SPECIAL){
+                allIsShow = false;
+            }
+        });
+    }*/
+
 }
 

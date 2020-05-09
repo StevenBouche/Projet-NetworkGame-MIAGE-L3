@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import network.message.obj.DataMoneyInfo;
 import network.message.obj.PlayerMoneyInfo;
 
 import java.util.List;
@@ -22,11 +23,11 @@ public class HandlerPlayerDataTable {
         initTable();
     }
 
-    public void updateDataPlayer(PlayerMoneyInfo var) {
-        PlayerData p = getPlayerData(var.id);
-        if(p!=null){
-            p.cashRound = var.CagnotteRound;
-            p.cashTotal = 0; //todo
+    public void updateDataPlayer(DataMoneyInfo var) {
+        for(PlayerMoneyInfo p : var.ListInfo){
+            PlayerData pd = getPlayerData(p.id);
+            pd.cashRound = p.CagnotteRound;
+            pd.cashTotal = p.CagnotteTotal;
             updateTable(this.listPlayerData);
         }
     }

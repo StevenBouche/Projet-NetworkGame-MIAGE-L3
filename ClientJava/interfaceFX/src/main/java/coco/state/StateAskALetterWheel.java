@@ -4,8 +4,6 @@ import coco.controller.ControllerGameUI;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import network.message.PacketMessage;
-import network.message.obj.ChoiceStep;
-import network.message.obj.ChoiceStepEnum;
 import network.tcp.ProtocolEventsTCP;
 
 public class StateAskALetterWheel extends StateGameUI {
@@ -25,6 +23,11 @@ public class StateAskALetterWheel extends StateGameUI {
         controller.proposEnigm.setDisable(true);
         controller.validChoice.setDisable(true);
         initButton();
+    }
+
+    @Override
+    public void onClickOnSwitch(Boolean switchActive) {
+        controller.validLetter.setDisable(switchActive);
     }
 
     private void initButton() {
@@ -53,11 +56,13 @@ public class StateAskALetterWheel extends StateGameUI {
     }
 
     private void handleAskALetter() {
-        PacketMessage<String> msg = new PacketMessage<>();
-        msg.evt = ProtocolEventsTCP.ASKFORALETTER.eventName;
-        msg.data = controller.cbdC.getValue();
-        controller.dataLoad.client.sendMsg(msg);
+        if(!controller.cbdC.getValue().equals(" ")){
+            PacketMessage<String> msg = new PacketMessage<>();
+            msg.evt = ProtocolEventsTCP.ASKFORALETTER.eventName;
+            msg.data = controller.cbdC.getValue();
+            controller.dataLoad.client.sendMsg(msg);
+            controller.validLetter.setDisable(true);
+        }
     }
-
 
 }
