@@ -32,7 +32,23 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 Context.listPlayers.TryGetValue(idClient, out Joueur j);
                 j.cagnotte.Montant_Total += Context.wheel.CurrentCase.valeur;
                 commandManager.TriggerUpdateMoney();
+                SendFinalValue();
             }
+            else
+            {
+                SendFinalValue();
+            }
+        }
+
+        private void SendFinalValue()
+        {
+            PacketMessage<int> msg = new PacketMessage<int>()
+            {
+                evt = ProtocolEventsTCP<Proposal>.SENDFINALVALUE.eventName,
+                data = Context.wheel.CurrentCase.valeur
+            };
+
+            Context.SendAllClient(msg);
         }
 
         private void SendAskForProposal()

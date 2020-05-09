@@ -91,6 +91,11 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandAskForFinalPropostion(engine, this));
         }
 
+        public void TriggerSetFinalEnigma()
+        {
+            this.TriggerCommand(new CommandSetFinalEnigma(engine, this));
+        }
+
         public void TriggerUpdateMoney()
         {
             this.TriggerCommand(new CommandUpdateMoney(engine, this));

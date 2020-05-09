@@ -60,8 +60,9 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteFinalRound()
         {
-            commandManager.TriggerWheelTurnFinal();
-            commandManager.TriggerAskForFinalLetters();
+            commandManager.TriggerSetFinalEnigma(); //Sends a FinalInfo with the winner and the final enigma
+            commandManager.TriggerWheelTurnFinal(); //Sets the current case 
+            commandManager.TriggerAskForFinalLetters(); //Sends askForFinalLetters and askForFinalProposition
             isFinal = true;
         }
 
