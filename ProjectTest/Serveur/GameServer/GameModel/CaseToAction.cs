@@ -20,8 +20,8 @@ namespace Serveur.GameServer.GameModel
         public static CaseToAction HOLDUPACTION = new CaseToAction(typeof(CommandHoldUp), TypeCase.HOLDUP);
         //public static CaseToAction VOYAGE = new CaseToAction(typeof(CommandBonus), TypeCase.VOYAGE);
         public static CaseToAction FINALACTION = new CaseToAction(typeof(CommandCash), TypeCase.FINAL);
-        Type actionType { get; }
-        TypeCase caseType { get; }
+        public Type actionType { get; }
+        public TypeCase caseType { get; }
 
         private CaseToAction(Type t, TypeCase t1)
         {

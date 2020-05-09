@@ -8,7 +8,7 @@ namespace Serveur.GameServer.GameModel
 {
     public class Voyage
     {
-        string _pays_Destination;
+        public string _pays_Destination;
 
         public Voyage()
         {
