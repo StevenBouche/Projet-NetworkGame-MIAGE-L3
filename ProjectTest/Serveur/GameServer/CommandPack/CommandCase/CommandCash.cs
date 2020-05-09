@@ -7,20 +7,20 @@ using System.Text;
 
 namespace Serveur.GameServer.CommandPack.CommandCase
 {
-    class CommandCash : Command<GameEngine>
+    class CommandCash : CommandCase
     {
         public CommandCash(GameEngine context, CommandManager manager) : base(context,manager) { }
 
-        public CommandCash(GameEngine context, CommandManager manager, int nb) : base(context, manager) 
+        public CommandCash(GameEngine context, CommandManager manager, int nb) : base(context, manager, nb) 
         {
-            this.nbOfOccurrences = nb;
+
         }
 
         public override void onExecute() // TODO UPDATE ROUND MONEY
         {
-            if(nbOfOccurrences != -1)
+            if(nb != -1)
             {
-                Context.CurrentPlayer.cagnotte.Montant_Manche += Context.wheel.CurrentCase.valeur * nbOfOccurrences;
+                Context.CurrentPlayer.cagnotte.Montant_Manche += Context.wheel.CurrentCase.valeur * nb;
             }
             else
             {

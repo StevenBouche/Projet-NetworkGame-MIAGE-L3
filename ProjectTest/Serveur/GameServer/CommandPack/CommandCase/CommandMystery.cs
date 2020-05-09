@@ -5,9 +5,11 @@ using System.Text;
 
 namespace Serveur.GameServer.CommandPack.CommandCase
 {
-    class CommandMystery : Command<GameEngine>
+    class CommandMystery : CommandCase
     {
         public CommandMystery(GameEngine context, CommandManager CM) : base(context, CM) { }
+
+        public CommandMystery(GameEngine context, CommandManager CM, int nb) : base(context, CM,nb) { }
         public override void onExecute()
         {
             Context.wheel.UnveiledMysteryCase(Context.wheel.CurrentCase);

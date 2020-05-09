@@ -28,6 +28,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class ControllerGameUI implements Initializable, INotifyPlayersGame {
@@ -37,8 +41,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public SubScene subScene;
     @FXML
     public Pane zoneButtons;
-    @FXML
-    public Pane clientChoic;
+ //   @FXML
+ //   public Pane clientChoic;
     @FXML
     public TextField proposEnigm;
     @FXML
@@ -57,15 +61,20 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public AnchorPane board;
     @FXML
     public Button buttonWheel;
+    @FXML
+    public ChoiceBox<String> cbdV; //for loadCBD()
+    @FXML
+    public ChoiceBox<String> cbdC;
+    @FXML
+    public Button validLetter;
 
     /** Element dynamic with code */
     public Button buttonSetEnigm; //for loadButtons
     public Button buttonShowEnigm;
     public Button buttonReset;
-    public Button validLetter;
+
     public Boolean switchActive; //switchActive = true -> voyelle switchActive = false -> consonne
-    public ChoiceBox<String> cbdV; //for loadCBD()
-    public ChoiceBox<String> cbdC;
+
     public Label displayManche;
 
     public int nbrRectWithLetter; // ?
@@ -74,8 +83,9 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public ControllerSceneRectancle manager;
     public Parent root;
 
-    Timer timerAnimLetter;
-    TimerTask taskTimer;
+  //  Timer timerAnimLetter;
+ //   TimerTask taskTimer;
+    ScheduledExecutorService executor;
 
     /** Data comming from lobby**/
     public DataLoadGame dataLoad;
@@ -94,7 +104,14 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId, IMain main) {
         alreadyStop = false;
         buildDataLoad(client,clientThread,data,myId);
-        timerAnimLetter = new Timer();
+   /*     timerAnimLetter = new Timer();
+        taskTimer = new TimerTask() {
+            @Override
+            public void run() {
+                if(allIsShow) cancel();
+                else tryshowRandomLetter(timerAnimLetter);
+            }
+        };*/
         this.main = main;
     }
 
@@ -214,8 +231,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
      * and set default letter chosen
      */
     public void loadSwitch(){
-        switchVoyCons.setTranslateX(200);
-        switchVoyCons.setTranslateY(-60);
         switchVoyCons.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -233,35 +248,33 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
      * 2nd to voyelle
      */
     public void loadCBD(){
-        cbdC = new ChoiceBox();
-        cbdV = new ChoiceBox();
 
-        cbdC.setTranslateX(220);
-        cbdV.setTranslateX(220);
-        cbdC.setPrefWidth(75);
+    //    cbdC.setTranslateX(220);
+    //    cbdV.setTranslateX(220);
+     /*   cbdC.setPrefWidth(75);
         cbdV.setPrefHeight(50);
         cbdC.setPrefHeight(50);
-        cbdV.setPrefWidth(75);
-        proposEnigm.setTranslateY(-25);
+        cbdV.setPrefWidth(75);*/
+     /*   proposEnigm.setTranslateY(-25);
         proposEnigm.setPrefWidth(200);
-        proposEnigm.setPrefHeight(50);
+        proposEnigm.setPrefHeight(50);*/
 
         cbdV.getItems().addAll(" ", "A", "E", "I", "O", "U", "Y");
 
         cbdC.getItems().addAll(" ", "B", "C", "D", "F", "G", "H", "J", "K","L", "M", "N", "P", "Q", "R", "S", "T", "V", "W","X", "Z");
 
-        clientChoic.getChildren().add(cbdC);
-        clientChoic.getChildren().add(cbdV);
+    //    clientChoic.getChildren().add(cbdC);
+    //    clientChoic.getChildren().add(cbdV);
 
-        validLetter = new Button();
+     //   validLetter = new Button();
         validLetter.setText("LETTRE");
-        validLetter.setTranslateX(220);
+  /*      validLetter.setTranslateX(220);
         validLetter.setTranslateY(58);
-        validLetter.setPrefWidth(75);
-        clientChoic.getChildren().add(validLetter);
+        validLetter.setPrefWidth(75);*/
+    //    clientChoic.getChildren().add(validLetter);
 
         validChoice.setText("ENIGME");
-        validChoice.setPrefWidth(200);
+    //    validChoice.setPrefWidth(200);
 
         /** Set visibility of ChoiceBoxs */
         changeChoiceB(cbdV, cbdC);
@@ -309,8 +322,11 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @Override
     public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
         String idLocal = id;
+     //   cancelTimerTask();
+
         Platform.runLater(() -> {
-            log("State timer : "+taskTimer.cancel());
+            executor.shutdownNow();
+        //    log("State timer : "+taskTimer.cancel());
             handlerRound.setIdPlayerHaveProposal(idLocal);
             manager.compareProp(proposal); // couleur vert
             manager.displayEnigm(); // montre toute l'enigme
@@ -320,8 +336,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     private void cancelTimerTask(){
-        timerAnimLetter.cancel();
+    /*    timerAnimLetter.cancel();
         boolean b = taskTimer.cancel();
+        timerAnimLetter.purge();
+        taskTimer.
         /*    while(!b){
                 b = taskTimer.cancel();
             }*/
@@ -390,7 +408,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         animShowLetter();
     }
 
-    public void animEnigmRound() {
+ /*   public void animEnigmRound() {
         mapRectWithLetter = new HashMap<>();
         nbrRectWithLetter = 0;
         manager.mapRect.forEach((idR, r)->{
@@ -401,7 +419,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             }
         });
 
-    }
+    }*/
 
     public void animShowLetter(){
 
@@ -409,25 +427,32 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             System.out.println("id : " + id + ", letter : " + r.getLetter());
         });*/
         allIsShow = false;
-        taskTimer = new TimerTask() {
+
+        executor = Executors.newScheduledThreadPool(1);
+
+        Runnable task1 = new Runnable() {
             @Override
             public void run() {
-                if(allIsShow) cancel();
-                else tryshowRandomLetter(timerAnimLetter);
+                tryshowRandomLetter();
             }
         };
-        timerAnimLetter.schedule(taskTimer, 100, 2000);
+
+        executor.scheduleAtFixedRate(task1, 0, 2, TimeUnit.SECONDS);
+
+    //    timerAnimLetter.schedule(taskTimer, 100, 2000);
 
     }
 
-    public void tryshowRandomLetter(Timer t){
+    public void tryshowRandomLetter(){
         System.out.println("TASK");
         Enigme e = handlerEnigme.getCurrentEnigme();
         if(e == null) return; //todo bug quand on recois l'enigme d'apres currentEnigme = null a test
         if(!e.order.isEmpty()){
             char c = e.order.remove(0);
             manager.displayLetter(c);
-            chekIfEnigmIsShow(t);
+         //   chekIfEnigmIsShow();
+        } else {
+            executor.shutdownNow();
         }
     }
 
@@ -439,7 +464,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     public boolean allIsShow;
-    public void chekIfEnigmIsShow(Timer t){
+    public void chekIfEnigmIsShow(){
         allIsShow = true;
         mapRectWithLetter.forEach((rId, r)->{
             if(mapRectWithLetter.get(rId).getStat() == StateOfRect.LETTRE_HIDDEN ||
@@ -471,6 +496,9 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @Override
     public void notifyDisconnect() {
         stop();
+        Platform.runLater(() -> {
+            main.backToMainLobbies();
+        });
     }
 
     @Override
@@ -502,13 +530,16 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         });
     }
 
-    public void stop() {
+    public synchronized void stop() {
         if(!alreadyStop) {
-            cancelTimerTask();
+            manager.stopExecutorAnimationRect();
+            executor.shutdownNow();
+            try {
+                executor.awaitTermination(10,TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             dataLoad.client.stop();
-            Platform.runLater(() -> {
-                main.backToMainLobbies();
-            });
             alreadyStop = true;
         }
     }

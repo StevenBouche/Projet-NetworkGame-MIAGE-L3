@@ -184,9 +184,13 @@ namespace Share.Network.NetworkManager
             {
                 Console.WriteLine("Socket disconnected because of " + s.Message);
                 OnDisconnectWhileListening(state);
+            } catch(ObjectDisposedException e)
+            {
+                Console.WriteLine("Socket disconnected because of " + e.Message);
+                OnDisconnectWhileListening(state);
             }
-            
-        }
+
+}
 
         private void OnDisconnectWhileListening(StateObjectTCP state)
         {
@@ -248,8 +252,11 @@ namespace Share.Network.NetworkManager
                     j.workSocket.Close();
                     myClients.Remove(id);
                 }
+            } else
+            {
+                Console.WriteLine("Tried to disconnect a null client");
             }
-            Console.WriteLine("Tried to disconnect a null client");
+            
         }
     }
 }

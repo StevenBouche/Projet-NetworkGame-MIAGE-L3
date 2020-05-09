@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Serveur.GameServer.CommandPack.CommandCase
 {
-    class CommandBanqueroute : Command<GameEngine>
+    class CommandBanqueroute : CommandCase
     {
 
         public CommandBanqueroute(GameEngine context, CommandManager CM) : base(context, CM) { }

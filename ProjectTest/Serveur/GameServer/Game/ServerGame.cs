@@ -23,7 +23,8 @@ namespace Serveur.GameServer.Game
         GameEngine gameManager;
         Thread executeGame;
         protected ManualResetEvent allDone = new ManualResetEvent(false);
-        String id; 
+        String id;
+        Boolean interrupt = false;
 
         public int GetNbCurrentPlayer { get => gameManager.listPlayers.Count;  }
 
@@ -84,7 +85,10 @@ namespace Serveur.GameServer.Game
 
         public void Run()
         {
-            gameManager.gameState = GameState.WAITING_PLAYER;
+
+            if (interrupt) return;
+
+            gameManager.gameState = GameState.WAITING_PLAYER; 
 
             while(gameManager.gameState != GameState.STARTED)
             {
@@ -98,19 +102,34 @@ namespace Serveur.GameServer.Game
             executeGame = new Thread(new ThreadStart(gameManager.Play)); 
             executeGame.Start(); //start play
 
-            // reveiller par le threas game quand fini ou stop
-            while (gameManager.gameState != GameState.FINISHED) 
+            // reveiller par le threaD game quand fini ou stop
+            Boolean running = true;
+            while (running) // BUG MYSTIC
             {
                 allDone.Reset();
                 allDone.WaitOne();
+                if (gameManager.gameState == GameState.FINISHED || gameManager.gameState == GameState.STOP) running = false;
             }
 
-            if (executeGame.IsAlive) executeGame.Abort(); // to cancel thread
+            if (executeGame.IsAlive) executeGame.Interrupt(); // to cancel thread
             executeGame.Join();
 
-            //STOP SERVER or RESET SERVER or WANT REPLAY GAME WITH SAME PLAYER ?
-            throw new NotImplementedException();
+            // TODO HERE
+            if (gameManager.listPlayers.Count != 0) // if player last game remove it, to waiting new player
+            {
+                Dictionary<String, Joueur> clone = new Dictionary<string, Joueur>(gameManager.listPlayers); //clone list for iterate
+                foreach (KeyValuePair<String, Joueur> elem in clone)
+                {
+                    network.disconnectClient(elem.Value.id);
+                }
 
+            }
+
+            //reset gameManager ?
+
+            //STOP SERVER or RESET SERVER or WANT REPLAY GAME WITH SAME PLAYER ?
+            Run(); // RUN ALORS ?
+            
         }
 
         public void OnConnect(string id)

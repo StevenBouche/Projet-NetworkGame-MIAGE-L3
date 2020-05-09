@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Serveur.GameServer.CommandPack.CommandCase
 {
-    class CommandCaverne : Command<GameEngine>
+    class CommandCaverne : CommandCase
     {
         public CommandCaverne(GameEngine context, CommandManager CM) : base(context, CM) { }
         public override void onExecute()

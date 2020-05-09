@@ -36,13 +36,9 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandAddRoundMoneyToPlayer(engine, this, amount, idClient));
         }
 
-        internal void TriggerProposalEnigmaRound(string idClient, string proposal)
+        public void TriggerActivePlayerWantBuyAVoy(string idClient, string voy)
         {
-            throw new NotImplementedException();
-        }
-        internal void TriggerActivePlayerWantBuyAVoy(string idClient, string voy)
-        {
-            throw new NotImplementedException();
+            this.TriggerCommand(new CommandBuyAVoy(engine, this,voy, idClient));
         }
 
         public void TriggerNextPlayer()

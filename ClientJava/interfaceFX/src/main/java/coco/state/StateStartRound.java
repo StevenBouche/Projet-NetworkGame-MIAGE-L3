@@ -22,15 +22,14 @@ public class StateStartRound extends StateGameUI {
 
     @Override
     public void execute() {
-        controller.buttonSetEnigm.setDisable(stateButton);
-        controller.buttonShowEnigm.setDisable(stateButton);
-        controller.buttonReset.setDisable(stateButton);
-        controller.clientChoic.setDisable(stateButton);
+     //   controller.clientChoic.setDisable(stateButton);
         controller.cbdV.setDisable(stateButton);
         controller.cbdC.setDisable(true);
         controller.switchVoyCons.setDisable(stateButton);
         controller.validLetter.setDisable(stateButton);
         controller.buttonWheel.setDisable(stateButton);
+        controller.proposEnigm.setDisable(stateButton);
+        controller.validChoice.setDisable(stateButton);
 
         /** set Event to propose the enigm chosen */
         controller.validLetter.setOnMouseReleased(new EventHandler<MouseEvent>(){

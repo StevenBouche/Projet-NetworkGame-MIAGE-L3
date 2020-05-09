@@ -74,7 +74,7 @@ namespace Serveur.GameServer.Game
                 this.gameState = GameState.FINISHED;
                 allDoneServer.Set();
             }
-            catch (ThreadAbortException)
+            catch (ThreadInterruptedException)
             {
                 Console.WriteLine("THREAD GAME HAS ABORD");
             }

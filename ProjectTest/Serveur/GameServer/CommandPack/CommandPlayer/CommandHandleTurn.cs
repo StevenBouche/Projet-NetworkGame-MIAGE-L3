@@ -1,5 +1,6 @@
 ﻿using Serveur.GameServer.CommandPack.ReceiverNetwork;
 using Serveur.GameServer.Game;
+using Serveur.GameServer.GameModel;
 using share;
 using Share.Network.Message;
 using Share.Network.Message.modele;
@@ -69,10 +70,34 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             Enigme e = Context.CurrentEnigma;
             if (e.label.Equals(Data.proposal))
             {
-                // MONTANT ROUND INTO MONTANT TOTAL player todo
+                UpdateMontantEndRound();
                 Context.NotifyPlayerHaveWinRound(idClient); // notify player win round
             }
             EndTurn(); // end turn meme si win round pour break le recursif
+        }
+
+        private void UpdateMontantEndRound()
+        {
+            foreach (KeyValuePair<String,Joueur> elem in Context.listPlayers)
+            {
+                if (elem.Key.Equals(idClient))
+                {
+                    elem.Value.cagnotte.Montant_Total += elem.Value.cagnotte.Montant_Manche;
+                   
+                }
+
+                elem.Value.cagnotte.Montant_Manche = 0;
+
+
+                //TODO FUSIONNER SEND CAR 3*3 packet a sens au lieu de 3
+             /*   PlayerMoneyInfo pInfo = new PlayerMoneyInfo(elem.Key, elem.Value.cagnotte.Montant_Manche, elem.Value.cagnotte.Montant_Total);
+                PacketMessage<PlayerMoneyInfo> msg = new PacketMessage<PlayerMoneyInfo>()
+                {
+                    evt = ProtocolEventsTCP<PlayerMoneyInfo>.UPDATEROUNDMONEY.eventName,
+                    data = pInfo
+                };
+                Context.SendAllClient(msg);*/
+            }
         }
 
         private void EndTurn()

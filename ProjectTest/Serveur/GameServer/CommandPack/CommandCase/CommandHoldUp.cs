@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Serveur.GameServer.CommandPack.CommandCase
 {
-    class CommandHoldUp : Command<GameEngine>
+    class CommandHoldUp : CommandCase
     {
         public CommandHoldUp(GameEngine context, CommandManager CM) : base(context, CM) { }
         public override void onExecute()

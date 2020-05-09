@@ -22,8 +22,6 @@ public class StateStartGame extends StateGameUI {
         controller.buttonSetEnigm.setDisable(!buttonDisable);
         controller.buttonShowEnigm.setDisable(buttonDisable);
         controller.buttonReset.setDisable(buttonDisable);
-        controller.clientChoic.setVisible(true);
-        controller.clientChoic.setDisable(choicePlayerDisable);
     }
 
 }
