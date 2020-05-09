@@ -24,4 +24,5 @@ public interface INotifyPlayersGame {
     void receiveFromServeurAskForAFinalLetter(FinalLetters var);
     void receiveFromServeurNotifyGoodProposalLetterFinal(ProposalLetter var);
 
+    void receiveFromServeurFinalResultMoney(Integer var);
 }

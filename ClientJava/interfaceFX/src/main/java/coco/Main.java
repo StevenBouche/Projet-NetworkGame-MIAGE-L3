@@ -2,13 +2,16 @@ package coco;
 
 import coco.controller.ControllerGameUI;
 import coco.controller.PlayerData;
+import coco.state.StateFinalRound;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import network.message.obj.Category;
 import network.message.obj.Enigme;
+import network.message.obj.FinalLetters;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,7 +56,7 @@ public class Main extends Application {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
+            /*    try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -65,7 +68,17 @@ public class Main extends Application {
                     e.printStackTrace();
                 }
 
-                managerGameUI.receiveFromServeurEnigmaOfRound(var);
+                managerGameUI.receiveFromServeurEnigmaOfRound(var);*/
+
+       /*         managerGameUI.receiveFromServeurActionFinal("1", var);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                FinalLetters f=new FinalLetters();
+                managerGameUI.receiveFromServeurAskForAFinalLetter(f);*/
 
 
            /*     managerGameUI.receiveFromServeurNotifyCurrentPlayerRound("1");

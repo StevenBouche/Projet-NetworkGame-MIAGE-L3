@@ -464,14 +464,26 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         Platform.runLater(() -> {
             handlerEnigme.setCurrentEnigme(e); // set enigma of final round
             preSetEnigm();
-            log("SET NEW ENIGME");
+            loadPreSetLetterOfFinalEnigma();
+            log("SET NEW ENIGME FINAL");
             setAndExecuteState(new StateFinalRound(this,idPlayer,e)); //execute final round
         });
     }
 
+    private void loadPreSetLetterOfFinalEnigma() {
+        char[] value = new char[]{'R','S','T','L','N','E'};
+        for(char c : value){
+            manager.displayLetter(c);
+        }
+    }
+
     @Override
     public synchronized void receiveFromServeurAskForAFinalLetter(FinalLetters var) {
-       // var.
+        Platform.runLater(() -> {
+            if(stateUI instanceof StateFinalRound){
+                ((StateFinalRound)stateUI).askForAFinalLetter(var);
+            }
+        });
     }
 
     @Override
@@ -481,13 +493,24 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
             PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
             log(var+" GOOD LETTER "+p.namePlayer);
             manager.displayLetter(var.letter);
-                //switch scene ?
         });
     }
 
     @Override
     public synchronized void receiveFromServeurAskForAFinalProposition(Proposal var) {
+        Platform.runLater(() -> {
+            if(stateUI instanceof StateFinalRound){ //HERE HERE
+                ((StateFinalRound)stateUI).switchToPropositionFinal(var);
+            }
+        });
+    }
 
+    @Override
+    public synchronized void receiveFromServeurFinalResultMoney(Integer var) {
+        Platform.runLater(() -> {
+            setAndExecuteState(new StateEndGame(this)); //execute final round
+            labelCase.setText(""+var);
+        });
     }
 
     public synchronized void stop() {
