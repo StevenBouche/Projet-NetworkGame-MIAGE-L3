@@ -1,5 +1,6 @@
 ﻿using Serveur.GameServer.CommandPack;
 using Serveur.GameServer.CommandPack.CommandCase;
+using Serveur.GameServer.CommandPack.CommandPlayer;
 using Serveur.GameServer.Game;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Serveur.GameServer.GameModel
         public static CaseToAction CAVERNEACTION = new CaseToAction(typeof(CommandCaverne), TypeCase.CAVERNE);
         public static CaseToAction HOLDUPACTION = new CaseToAction(typeof(CommandHoldUp), TypeCase.HOLDUP);
         //public static CaseToAction VOYAGE = new CaseToAction(typeof(CommandBonus), TypeCase.VOYAGE);
-        public static CaseToAction FINALACTION = new CaseToAction(typeof(CommandCash), TypeCase.FINAL);
+        //public static CaseToAction FINALACTION = new CaseToAction(typeof(CommandCash), TypeCase.FINAL);
         public Type actionType { get; }
         public TypeCase caseType { get; }
 

@@ -36,13 +36,18 @@ namespace Share.Network.Protocol
         public static ProtocolEventsTCP<DataMoneyInfo> UPDATEMONEYALL = new ProtocolEventsTCP<DataMoneyInfo>("UPDATEMONEYALL");
         public static ProtocolEventsTCP<Proposal> BADPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("BADPROPOSALLETTER");
         public static ProtocolEventsTCP<Proposal> GOODPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("GOODPROPOSALLETTER");
-
+        public static ProtocolEventsTCP<ProposalLetter> BADPROPOSALFINALLETTER = new ProtocolEventsTCP<ProposalLetter>("BADPROPOSALFINALLETTER");
+        public static ProtocolEventsTCP<ProposalLetter> GOODPROPOSALFINALLETTER = new ProtocolEventsTCP<ProposalLetter>("GOODPROPOSALFINALLETTER");
 
         /*
        *  PROTOCOL GAME SEND AND RECEIVE
        */
         public static ProtocolEventsTCP<ChoiceStep> CHOICESTEP = new ProtocolEventsTCP<ChoiceStep>("CHOICESTEP");
         public static ProtocolEventsTCP<String> ASKFORALETTER = new ProtocolEventsTCP<String>("ASKFORALETTER");
+        public static ProtocolEventsTCP<FinalLetters> ASKFORFINALLETTER = new ProtocolEventsTCP<FinalLetters>("ASKFORFINALLETTER");
+        public static ProtocolEventsTCP<Proposal> ASKFORFINALPROPOSITION = new ProtocolEventsTCP<Proposal>("ASKFORFINALPROPOSITION");
+        public static ProtocolEventsTCP<String> ASKFORIDPLAYER = new ProtocolEventsTCP<String>("ASKFORIDPLAYER");
+
 
 
         private ProtocolEventsTCP(String name) : base(name){ }

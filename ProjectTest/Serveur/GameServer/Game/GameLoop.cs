@@ -63,6 +63,8 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteFinalRound()
         {
+            commandManager.TriggerWheelTurnFinal();
+            commandManager.TriggerAskForFinalLetters();
             isFinal = true;
         }
 

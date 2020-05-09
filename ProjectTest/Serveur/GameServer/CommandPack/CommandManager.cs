@@ -26,6 +26,11 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandHandleTurn(engine,this));
         }
 
+        public void TriggerHoldUp()
+        {
+            this.TriggerCommand(new CommandHoldUp(engine, this));
+        }
+
         public void TriggerWheelTurn()
         {
             this.TriggerCommand(new CommandWheelTurn(engine, this));
@@ -51,6 +56,11 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandCash(engine,this));
         }
 
+        public void TriggerWheelTurnFinal()
+        {
+            this.TriggerCommand(new CommandWheelTurnFinal(engine, this));
+        }
+
         public void AddPassCommand()
         {
             this.TriggerCommand(new CommandPass(engine,this));
@@ -71,11 +81,20 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandSetCurrentEnigma(engine, this));
         }
 
+        public void TriggerAskForFinalLetters()
+        {
+            this.TriggerCommand(new CommandAskForFinalLetters(engine, this));
+        }
+
+        public void TriggerAskForFinalPropostion()
+        {
+            this.TriggerCommand(new CommandAskForFinalPropostion(engine, this));
+        }
+
         public void TriggerUpdateMoney()
         {
             this.TriggerCommand(new CommandUpdateMoney(engine, this));
         }
-
 
         public void TriggerCommand(Command<GameEngine> cmd)
         {

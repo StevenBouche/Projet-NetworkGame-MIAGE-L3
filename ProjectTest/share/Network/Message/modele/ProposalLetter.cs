@@ -4,17 +4,15 @@ using System.Text;
 
 namespace Share.Network.Message.modele
 {
-    public class Proposal 
+    public class ProposalLetter
     {
         public String id;
-        public String proposal;
+        public char letter;
 
-        public Proposal(String idP, String prop)
+        public ProposalLetter(String idP, char c)
         {
             this.id = idP;
-            this.proposal = prop;
+            this.letter = c;
         }
-
-
     }
 }
