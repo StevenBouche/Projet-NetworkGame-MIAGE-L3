@@ -6,6 +6,8 @@ using Share.Network.Message;
 using Share.Network.Message.modele;
 using Share.Network.Protocol;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Serveur.GameServer.CommandPack.CommandPlayer
 {

@@ -56,6 +56,11 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandCash(engine,this));
         }
 
+        public void TriggerWheelTurnFinal()
+        {
+            this.TriggerCommand(new CommandWheelTurnFinal(engine, this));
+        }
+
         public void AddPassCommand()
         {
             this.TriggerCommand(new CommandPass(engine,this));

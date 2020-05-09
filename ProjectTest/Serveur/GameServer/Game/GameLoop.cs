@@ -63,7 +63,7 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteFinalRound()
         {
-            //Avoir la current case de la finale
+            commandManager.TriggerWheelTurnFinal();
             commandManager.TriggerAskForFinalLetters();
             isFinal = true;
         }

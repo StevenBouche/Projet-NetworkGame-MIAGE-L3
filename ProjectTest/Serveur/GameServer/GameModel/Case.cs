@@ -30,6 +30,12 @@ namespace Serveur.GameServer.GameModel
             }
         }
 
+        public Case(TypeCase t, int value)
+        {
+            type = t;
+            valeur = value;
+        }
+
         override public String ToString()
         {
             return valeur + " " + type.ToString();
