@@ -102,6 +102,31 @@ public class ClientTCP implements Runnable, INotifyState {
                 if(notifierGame != null) notifierGame.receiveFromServeurEnigmaConsAllBuy(var);
             }
         });
+   /*     managerTCP.eventManager.OnEvent(String.class, ProtocolEventsTCP.ASKFORIDPLAYER, new DataListenerTCP<String>() {
+            @Override
+            public void onData(String var) {
+                if(notifierGame != null) notifierGame.receiveFromServeur
+            }
+        });*/
+        managerTCP.eventManager.OnEvent(Proposal.class, ProtocolEventsTCP.ASKFORFINALPROPOSITION, new DataListenerTCP<Proposal>() {
+            @Override
+            public void onData(Proposal var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurAskForAFinalProposition(var);
+            }
+        });
+        managerTCP.eventManager.OnEvent(FinalLetters.class, ProtocolEventsTCP.ASKFORFINALLETTER, new DataListenerTCP<FinalLetters>() {
+            @Override
+            public void onData(FinalLetters var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurAskForAFinalLetter(var);
+            }
+        });
+        managerTCP.eventManager.OnEvent(ProposalLetter.class, ProtocolEventsTCP.GOODPROPOSALFINALLETTER, new DataListenerTCP<ProposalLetter>() {
+            @Override
+            public void onData(ProposalLetter var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurNotifyGoodProposalLetterFinal(var);
+            }
+        });
+
     }
 
     private void initEventLobbyTCP() {

@@ -32,12 +32,17 @@ public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
     public static ProtocolEventsTCP<Proposal> BADPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("BADPROPOSALLETTER");
     public static ProtocolEventsTCP<Proposal> GOODPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("GOODPROPOSALLETTER");
     public static ProtocolEventsTCP<String> NOTIFYNOMORECONSONNANT = new ProtocolEventsTCP<String>("NOTIFYNOMORECONSONNANT");
+    public static ProtocolEventsTCP<ProposalLetter> GOODPROPOSALFINALLETTER = new ProtocolEventsTCP<ProposalLetter>("GOODPROPOSALFINALLETTER");
 
     /*
         PROTOCOL SEND AND RECEIVE
      */
     public static ProtocolEventsTCP<ChoiceStep> CHOICESTEP = new ProtocolEventsTCP<ChoiceStep>("CHOICESTEP");
     public static ProtocolEventsTCP<String> ASKFORALETTER = new ProtocolEventsTCP<String>("ASKFORALETTER");
+
+    public static ProtocolEventsTCP<FinalLetters> ASKFORFINALLETTER = new ProtocolEventsTCP<FinalLetters>("ASKFORFINALLETTER");
+    public static ProtocolEventsTCP<Proposal> ASKFORFINALPROPOSITION = new ProtocolEventsTCP<Proposal>("ASKFORFINALPROPOSITION");
+    public static ProtocolEventsTCP<String> ASKFORIDPLAYER = new ProtocolEventsTCP<String>("ASKFORIDPLAYER");
 
     private ProtocolEventsTCP(String name){
         super(name);

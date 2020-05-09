@@ -30,10 +30,7 @@ namespace Serveur.GameServer.Game
                 ExecuteQuickRound();
                 commandManager.TriggerCurrentEnigma();
                 ExecuteRound();
-            }
-
-            if (roundsNb == 4)
-            {
+            } else {
                 ExecuteFinalRound();
             }
 

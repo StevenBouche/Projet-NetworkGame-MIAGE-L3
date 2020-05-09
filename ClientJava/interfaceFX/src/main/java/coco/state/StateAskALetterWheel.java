@@ -9,8 +9,8 @@ import network.tcp.ProtocolEventsTCP;
 public class StateAskALetterWheel extends StateGameUI {
 
 
-    public StateAskALetterWheel(ControllerGameUI controller, boolean buttonAvailable, boolean choicePlayerDisible) {
-        super(controller, buttonAvailable, choicePlayerDisible);
+    public StateAskALetterWheel(ControllerGameUI controller) {
+        super(controller);
     }
 
     @Override

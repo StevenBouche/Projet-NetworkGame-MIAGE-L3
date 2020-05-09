@@ -5,7 +5,7 @@ import coco.controller.ControllerGameUI;
 public class StateStartGame extends StateGameUI {
 
     public StateStartGame(ControllerGameUI controller) {
-         super(controller,true, true);
+         super(controller);
     }
 
     @Override

@@ -420,7 +420,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public synchronized void receiveFromServeurAskForALetter(String var) {
         Platform.runLater(() -> {
             //todo popup coco
-            setAndExecuteState(new StateAskALetterWheel(this,false,false));
+            setAndExecuteState(new StateAskALetterWheel(this));
         });
     }
 
@@ -457,6 +457,37 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         Platform.runLater(() -> {
             handlerEnigme.notifyHaveNotConson();
         });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurActionFinal(String idPlayer, Enigme e){
+        Platform.runLater(() -> {
+            handlerEnigme.setCurrentEnigme(e); // set enigma of final round
+            preSetEnigm();
+            log("SET NEW ENIGME");
+            setAndExecuteState(new StateFinalRound(this,idPlayer,e)); //execute final round
+        });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurAskForAFinalLetter(FinalLetters var) {
+       // var.
+    }
+
+    @Override
+    public synchronized void receiveFromServeurNotifyGoodProposalLetterFinal(ProposalLetter var) {
+        String idP = var.id;
+        Platform.runLater(() -> {
+            PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
+            log(var+" GOOD LETTER "+p.namePlayer);
+            manager.displayLetter(var.letter);
+                //switch scene ?
+        });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurAskForAFinalProposition(Proposal var) {
+
     }
 
     public synchronized void stop() {

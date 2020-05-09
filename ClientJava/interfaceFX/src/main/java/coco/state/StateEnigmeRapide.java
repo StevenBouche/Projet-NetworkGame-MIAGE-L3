@@ -9,7 +9,7 @@ import network.tcp.ProtocolEventsTCP;
 public class StateEnigmeRapide extends StateGameUI {
 
     public StateEnigmeRapide(ControllerGameUI controller) {
-        super(controller,true, false);
+        super(controller);
     }
 
     @Override

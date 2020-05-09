@@ -14,7 +14,7 @@ public class StateRound extends StateGameUI {
     Boolean stateButton;
 
     public StateRound(ControllerGameUI controllerGameUI, String var) {
-        super(controllerGameUI,true,true);
+        super(controllerGameUI);
         stateButton = !controller.handlerIdentity.myId.equals(var);
      //   controller.animEnigmRound();
     }

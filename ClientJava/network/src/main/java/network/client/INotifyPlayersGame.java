@@ -17,4 +17,11 @@ public interface INotifyPlayersGame {
     void receiveFromServeurGoodAskForALetter(String id, String var);
     void receiveFromServeurCaseOfWheel(CaseInfo var);
     void receiveFromServeurEnigmaConsAllBuy(String var);
+    void receiveFromServeurAskForAFinalProposition(Proposal var);
+
+    void receiveFromServeurActionFinal(String idPlayer, Enigme e);
+
+    void receiveFromServeurAskForAFinalLetter(FinalLetters var);
+    void receiveFromServeurNotifyGoodProposalLetterFinal(ProposalLetter var);
+
 }
