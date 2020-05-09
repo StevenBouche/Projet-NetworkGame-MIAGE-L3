@@ -83,6 +83,7 @@ public class NetworkManagerTCP {
                 eventManager.OnReceivedData(data.toString());
                 data = new StringBuilder();
             }
+            running = false;
         }
     }
 

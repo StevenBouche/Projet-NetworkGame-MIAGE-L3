@@ -70,7 +70,7 @@ public class Main extends Application {
 
                 managerGameUI.receiveFromServeurEnigmaOfRound(var);*/
 
-       /*         managerGameUI.receiveFromServeurActionFinal("1", var);
+                managerGameUI.receiveFromServeurActionFinal("1", var);
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -78,9 +78,15 @@ public class Main extends Application {
                 }
 
                 FinalLetters f=new FinalLetters();
-                managerGameUI.receiveFromServeurAskForAFinalLetter(f);*/
+                managerGameUI.receiveFromServeurAskForAFinalLetter(f);
 
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
+                managerGameUI.notifyDisconnect();
            /*     managerGameUI.receiveFromServeurNotifyCurrentPlayerRound("1");
                 try {
                     Thread.sleep(5000);

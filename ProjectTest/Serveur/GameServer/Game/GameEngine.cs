@@ -126,17 +126,27 @@ namespace Serveur.GameServer.Game
             //TODO
             //depend de si la game est lancer ou pas
             //si game lancer stop partie sinon remove
-            if(gameState == GameState.STARTED)
+            lock (this)
             {
-                gameState = GameState.STOP;
-                allDoneServer.Set();
-            } else
-            {
-                listIdPlayers.Remove(id);
-                listPlayers.Remove(id);
-                callbackLeave(id, GetListOfPlayerLobbies());
+                if (gameState == GameState.STARTED)
+                {
+                    gameState = GameState.STOP;
+                    allDoneServer.Set();
+                }
+                else if (gameState == GameState.STOP || gameState == GameState.FINISHED)
+                {
+                    listIdPlayers.Remove(id);
+                    listPlayers.Remove(id);
+                    allDoneServer.Set();
+                }
+                else
+                {
+                    listIdPlayers.Remove(id);
+                    listPlayers.Remove(id);
+                    callbackLeave(id, GetListOfPlayerLobbies());
+                }
             }
-         
+            
         }
 
         public void NotifyReceivePlayer<T>(T obj, string id)

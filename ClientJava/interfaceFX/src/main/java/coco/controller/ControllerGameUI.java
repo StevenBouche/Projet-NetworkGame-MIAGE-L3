@@ -409,14 +409,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     @Override
-    public synchronized void notifyDisconnect() {
-        stop();
-        Platform.runLater(() -> {
-            main.backToMainLobbies();
-        });
-    }
-
-    @Override
     public synchronized void receiveFromServeurAskForALetter(String var) {
         Platform.runLater(() -> {
             //todo popup coco
@@ -513,19 +505,44 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         });
     }
 
+    @Override
+    public synchronized void notifyDisconnect() {
+        Platform.runLater(() -> {
+            if(!alreadyStop){
+                stop();
+                main.backToMainLobbies();
+            }
+        });
+    }
+
+
     public synchronized void stop() {
+
         if(!alreadyStop) {
+
+            alreadyStop = true;
+
             manager.stopExecutorAnimationRect();
-            executor.shutdownNow();
             dataLoad.client.stop();
-            dataLoad.clientThread.interrupt();
+          //  dataLoad.clientThread.interrupt();
             try {
-                dataLoad.clientThread.join();
-                executor.awaitTermination(10,TimeUnit.SECONDS);
+              //  dataLoad.clientThread.join();
+                shutdownExecutors();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            alreadyStop = true;
+
+        }
+    }
+
+    private void shutdownExecutors() throws InterruptedException {
+        if(executor != null && !executor.isShutdown()) {
+            executor.shutdownNow();
+            executor.awaitTermination(10,TimeUnit.MINUTES);
+        }
+        if(executorPopup != null && !executorPopup.isShutdown()) {
+            executorPopup.shutdownNow();
+            executorPopup.awaitTermination(10,TimeUnit.MINUTES);
         }
     }
 

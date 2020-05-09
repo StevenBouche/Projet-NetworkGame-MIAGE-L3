@@ -30,6 +30,8 @@ namespace Serveur.GameServer.Game
 
         HelperLobby helperLobby;
 
+        Boolean firstExec = true;
+
         public ServerGame(String id, int port) 
         {
             this.id = id;
@@ -54,10 +56,9 @@ namespace Serveur.GameServer.Game
 
         private void InitEventAndStartServerTCP()
         {
-            //event lobby
-            network.OnEvent<String>(ProtocolEventsTCP<String>.IDENTITY, helperLobby.OnIdentityReceived);
-            network.OnEvent<Boolean>(ProtocolEventsTCP<Boolean>.NOTIFYPLAYERREADY, helperLobby.OnReadyReceived);
-            
+
+            initLobby();
+
             //event game choice client
             network.OnEvent<String>(ProtocolEventsTCP<String>.PROPOSALRESPONSE, OnProposalResponse);
             network.OnEvent<String>(ProtocolEventsTCP<String>.ASKFORALETTER, OnLetterProposed);
@@ -68,9 +69,19 @@ namespace Serveur.GameServer.Game
             network.OnEvent<String>(ProtocolEventsTCP<String>.ASKFORIDPLAYER, OnAskForIdPlayer);
        
             //Start thread network
-        threadNetwork = new Thread(new ThreadStart(network.Run));
+            threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
         }
+
+        private void initLobby()
+        {
+            //event lobby
+            network.OnEvent<String>(ProtocolEventsTCP<String>.IDENTITY, helperLobby.OnIdentityReceived);
+            network.OnEvent<Boolean>(ProtocolEventsTCP<Boolean>.NOTIFYPLAYERREADY, helperLobby.OnReadyReceived);
+        }
+
+
+
 
         private void OnAskForIdPlayer(string obj, string id)
         {
@@ -107,7 +118,9 @@ namespace Serveur.GameServer.Game
 
             if (interrupt) return;
 
-            gameManager.gameState = GameState.WAITING_PLAYER; 
+        //    resetServer();
+
+            gameManager.gameState = GameState.WAITING_PLAYER;
 
             while(gameManager.gameState != GameState.STARTED)
             {
@@ -143,11 +156,29 @@ namespace Serveur.GameServer.Game
                 }
             }
 
+            while (gameManager.listPlayers.Count > 0)
+            {
+                allDone.Reset();
+                allDone.WaitOne();
+            }
+
+            firstExec = false;
             //reset gameManager ?
 
             //STOP SERVER or RESET SERVER or WANT REPLAY GAME WITH SAME PLAYER ?
             Run(); // RUN ALORS ?
             
+        }
+
+        private void resetServer()
+        {
+            if (!firstExec)
+            {
+                network.ClearEvent();
+                gameManager = new GameEngine(this, ref allDone);
+                helperLobby = new HelperLobby(ref gameManager, ref network, ref allDone);
+                InitEventAndStartServerTCP();
+            }
         }
 
         public void OnConnect(string id)

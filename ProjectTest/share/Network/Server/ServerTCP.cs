@@ -35,6 +35,11 @@ namespace Share.Network.Server
             } 
         }
 
+        public void ClearEvent()
+        {
+            this.managerTCP.eventManager.resetEvent();
+        }
+
         public void Run()
         {
             managerTCP.StartListening();

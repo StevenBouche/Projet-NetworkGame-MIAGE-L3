@@ -75,6 +75,11 @@ namespace Share.Network.Event
 
         }
 
+        public void resetEvent()
+        {
+            mapEvents.Clear();
+        }
+
         public void close()
         {
             running = false;

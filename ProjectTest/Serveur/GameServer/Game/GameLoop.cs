@@ -53,13 +53,14 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteTurn()
         {
-           // isEnignaDiscovered = true; cheat mod
+           // isEnignaDiscovered = true; //cheat mod
             commandManager.TriggerHandleTurn(); //trigger handler for turn of one player
             if (!isEnignaDiscovered) commandManager.TriggerNextPlayer(); //sets the next player 
         }
 
         public void ExecuteFinalRound()
         {
+
             commandManager.TriggerSetFinalEnigma(); //Sends a FinalInfo with the winner and the final enigma
             commandManager.TriggerWheelTurnFinal(); //Sets the current case 
             commandManager.TriggerAskForFinalLetters(); //Sends askForFinalLetters and askForFinalProposition

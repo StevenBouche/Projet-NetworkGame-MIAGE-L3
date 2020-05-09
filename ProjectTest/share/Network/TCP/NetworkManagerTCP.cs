@@ -38,7 +38,7 @@ namespace Share.Network.NetworkManager
 
         public int port;
 
-        Boolean running;
+        private Boolean running;
 
         INotifyStateSocket observerStateSocket;
 
@@ -57,7 +57,7 @@ namespace Share.Network.NetworkManager
             allDone.Set();
         }
 
-        public void StartListening() //TODO : Desactivate listening when GameState = Started
+        public void StartListening() 
         {
             // Service Event redirection
             Thread t = new Thread(new ThreadStart(eventManager.Run));
@@ -254,6 +254,7 @@ namespace Share.Network.NetworkManager
                 }
             } else
             {
+                observerStateSocket.OnDisconnect(id);
                 Console.WriteLine("Tried to disconnect a null client");
             }
             
