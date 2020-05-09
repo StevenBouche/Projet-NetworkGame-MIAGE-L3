@@ -96,8 +96,12 @@ public class ClientTCP implements Runnable, INotifyState {
                 if(notifierGame != null) notifierGame.receiveFromServeurCaseOfWheel(var);
             }
         });
-
-    //    public static ProtocolEventsTCP<int> SENDCASEVALUE = new ProtocolEventsTCP<int>("SENDCASEVALUE");
+        managerTCP.eventManager.OnEvent(String.class, ProtocolEventsTCP.NOTIFYNOMORECONSONNANT, new DataListenerTCP<String>() {
+            @Override
+            public void onData(String var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurEnigmaConsAllBuy(var);
+            }
+        });
     }
 
     private void initEventLobbyTCP() {

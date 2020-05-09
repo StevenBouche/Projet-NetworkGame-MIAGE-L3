@@ -31,6 +31,7 @@ public class ProtocolEventsTCP<T> extends ProtocolEvents<T> {
     public static ProtocolEventsTCP<DataMoneyInfo> UPDATEMONEYALL = new ProtocolEventsTCP<DataMoneyInfo>("UPDATEMONEYALL");
     public static ProtocolEventsTCP<Proposal> BADPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("BADPROPOSALLETTER");
     public static ProtocolEventsTCP<Proposal> GOODPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("GOODPROPOSALLETTER");
+    public static ProtocolEventsTCP<String> NOTIFYNOMORECONSONNANT = new ProtocolEventsTCP<String>("NOTIFYNOMORECONSONNANT");
 
     /*
         PROTOCOL SEND AND RECEIVE

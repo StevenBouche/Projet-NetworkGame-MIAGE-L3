@@ -2,6 +2,7 @@ package coco.controller.handle;
 
 import coco.controller.ControllerSceneRectancle;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -13,10 +14,13 @@ public class HandlerEnigma {
 
     private Label displayTheme;
     private Enigme currentEnigme;
+    private boolean haveConson;
     ControllerSceneRectancle controllerPan;
+    Button wheel;
 
-    public HandlerEnigma(Label displayTheme){
+    public HandlerEnigma(Label displayTheme, Button wheel){
         this.displayTheme = displayTheme;
+        this.wheel = wheel;
     }
 
     public void setCallbackForEnigmaChange(ControllerSceneRectancle controllerPan){
@@ -28,8 +32,19 @@ public class HandlerEnigma {
     }
 
     public void setCurrentEnigme(Enigme e){
+        haveConson = true;
+        wheel.setText("Turn wheel");
         this.currentEnigme = e;
         updateThemeEnigmaUI();
+    }
+
+    public Boolean getHaveConson(){
+        return haveConson;
+    }
+
+    public void notifyHaveNotConson(){
+        this.haveConson = false;
+        wheel.setText("Turn wheel - plus de consonne");
     }
 
     public String getCurrentEnigmeLabel(){

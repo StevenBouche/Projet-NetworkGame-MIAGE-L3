@@ -40,7 +40,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             }
             else
             {
-                Context.endTurn = true;
+                Context.endTurn = true; // fin du tour
                 SendBadLetter();
                 Console.WriteLine("La lettre n'est pas contenue dans l'enigme ou est une voyelle, c'est au joueur suivant \n");
             }

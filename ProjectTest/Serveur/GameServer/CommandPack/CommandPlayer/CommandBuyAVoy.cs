@@ -28,15 +28,23 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             char d = char.Parse(Data);
             if (Context.CurrentEnigma.label.Contains(Data) && EnigmePool.isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(d))
             {
-                
-                Context.letterBuyInARound.Add(d); // Add letter to already buy TODO : test char.Parse(Data)
-                Context.CurrentPlayer.cagnotte.Montant_Manche -= 150;
-                SendGoodLetter();
-                SendUpdateMoney();
+                if(Context.CurrentPlayer.cagnotte.Montant_Manche >= 150)
+                {
+                    Context.letterBuyInARound.Add(d); // Add letter to already buy TODO : test char.Parse(Data)
+                    Context.CurrentPlayer.cagnotte.Montant_Manche -= 150;
+                    SendGoodLetter();
+                    SendUpdateMoney();
+                }
+                else
+                {
+                    Context.endTurn = true;
+                    Console.WriteLine("Pas assez d'argent\n");
+                }
+               
             }
             else
             {
-            //    Context.endTurn = true;
+                Context.endTurn = true;
                 SendBadLetter();
                 Console.WriteLine("La lettre n'est pas contenue dans l'enigme ou est une consonne, c'est au joueur suivant \n");
             }

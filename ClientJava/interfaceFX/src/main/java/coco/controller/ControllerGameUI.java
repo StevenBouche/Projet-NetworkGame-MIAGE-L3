@@ -137,7 +137,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     private void createHandler() {
-        handlerEnigme = new HandlerEnigma(displayTheme);
+        handlerEnigme = new HandlerEnigma(displayTheme,buttonWheel);
         handlerEnigme.setCallbackForEnigmaChange(manager);
         handlerPlayerDataTable = new HandlerPlayerDataTable(tableView,dataLoad.listPlayerData);
         handlerIdentity = new HandlerMyIdentity(dataLoad.myId);
@@ -201,7 +201,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         changeChoiceB(cbdV, cbdC);
     }
 
-
     /**
      * This function set the visibility of
      * the Choiceboxs depending on switch button
@@ -213,10 +212,12 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         if(switchActive) {
             cV.setVisible(true);
             cC.setVisible(false);
+            validLetter.setText("Valid a voyelle");
         }
         else{
             cV.setVisible(false);
             cC.setVisible(true);
+            validLetter.setText("Valid a conson");
         }
     }
 
@@ -448,6 +449,13 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     public synchronized void receiveFromServeurCaseOfWheel(CaseInfo var) {
         Platform.runLater(() -> {
             labelCase.setText(var.value+" "+var.type);
+        });
+    }
+
+    @Override
+    public synchronized void receiveFromServeurEnigmaConsAllBuy(String var) {
+        Platform.runLater(() -> {
+            handlerEnigme.notifyHaveNotConson();
         });
     }
 

@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import network.message.PacketMessage;
 import network.message.obj.ChoiceStep;
 import network.message.obj.ChoiceStepEnum;
+import network.message.obj.Enigme;
 import network.tcp.ProtocolEventsTCP;
 
 public class StateRound extends StateGameUI {
@@ -24,9 +25,10 @@ public class StateRound extends StateGameUI {
         controller.cbdV.setDisable(stateButton);
         controller.cbdC.setDisable(true);
         controller.switchVoyCons.setDisable(stateButton);
-        controller.buttonWheel.setDisable(stateButton);
         controller.proposEnigm.setDisable(stateButton);
         controller.validChoice.setDisable(stateButton);
+
+        controller.buttonWheel.setDisable(stateButton && !controller.handlerEnigme.getHaveConson());
 
         // todo simplifier
         if(!stateButton && controller.switchVoyCons.isSelected()) controller.validLetter.setDisable(false);
@@ -63,12 +65,16 @@ public class StateRound extends StateGameUI {
     }
 
     private void handleTurnWheel() {
+
+        if(!controller.handlerEnigme.getHaveConson()) return; // PREVENIR ?
+
         ChoiceStep ch = new ChoiceStep();
         ch.choiceStep = ChoiceStepEnum.TURNWHEEL.name();
         PacketMessage<ChoiceStep> msg = new PacketMessage<>();
         msg.evt = ProtocolEventsTCP.CHOICESTEP.eventName;
         msg.data = ch;
         controller.dataLoad.client.sendMsg(msg);
+
     }
 
     private void handlePropositionEnigma() {

@@ -104,6 +104,8 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             
             var consonnants = new HashSet<char> { 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Z'};
             int cpt = 0;
+
+      //      int nbtest = alreadyProposedLetters.Where(a => consonnants.Contains(a)).Count();
             
             foreach(char c in alreadyProposedLetters)
             {
@@ -113,14 +115,8 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 }
             }
 
-            if(Context.CurrentEnigma.consonantNb < cpt)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Context.CurrentEnigma.consonantNb <= cpt;
+ 
         }
     }
 }
