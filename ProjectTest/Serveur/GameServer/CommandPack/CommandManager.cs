@@ -71,6 +71,16 @@ namespace Serveur.GameServer.CommandPack
             this.TriggerCommand(new CommandSetCurrentEnigma(engine, this));
         }
 
+        public void TriggerAskForFinalLetters()
+        {
+            this.TriggerCommand(new CommandAskForFinalLetters(engine, this));
+        }
+
+        public void TriggerAskForFinalPropostion()
+        {
+            this.TriggerCommand(new CommandAskForFinalPropostion(engine, this));
+        }
+
         public void TriggerUpdateMoney()
         {
             this.TriggerCommand(new CommandUpdateMoney(engine, this));
