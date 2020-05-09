@@ -6,8 +6,8 @@ namespace Share.Network.Message.modele
 {
     public class FinalInfo
     {
-        String id;
-        Enigme enigme;
+        public String id;
+        public Enigme enigme;
 
         public FinalInfo(String id, Enigme e)
         {

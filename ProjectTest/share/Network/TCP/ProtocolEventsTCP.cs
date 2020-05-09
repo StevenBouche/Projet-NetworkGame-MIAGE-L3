@@ -21,23 +21,24 @@ namespace Share.Network.Protocol
          *  PROTOCOL GAME RECEIVE
          */
         public static ProtocolEventsTCP<String> PROPOSALRESPONSE = new ProtocolEventsTCP<String>("PROPOSALRESPONSE");
-        public static ProtocolEventsTCP<CaseInfo> SENDCASE = new ProtocolEventsTCP<CaseInfo>("SENDCASE");
-
 
         /*
         *  PROTOCOL GAME SEND
         */
         public static ProtocolEventsTCP<Proposal> BADPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("BADPROPOSALRESPONSE");
         public static ProtocolEventsTCP<Proposal> GOODPROPOSALRESPONSE = new ProtocolEventsTCP<Proposal>("GOODPROPOSALRESPONSE");
-        public static ProtocolEventsTCP<Enigme> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMERAPIDE");
-        public static ProtocolEventsTCP<Enigme> ACTIONENIGMEPRINCIPALE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMEPRINCIPALE");
-        public static ProtocolEventsTCP<FinalInfo> ACTIONENIGMEFINALE = new ProtocolEventsTCP<FinalInfo>("ACTIONENIGMEFINALE");
-        public static ProtocolEventsTCP<String> NOTIFYCURRENTPLAYER = new ProtocolEventsTCP<String>("NOTIFYCURRENTPLAYER");
-        public static ProtocolEventsTCP<DataMoneyInfo> UPDATEMONEYALL = new ProtocolEventsTCP<DataMoneyInfo>("UPDATEMONEYALL");
         public static ProtocolEventsTCP<Proposal> BADPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("BADPROPOSALLETTER");
         public static ProtocolEventsTCP<Proposal> GOODPROPOSALLETTER = new ProtocolEventsTCP<Proposal>("GOODPROPOSALLETTER");
         public static ProtocolEventsTCP<ProposalLetter> BADPROPOSALFINALLETTER = new ProtocolEventsTCP<ProposalLetter>("BADPROPOSALFINALLETTER");
         public static ProtocolEventsTCP<ProposalLetter> GOODPROPOSALFINALLETTER = new ProtocolEventsTCP<ProposalLetter>("GOODPROPOSALFINALLETTER");
+
+        public static ProtocolEventsTCP<Enigme> ACTIONENIGMERAPIDE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMERAPIDE");
+        public static ProtocolEventsTCP<Enigme> ACTIONENIGMEPRINCIPALE = new ProtocolEventsTCP<Enigme>("ACTIONENIGMEPRINCIPALE");
+        public static ProtocolEventsTCP<FinalInfo> ACTIONENIGMEFINALE = new ProtocolEventsTCP<FinalInfo>("ACTIONENIGMEFINALE");
+
+        public static ProtocolEventsTCP<CaseInfo> SENDCASE = new ProtocolEventsTCP<CaseInfo>("SENDCASE");
+        public static ProtocolEventsTCP<String> NOTIFYCURRENTPLAYER = new ProtocolEventsTCP<String>("NOTIFYCURRENTPLAYER");
+        public static ProtocolEventsTCP<DataMoneyInfo> UPDATEMONEYALL = new ProtocolEventsTCP<DataMoneyInfo>("UPDATEMONEYALL");
         public static ProtocolEventsTCP<String> NOTIFYNOMORECONSONNANT = new ProtocolEventsTCP<String>("NOTIFYNOMORECONSONNANT");
         public static ProtocolEventsTCP<int> SENDFINALVALUE = new ProtocolEventsTCP<int>("SENDFINALVALUE");
 
