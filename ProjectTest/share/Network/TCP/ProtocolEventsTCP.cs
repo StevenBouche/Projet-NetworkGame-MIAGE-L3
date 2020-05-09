@@ -21,7 +21,7 @@ namespace Share.Network.Protocol
          *  PROTOCOL GAME RECEIVE
          */
         public static ProtocolEventsTCP<String> PROPOSALRESPONSE = new ProtocolEventsTCP<String>("PROPOSALRESPONSE");
-        public static ProtocolEventsTCP<int> SENDCASEVALUE = new ProtocolEventsTCP<int>("SENDCASEVALUE"); // ??
+        public static ProtocolEventsTCP<int> SENDCASEVALUE = new ProtocolEventsTCP<int>("SENDCASEVALUE");
 
 
         /*

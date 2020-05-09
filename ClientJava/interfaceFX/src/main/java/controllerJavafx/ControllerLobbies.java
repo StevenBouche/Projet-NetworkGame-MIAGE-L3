@@ -266,6 +266,7 @@ public class ControllerLobbies implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("dialogTest.fxml"));
 
         try {
+
            // https://stackoverflow.com/questions/12935953/javafx-class-controller-scene-reference
             StackPane root = fxmlLoader.load();
             JFXPopup popup = new JFXPopup(root);

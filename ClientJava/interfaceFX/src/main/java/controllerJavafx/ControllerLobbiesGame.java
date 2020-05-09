@@ -156,12 +156,12 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
     }
 
     @Override
-    public void notifyReceiveMyId(String id) {
+    public synchronized void notifyReceiveMyId(String id) {
         this.id = id;
     }
 
     @Override
-    public void notifyReceiveListPlayer(ListPlayerGame l) {
+    public synchronized void notifyReceiveListPlayer(ListPlayerGame l) {
         this.listPlayer.listPlayers = l.listPlayers;
         Platform.runLater(() -> {
             mainPane.getChildren().removeAll(mapSubScene.values());
@@ -175,12 +175,12 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
     }
 
     @Override
-    public void notifyDisconnect() {
+    public synchronized void notifyDisconnect() {
         onCancelAction();
     }
 
     @Override
-    public void notifyGameStart() {
+    public synchronized void notifyGameStart() {
         client.removeNotifierLobby();
         List<PlayerData> listData = buildPlayerDataForGame();
         Platform.runLater(() -> {
