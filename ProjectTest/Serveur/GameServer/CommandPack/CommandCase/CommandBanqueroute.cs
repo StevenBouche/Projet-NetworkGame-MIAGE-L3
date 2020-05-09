@@ -12,6 +12,7 @@ namespace Serveur.GameServer.CommandPack.CommandCase
 
         public override void onExecute()
         {
+            Context.endTurn = true;
             Context.CurrentPlayer.cagnotte.Montant_Manche = 0;
         }
     }

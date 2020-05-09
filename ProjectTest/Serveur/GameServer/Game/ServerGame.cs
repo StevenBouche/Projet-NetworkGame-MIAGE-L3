@@ -99,7 +99,7 @@ namespace Serveur.GameServer.Game
             executeGame.Start(); //start play
 
             // reveiller par le threas game quand fini ou stop
-            while (gameManager.gameState != GameState.FINISHED || gameManager.gameState != GameState.STOP) 
+            while (gameManager.gameState != GameState.FINISHED) 
             {
                 allDone.Reset();
                 allDone.WaitOne();

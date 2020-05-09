@@ -17,12 +17,15 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         public CommandHandleTurn(GameEngine context, CommandManager CM) : base(context, CM) { }
 
         private Boolean haveAlreadyBuyVoy = false;
-        private Boolean endTurn = false;
+        
         public override void onExecute()
         {
-
-            while (!endTurn)
+            Context.endTurn = false;
+            while (!Context.endTurn)
             {
+                //reset data for choice
+                Data = null;
+                idClient = null;
 
                 SendAChoiceStep();
 
@@ -64,8 +67,9 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         private void HandleProposition()
         {
             Enigme e = Context.CurrentEnigma;
-            if (!e.label.Equals(Data.proposal))
+            if (e.label.Equals(Data.proposal))
             {
+                // MONTANT ROUND INTO MONTANT TOTAL player todo
                 Context.NotifyPlayerHaveWinRound(idClient); // notify player win round
             }
             EndTurn(); // end turn meme si win round pour break le recursif
@@ -73,7 +77,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         private void EndTurn()
         {
-            endTurn = true;
+            Context.endTurn = true;
         }
 
         public Boolean HaveConsonneEnigma()

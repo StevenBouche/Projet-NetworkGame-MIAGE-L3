@@ -26,9 +26,8 @@ public class StateStartRound extends StateGameUI {
         controller.buttonShowEnigm.setDisable(stateButton);
         controller.buttonReset.setDisable(stateButton);
         controller.clientChoic.setDisable(stateButton);
-        controller.clientChoic.setDisable(stateButton);
         controller.cbdV.setDisable(stateButton);
-        controller.cbdC.setDisable(stateButton);
+        controller.cbdC.setDisable(true);
         controller.switchVoyCons.setDisable(stateButton);
         controller.validLetter.setDisable(stateButton);
         controller.buttonWheel.setDisable(stateButton);

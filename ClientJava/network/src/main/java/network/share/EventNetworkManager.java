@@ -50,7 +50,7 @@ public class EventNetworkManager {
             ObjectNode actualObj = (ObjectNode) objectMapper.readTree(obj);
             if(actualObj.get("data")!= null && actualObj.get("evt")!= null){
                 Protocol<?> p = mapEvents.get(actualObj.get("evt").textValue());
-                p.onReceive(actualObj.get("data").toString());
+                if(p!=null) p.onReceive(actualObj.get("data").toString());
             }
         } catch (IOException e) {
             e.printStackTrace();

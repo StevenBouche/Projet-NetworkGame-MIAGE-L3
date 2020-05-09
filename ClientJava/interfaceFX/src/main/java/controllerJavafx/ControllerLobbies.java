@@ -1,12 +1,15 @@
 package controllerJavafx;
 
+import com.jfoenix.controls.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -46,6 +49,8 @@ public class ControllerLobbies implements Initializable {
     public TextField name;
     @FXML
     public AnchorPane mainPane;
+    @FXML
+    public Button createGame;
 
     ClientUDP server;
     Thread threadServer;
@@ -64,6 +69,7 @@ public class ControllerLobbies implements Initializable {
         initTable();
         initButton();
         initNameField();
+        popUp();
         try {
             loadServerUDP();
         } catch (SocketException | UnknownHostException e) {
@@ -252,6 +258,34 @@ public class ControllerLobbies implements Initializable {
         threadServer = new Thread(server);
         threadServer.setName("Thread Client UDP");
         threadServer.start();
+
+    }
+
+    public void popUp(){
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("dialogTest.fxml"));
+
+        try {
+           // https://stackoverflow.com/questions/12935953/javafx-class-controller-scene-reference
+            StackPane root = fxmlLoader.load();
+            JFXPopup popup = new JFXPopup(root);
+            createGame.setOnMouseClicked(e -> popup.show(mainPane, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT,
+                    (mainPane.getWidth() - root.getPrefWidth()) / 2,
+                    (mainPane.getHeight() - root.getPrefHeight()) / 2));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+    //    createGame.setOnMouseClicked(e -> popup.show(createGame, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));
+
+
+
 
     }
 

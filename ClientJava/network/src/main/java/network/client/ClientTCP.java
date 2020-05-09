@@ -78,6 +78,18 @@ public class ClientTCP implements Runnable, INotifyState {
                 if(notifierGame != null) notifierGame.receiveFromServeurAskForALetter(var);
             }
         });
+        managerTCP.eventManager.OnEvent(Proposal.class, ProtocolEventsTCP.BADPROPOSALLETTER, new DataListenerTCP<Proposal>() {
+            @Override
+            public void onData(Proposal var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurBadAskForALetter(var.id,var.proposal);
+            }
+        });
+        managerTCP.eventManager.OnEvent(Proposal.class, ProtocolEventsTCP.GOODPROPOSALLETTER, new DataListenerTCP<Proposal>() {
+            @Override
+            public void onData(Proposal var) {
+                if(notifierGame != null) notifierGame.receiveFromServeurGoodAskForALetter(var.id,var.proposal);
+            }
+        });
 
     }
 

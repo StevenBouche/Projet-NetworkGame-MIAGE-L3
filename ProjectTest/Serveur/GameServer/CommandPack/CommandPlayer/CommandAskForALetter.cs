@@ -23,8 +23,9 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             // if enigma containe letter and is not a vowel and is not already bought
             if (Context.CurrentEnigma.label.Contains(Data) && !isAVowel(char.Parse(Data)) && !Context.LetterIsAlreadyBuy(Data))
             {
-                Context.letterBuyInARound.Add(char.Parse(Data)); // Add letter to already buy TODO : test char.Parse(Data)
-                this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, Data);
+                char d = char.Parse(Data);
+                Context.letterBuyInARound.Add(d); // Add letter to already buy TODO : test char.Parse(Data)
+                this.nbOfOccurrences = GetNbOfOccurencesInEnigma(Context.CurrentEnigma.label, d); //TODO return 0 but 1 H les ho...
                 SendGoodLetter();
                 commandManager.TriggerCommand(new CommandCurrentCaseAction(Context, commandManager, nbOfOccurrences));
             }
@@ -64,22 +65,23 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         private void SendALetterAsked()
         {
             String id = Context.CurrentPlayer.id;
+            String str = "Entrez une consonne";
             PacketMessage<String> msg = new PacketMessage<String>()
             {
                 evt = ProtocolEventsTCP<String>.ASKFORALETTER.eventName,
-                data = "Entrez une consonne"
+                data = str
             };
 
             Context.SendClient(msg, id);
         }
 
-        private int GetNbOfOccurencesInEnigma(String label, String letter)
+        private int GetNbOfOccurencesInEnigma(String label, char letter)
         {
             int count = 0;
 
             for(int i = 0; i < label.Length; i++)
             {
-                if(label[i].Equals(letter))
+                if(label[i] == letter)
                 {
                     count++;
                 }

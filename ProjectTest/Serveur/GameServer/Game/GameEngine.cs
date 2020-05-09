@@ -48,6 +48,10 @@ namespace Serveur.GameServer.Game
         public List<char> letterBuyInARound;
 
         private ManualResetEvent allDoneServer;
+
+        public Boolean endTurn = false;
+
+
         public GameEngine(ISenderAtClient sender, ref ManualResetEvent allDone)
         {
             this.sender = sender;

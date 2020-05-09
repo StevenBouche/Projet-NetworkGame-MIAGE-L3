@@ -10,6 +10,7 @@ namespace Serveur.GameServer.CommandPack.CommandCase
         public CommandPass(GameEngine context, CommandManager manager) : base(context,manager) { }
         public override void onExecute()
         {
+            Context.endTurn = true;
         }
     }
 }

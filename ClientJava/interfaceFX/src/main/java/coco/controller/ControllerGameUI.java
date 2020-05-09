@@ -408,6 +408,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
   /*      mapRectWithLetter.forEach((id, r)->{
             System.out.println("id : " + id + ", letter : " + r.getLetter());
         });*/
+        allIsShow = false;
         taskTimer = new TimerTask() {
             @Override
             public void run() {
@@ -481,11 +482,11 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     @Override
-    public void receiveFromServeurBadAskForALetter(String id) {
+    public void receiveFromServeurBadAskForALetter(String id, String var) {
         String idP = id;
         Platform.runLater(() -> {
             PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
-            log("BAD LETTER "+p.namePlayer);
+            log(var+" : BAD LETTER "+p.namePlayer);
             setAndExecuteState(new StateStartRound(this, idP)); //todo rename
         });
     }
@@ -495,7 +496,8 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         String idP = id;
         Platform.runLater(() -> {
             PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
-            log("GOOD LETTER "+p.namePlayer);
+            log(idP+" GOOD LETTER "+p.namePlayer);
+            manager.displayLetter(var.charAt(0));
             setAndExecuteState(new StateStartRound(this,idP)); //todo rename
         });
     }
