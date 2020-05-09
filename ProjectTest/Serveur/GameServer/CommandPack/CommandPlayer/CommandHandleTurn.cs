@@ -70,6 +70,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
                 evt = ProtocolEventsTCP<String>.NOTIFYNOMORECONSONNANT.eventName,
                 data = str
             };
+            Context.SendAllClient(msg);
         }
 
         private void SendAChoiceStep()

@@ -28,7 +28,8 @@ public class StateRound extends StateGameUI {
         controller.proposEnigm.setDisable(stateButton);
         controller.validChoice.setDisable(stateButton);
 
-        controller.buttonWheel.setDisable(stateButton && !controller.handlerEnigme.getHaveConson());
+        if(!stateButton && controller.handlerEnigme.getHaveConson()) controller.buttonWheel.setDisable(false);
+        else controller.buttonWheel.setDisable(true);
 
         // todo simplifier
         if(!stateButton && controller.switchVoyCons.isSelected()) controller.validLetter.setDisable(false);
