@@ -39,6 +39,7 @@ namespace Serveur.GameServer.Game
             gameManager = new GameEngine(this,ref allDone);
             helperLobby = new HelperLobby(ref gameManager,ref network,ref allDone);
             InitEventAndStartServerTCP();
+            StartThreadNetwork();
         }
 
         public ServerGameInfo GetInfo()
@@ -68,6 +69,10 @@ namespace Serveur.GameServer.Game
             network.OnEvent<Proposal>(ProtocolEventsTCP<Proposal>.ASKFORFINALPROPOSITION, OnReceiveAskForFinalProposition);
             network.OnEvent<String>(ProtocolEventsTCP<String>.ASKFORIDPLAYER, OnAskForIdPlayer);
        
+        }
+
+        private void StartThreadNetwork()
+        {
             //Start thread network
             threadNetwork = new Thread(new ThreadStart(network.Run));
             threadNetwork.Start();
@@ -79,9 +84,6 @@ namespace Serveur.GameServer.Game
             network.OnEvent<String>(ProtocolEventsTCP<String>.IDENTITY, helperLobby.OnIdentityReceived);
             network.OnEvent<Boolean>(ProtocolEventsTCP<Boolean>.NOTIFYPLAYERREADY, helperLobby.OnReadyReceived);
         }
-
-
-
 
         private void OnAskForIdPlayer(string obj, string id)
         {
@@ -118,7 +120,7 @@ namespace Serveur.GameServer.Game
 
             if (interrupt) return;
 
-        //    resetServer();
+            resetServer();
 
             gameManager.gameState = GameState.WAITING_PLAYER;
 
@@ -172,27 +174,36 @@ namespace Serveur.GameServer.Game
 
         private void resetServer()
         {
-            if (!firstExec)
+            lock (this)
             {
-                network.ClearEvent();
-                gameManager = new GameEngine(this, ref allDone);
-                helperLobby = new HelperLobby(ref gameManager, ref network, ref allDone);
-                InitEventAndStartServerTCP();
+                if (!firstExec)
+                {
+                    network.ClearEvent();
+                    gameManager = new GameEngine(this, ref allDone);
+                    helperLobby = new HelperLobby(ref gameManager, ref network, ref allDone);
+                    InitEventAndStartServerTCP();
+                }
             }
         }
 
         public void OnConnect(string id)
         {
-            if(gameManager.listPlayers.Count == 3)
+            lock (this)
             {
-                network.disconnectClient(id);
+                if (gameManager.listPlayers.Count == 3)
+                {
+                    network.disconnectClient(id);
+                }
             }
         }
 
         public void OnDisconnect(string id)
         {
-            Debug.WriteLine("(TCP exchange) On Disconnect player : " + id);
-            gameManager.RemovePlayer(id);
+            lock (this)
+            {
+                Debug.WriteLine("(TCP exchange) On Disconnect player : " + id);
+                gameManager.RemovePlayer(id);
+            }
         }
 
         private void notifyGameIsReady()

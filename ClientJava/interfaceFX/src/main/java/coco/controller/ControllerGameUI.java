@@ -320,8 +320,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @Override
     public synchronized void receiveFromServeurGoodProposalResponse(String id, String proposal) {
         String idLocal = id;
-        //   cancelTimerTask();
-
         Platform.runLater(() -> {
             executor.shutdownNow();
             //    log("State timer : "+taskTimer.cancel());

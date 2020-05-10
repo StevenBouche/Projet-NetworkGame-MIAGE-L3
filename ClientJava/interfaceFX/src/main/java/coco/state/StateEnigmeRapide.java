@@ -58,8 +58,8 @@ public class StateEnigmeRapide extends StateGameUI {
     private void handlePropositionEnigma() {
 
         /** If player propose enigme */
-        controller.manager.compareProp(controller.proposEnigm.getText());
-        System.out.println("client submit enigm");
+     /*   controller.manager.compareProp(controller.proposEnigm.getText());
+        System.out.println("client submit enigm");*/
 
         /** Send at server my proposal string **/
         PacketMessage<String> msg = new PacketMessage<>();

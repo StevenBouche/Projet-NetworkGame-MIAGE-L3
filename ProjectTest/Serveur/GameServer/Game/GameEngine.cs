@@ -116,9 +116,12 @@ namespace Serveur.GameServer.Game
 
         public void AddPlayer(String id, String name)
         {
-            listIdPlayers.Add(id);
-            listPlayers.Add(id, new Joueur(id,name));
-            callbackJoin(id, GetListOfPlayerLobbies());
+            lock (this)
+            {
+                listIdPlayers.Add(id);
+                listPlayers.Add(id, new Joueur(id, name));
+                callbackJoin(id, GetListOfPlayerLobbies());
+            }
         }
 
         public void RemovePlayer(string id)

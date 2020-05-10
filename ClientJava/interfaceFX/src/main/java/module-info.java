@@ -15,10 +15,12 @@ module org.miage.interfaceFX {
     exports coco.state;
     exports coco.controller.handle;
     exports coco;
+    exports controllerJavafx.testwheel;
     opens network.main to javafx.graphics;
     opens controllerJavafx to javafx.graphics;
     opens coco.controller to javafx.graphics;
     opens coco.state to javafx.graphics;
     opens coco to javafx.graphics;
     opens coco.controller.handle to javafx.graphics;
+    opens controllerJavafx.testwheel to javafx.graphics;
 }

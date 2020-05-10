@@ -31,7 +31,7 @@ public class HandlerEnigma {
         return currentEnigme;
     }
 
-    public void setCurrentEnigme(Enigme e){
+    public synchronized void setCurrentEnigme(Enigme e){
         haveConson = true;
         wheel.setText("Turn wheel");
         this.currentEnigme = e;
@@ -47,7 +47,7 @@ public class HandlerEnigma {
         wheel.setText("Turn wheel - plus de consonne");
     }
 
-    public String getCurrentEnigmeLabel(){
+    public synchronized String getCurrentEnigmeLabel(){
       return currentEnigme.label;
     }
 
