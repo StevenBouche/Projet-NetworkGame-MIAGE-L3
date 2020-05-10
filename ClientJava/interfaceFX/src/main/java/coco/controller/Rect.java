@@ -92,13 +92,14 @@ public class Rect{
         ch = c;
 
         if(ch != '~') {
-            state = StateOfRect.LETTRE_HIDDEN;
+            state = StateOfRect.SPACE;
             if (ch == ' ') state = StateOfRect.SPACE;
-            if (ch == '!' || ch == '?' || ch == '\'' || ch == '-') {
+            else if (ch == '!' || ch == '?' || ch == '\'' || ch == '-') {
                 this.l.setText("" + ch);
+                state = StateOfRect.LETTRE_SPECIAL;
             }
             else{
-                state = StateOfRect.LETTRE_SPECIAL;
+                state = StateOfRect.LETTRE_HIDDEN;
             }
         }
         else{
