@@ -41,6 +41,7 @@ namespace Share.Network.Protocol
         public static ProtocolEventsTCP<DataMoneyInfo> UPDATEMONEYALL = new ProtocolEventsTCP<DataMoneyInfo>("UPDATEMONEYALL");
         public static ProtocolEventsTCP<String> NOTIFYNOMORECONSONNANT = new ProtocolEventsTCP<String>("NOTIFYNOMORECONSONNANT");
         public static ProtocolEventsTCP<int> SENDFINALVALUE = new ProtocolEventsTCP<int>("SENDFINALVALUE");
+        public static ProtocolEventsTCP<String> SENDVOYAGEWIN = new ProtocolEventsTCP<String>("SENDVOYAGEWIN");
 
         /*
        *  PROTOCOL GAME SEND AND RECEIVE

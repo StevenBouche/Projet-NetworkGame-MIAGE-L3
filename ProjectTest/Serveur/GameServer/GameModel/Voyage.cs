@@ -8,15 +8,18 @@ namespace Serveur.GameServer.GameModel
 {
     public class Voyage
     {
-        public string _pays_Destination;
+        public string Pays_Destination;
 
         public Voyage()
         {
-            _pays_Destination = "";
+            Pays_Destination = "";
         }
 
-      
-        public string Pays_Destination { get => _pays_Destination; set => _pays_Destination = value; }
+        public void GetRandomVoyage()
+        {
+            Random r = new Random();
+            Pays_Destination = (String)Enum.GetValues(typeof(ListVoyage)).GetValue(r.Next(12));
+        }
 
     }
 }
