@@ -6,6 +6,8 @@ import javafx.scene.input.MouseEvent;
 import network.message.PacketMessage;
 import network.tcp.ProtocolEventsTCP;
 
+import java.util.concurrent.ExecutionException;
+
 public class StateEnigmeRapide extends StateGameUI {
 
     public StateEnigmeRapide(ControllerGameUI controller) {
@@ -15,17 +17,11 @@ public class StateEnigmeRapide extends StateGameUI {
     @Override
     public void execute() {
         stateButton();
-        setEnigme();
-        controller.animEnigmRapide();
     }
 
     @Override
     public void onClickOnSwitch(Boolean switchActive) {
 
-    }
-
-    private void setEnigme() {
-        controller.preSetEnigm();
     }
 
     protected void stateButton() {
@@ -73,7 +69,7 @@ public class StateEnigmeRapide extends StateGameUI {
         /** Compare state of switch button v/c */
         if(controller.switchActive){
             char charCb = controller.cbdV.getValue().toString().charAt(0);
-            controller.manager.displayLetter(charCb);
+                controller.manager.displayLetter(charCb);
         }
         else{
             char charCb = controller.cbdC.getValue().toString().charAt(0);

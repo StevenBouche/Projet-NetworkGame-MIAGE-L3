@@ -20,6 +20,9 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         public override void onExecute()
         {
+
+            Context.stateLoop = EnumStateGameLoop.QUICKROUND;
+
             sendQuickEnigma();
             Console.WriteLine("\n En attente du gagnant de l'enigme rapide");
 

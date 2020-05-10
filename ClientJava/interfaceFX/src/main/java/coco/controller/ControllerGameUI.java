@@ -32,9 +32,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
@@ -85,7 +86,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
   //  Timer timerAnimLetter;
  //   TimerTask taskTimer;
-    ScheduledExecutorService executor;
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    Thread taskQuickRound;
+    FutureTask taskProposalResponse;
+    //Thread taskQuickRound;
     ScheduledExecutorService executorPopup;
 
     /** Data comming from lobby**/
@@ -101,6 +105,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     StateGameUI stateUI;
     IMain main;
     boolean alreadyStop;
+
+    public final Lock lock = new ReentrantLock();
+    public final Condition condition = this.lock.newCondition();
+    public final Condition conditionHaveFinishCompareProp = this.lock.newCondition();
 
     public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId, IMain main) {
         alreadyStop = false;
@@ -222,18 +230,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     private void log(String str){
-        String str2 = log.getText();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         Date date = new Date();
-        String newString = formatter.format(date)+" : "+str+"\n" + str2;
-        log.clear();
+        String newString = formatter.format(date)+" : "+str+"\n";
         log.appendText(newString);
-    }
-
-    public void preSetEnigm() {
-        manager.resetPanneau();
-        manager.setEnigm(handlerEnigme.getCurrentEnigmeLabel());
-        manager.setRectWithLetter();
     }
 
     public Map<Integer, Rect> mapRectWithLetter;
@@ -254,28 +254,47 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
         executor = Executors.newScheduledThreadPool(1);
 
-        Runnable task1 = new Runnable() {
+        Runnable quickRound = new Runnable() {
             @Override
             public void run() {
-                tryshowRandomLetter();
+                    tryshowRandomLetter();
             }
         };
 
-        executor.scheduleAtFixedRate(task1, 0, 2, TimeUnit.SECONDS);
+        taskQuickRound = new Thread(quickRound);
+        taskQuickRound.start();
+
+     //   taskQuickRound = new Thread(quickRound);
+     //   taskQuickRound.start();
+     //   executor.schedule(taskQuickRound,0, TimeUnit.SECONDS);
 
     }
 
-    public void tryshowRandomLetter(){
-        System.out.println("TASK");
-        Enigme e = handlerEnigme.getCurrentEnigme();
-        if(e == null) return; //todo bug quand on recois l'enigme d'apres currentEnigme = null a test
-        if(!e.order.isEmpty()){
-            char c = e.order.remove(0);
-            manager.displayLetter(c);
-         //   chekIfEnigmIsShow();
-        } else {
-            executor.shutdownNow();
+    public void tryshowRandomLetter() {
+
+        try{
+            while(!Thread.currentThread().isInterrupted()){
+                Enigme e = handlerEnigme.getCurrentEnigme();
+                if(e == null) Thread.currentThread().interrupt(); //todo bug quand on recois l'enigme d'apres currentEnigme = null a test
+                System.out.println("TASK");
+                if(!e.order.isEmpty()){
+                    char c = e.order.remove(0);
+                    manager.displayLetter(c);
+                    Thread.sleep(2000);
+                } else {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        } catch (InterruptedException e){
+            e.printStackTrace();
         }
+
+        try {
+            manager.tempoDisplayLetters.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void loadBackGround() {
@@ -298,38 +317,258 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     }
 
     @Override
-    public synchronized void startActionEnigmeRapide(Enigme varE) {
-        Platform.runLater(() -> {
-            handlerEnigme.setCurrentEnigme(varE);
-            // todo change state of UI on rapid enigma
-            setAndExecuteState(new StateEnigmeRapide(this)); //todo handle enigme => panneau enigme
-        });
+    public void startActionEnigmeRapide(Enigme varE) {
+        ControllerGameUI controller = this;
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                Platform.runLater(()->{
+                    handlerEnigme.setCurrentEnigme(varE);
+                    manager.resetPanneau(handlerEnigme.getCurrentEnigmeLabel());
+                    setAndExecuteState(new StateEnigmeRapide(controller));
+                    animEnigmRapide();
+                });
+            }
+        };
+        executor.submit(r);
     }
 
     int cpt;
     @Override
-    public synchronized void receiveFromServeurBadProposalResponse(String var, String badReponse) {
+    public void receiveFromServeurBadProposalResponse(String var, String badReponse) {
         Platform.runLater(() -> {
-            manager.compareProp(badReponse);
             handlerRound.setIdPlayerHaveProposal(var);
             PlayerData p = handlerPlayerDataTable.getPlayerData(var);
+            manager.compareProp(badReponse);
             log("Bad response from "+p.namePlayer+" : "+badReponse);
         });
     }
 
+    private void waitAnimationQuickRound(){
+
+        if(taskQuickRound == null || taskQuickRound.isInterrupted()) return;
+
+        taskQuickRound.interrupt();
+
+        try {
+            taskQuickRound.join();
+        } catch (InterruptedException e ) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Override
-    public synchronized void receiveFromServeurGoodProposalResponse(String id, String proposal) {
-        String idLocal = id;
+    public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                waitAnimationQuickRound();
+                PlayerData p = handlerPlayerDataTable.getPlayerData(id);
+                handlerRound.setIdPlayerHaveProposal(id);
+                manager.compareProp(proposal); // couleur vert
+                manager.displayEnigm(); // montre toute l'enigme
+                log("Good response from "+p.namePlayer+" : "+proposal);
+                manager.waitDisplayLetter();
+                manager.waitAnimColor();
+            }
+        };
+        executor.submit(r);
+    }
+
+    @Override
+    public void receiveFromServeurNotifyCurrentPlayerRound(String var) {
+        ControllerGameUI contr = this;
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                handlerRound.setCurrentPlayerId(var);
+                PlayerData p = handlerPlayerDataTable.getPlayerData(var);
+                log("Current player is "+p.namePlayer);
+                setAndExecuteState(new StateRound(contr,var)); //todo rename
+               /* Platform.runLater(() -> {
+
+                });*/
+            }
+        };
+        executor.submit(r);
+    }
+
+    @Override
+    public void receiveFromServeurChoiceStep(ChoiceStep var) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                log("You need to choice between buy vowel, turn wheel or proposal enigma");
+            }
+        };
+        executor.submit(r);
+    }
+
+    @Override
+    public void receiveFromServeurEnigmaOfRound(Enigme var) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    handlerEnigme.setCurrentEnigme(var);
+                    manager.resetPanneau(handlerEnigme.getCurrentEnigmeLabel());
+                    log("SET NEW ENIGME");
+                });
+            }
+        };
+        executor.submit(r);
+    }
+
+    @Override
+    public void receiveFromServeurPlayerMoneyInfo(DataMoneyInfo var) {
         Platform.runLater(() -> {
-            executor.shutdownNow();
-            //    log("State timer : "+taskTimer.cancel());
-            handlerRound.setIdPlayerHaveProposal(idLocal);
-            manager.compareProp(proposal); // couleur vert
-            manager.displayEnigm(); // montre toute l'enigme
-            PlayerData p = handlerPlayerDataTable.getPlayerData(id);
-            log("Good response from "+p.namePlayer+" : "+proposal);
-         //   actionPopup();
+            handlerPlayerDataTable.updateDataPlayer(var);
         });
+    }
+
+    @Override
+    public void receiveFromServeurAskForALetter(String var) {
+        Platform.runLater(() -> {
+            //todo popup coco
+            setAndExecuteState(new StateAskALetterWheel(this));
+        });
+    }
+
+    @Override
+    public void receiveFromServeurBadAskForALetter(String id, String var) {
+        String idP = id;
+        Platform.runLater(() -> {
+            PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
+            log(var+" : BAD LETTER "+p.namePlayer);
+            setAndExecuteState(new StateRound(this, idP)); //todo rename
+        });
+    }
+
+    @Override
+    public void receiveFromServeurGoodAskForALetter(String id, String var) {
+        String idP = id;
+        Platform.runLater(() -> {
+            PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
+            log(var+" GOOD LETTER "+p.namePlayer);
+            manager.displayLetter(var.charAt(0));
+            setAndExecuteState(new StateRound(this,idP)); //todo rename
+        });
+    }
+
+    @Override
+    public void receiveFromServeurCaseOfWheel(CaseInfo var) {
+        Platform.runLater(() -> {
+            labelCase.setText(var.value+" "+var.type);
+        });
+    }
+
+    @Override
+    public void receiveFromServeurEnigmaConsAllBuy(String var) {
+        Platform.runLater(() -> {
+            handlerEnigme.notifyHaveNotConson();
+        });
+    }
+
+    @Override
+    public void receiveFromServeurActionFinal(String idPlayer, Enigme e){
+        ControllerGameUI controller = this;
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                Platform.runLater(()->{
+                    handlerEnigme.setCurrentEnigme(e); // set enigma of final round
+                    manager.resetPanneau(handlerEnigme.getCurrentEnigmeLabel());
+                    loadPreSetLetterOfFinalEnigma();
+                    log("SET NEW ENIGME FINAL");
+                    setAndExecuteState(new StateFinalRound(controller,idPlayer,e)); //execute final round
+                });
+            }
+        };
+        executor.submit(r);
+    }
+
+    private void loadPreSetLetterOfFinalEnigma() {
+        char[] value = new char[]{'R','S','T','L','N','E'};
+        for(char c : value){
+            manager.displayLetter(c);
+        }
+    }
+
+    @Override
+    public void receiveFromServeurAskForAFinalLetter(FinalLetters var) {
+        Platform.runLater(() -> {
+            if(stateUI instanceof StateFinalRound){
+                ((StateFinalRound)stateUI).askForAFinalLetter(var);
+            }
+        });
+    }
+
+    @Override
+    public void receiveFromServeurNotifyGoodProposalLetterFinal(ProposalLetter var) {
+        String idP = var.id;
+        Platform.runLater(() -> {
+            PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
+            log(var+" GOOD LETTER "+p.namePlayer);
+            manager.displayLetter(var.letter);
+        });
+    }
+
+    @Override
+    public void receiveFromServeurAskForAFinalProposition(Proposal var) {
+        Platform.runLater(() -> {
+            if(stateUI instanceof StateFinalRound){ //HERE HERE
+                ((StateFinalRound)stateUI).switchToPropositionFinal(var);
+            }
+        });
+    }
+
+    @Override
+    public void receiveFromServeurFinalResultMoney(Integer var) {
+        Platform.runLater(() -> {
+            setAndExecuteState(new StateEndGame(this)); //execute final round
+            labelCase.setText(""+var);
+        });
+    }
+
+    @Override
+    public synchronized void notifyDisconnect() {
+        Platform.runLater(() -> {
+            if(!alreadyStop){
+                stop();
+                main.backToMainLobbies();
+            }
+        });
+    }
+
+    public synchronized void stop() {
+
+        if(!alreadyStop) {
+
+            alreadyStop = true;
+
+            manager.stopExecutorAnimationRect();
+            dataLoad.client.stop();
+          //  dataLoad.clientThread.interrupt();
+            try {
+              //  dataLoad.clientThread.join();
+                shutdownExecutors();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void shutdownExecutors() throws InterruptedException {
+        if(executor != null && !executor.isShutdown()) {
+            executor.shutdownNow();
+            executor.awaitTermination(10,TimeUnit.MINUTES);
+        }
+        if(executorPopup != null && !executorPopup.isShutdown()) {
+            executorPopup.shutdownNow();
+            executorPopup.awaitTermination(10,TimeUnit.MINUTES);
+        }
     }
 
     public void actionPopup(){
@@ -372,177 +611,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     }
 
-
-    @Override
-    public synchronized void receiveFromServeurNotifyCurrentPlayerRound(String var) {
-        Platform.runLater(() -> {
-            handlerRound.setCurrentPlayerId(var);
-            PlayerData p = handlerPlayerDataTable.getPlayerData(var);
-            log("Current player is "+p.namePlayer);
-            setAndExecuteState(new StateRound(this,var)); //todo rename
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurChoiceStep(ChoiceStep var) {
-        Platform.runLater(() -> {
-            log("You need to choice between buy vowel, turn wheel or proposal enigma");
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurEnigmaOfRound(Enigme var) {
-        Platform.runLater(() -> {
-            handlerEnigme.setCurrentEnigme(var);
-            preSetEnigm();
-            log("SET NEW ENIGME");
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurPlayerMoneyInfo(DataMoneyInfo var) {
-        Platform.runLater(() -> {
-            handlerPlayerDataTable.updateDataPlayer(var);
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurAskForALetter(String var) {
-        Platform.runLater(() -> {
-            //todo popup coco
-            setAndExecuteState(new StateAskALetterWheel(this));
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurBadAskForALetter(String id, String var) {
-        String idP = id;
-        Platform.runLater(() -> {
-            PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
-            log(var+" : BAD LETTER "+p.namePlayer);
-            setAndExecuteState(new StateRound(this, idP)); //todo rename
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurGoodAskForALetter(String id, String var) {
-        String idP = id;
-        Platform.runLater(() -> {
-            PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
-            log(var+" GOOD LETTER "+p.namePlayer);
-            manager.displayLetter(var.charAt(0));
-            setAndExecuteState(new StateRound(this,idP)); //todo rename
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurCaseOfWheel(CaseInfo var) {
-        Platform.runLater(() -> {
-            labelCase.setText(var.value+" "+var.type);
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurEnigmaConsAllBuy(String var) {
-        Platform.runLater(() -> {
-            handlerEnigme.notifyHaveNotConson();
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurActionFinal(String idPlayer, Enigme e){
-        Platform.runLater(() -> {
-            handlerEnigme.setCurrentEnigme(e); // set enigma of final round
-            preSetEnigm();
-            loadPreSetLetterOfFinalEnigma();
-            log("SET NEW ENIGME FINAL");
-            setAndExecuteState(new StateFinalRound(this,idPlayer,e)); //execute final round
-        });
-    }
-
-    private void loadPreSetLetterOfFinalEnigma() {
-        char[] value = new char[]{'R','S','T','L','N','E'};
-        for(char c : value){
-            manager.displayLetter(c);
-        }
-    }
-
-    @Override
-    public synchronized void receiveFromServeurAskForAFinalLetter(FinalLetters var) {
-        Platform.runLater(() -> {
-            if(stateUI instanceof StateFinalRound){
-                ((StateFinalRound)stateUI).askForAFinalLetter(var);
-            }
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurNotifyGoodProposalLetterFinal(ProposalLetter var) {
-        String idP = var.id;
-        Platform.runLater(() -> {
-            PlayerData p = handlerPlayerDataTable.getPlayerData(idP);
-            log(var+" GOOD LETTER "+p.namePlayer);
-            manager.displayLetter(var.letter);
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurAskForAFinalProposition(Proposal var) {
-        Platform.runLater(() -> {
-            if(stateUI instanceof StateFinalRound){ //HERE HERE
-                ((StateFinalRound)stateUI).switchToPropositionFinal(var);
-            }
-        });
-    }
-
-    @Override
-    public synchronized void receiveFromServeurFinalResultMoney(Integer var) {
-        Platform.runLater(() -> {
-            setAndExecuteState(new StateEndGame(this)); //execute final round
-            labelCase.setText(""+var);
-        });
-    }
-
-    @Override
-    public synchronized void notifyDisconnect() {
-        Platform.runLater(() -> {
-            if(!alreadyStop){
-                stop();
-                main.backToMainLobbies();
-            }
-        });
-    }
-
-
-    public synchronized void stop() {
-
-        if(!alreadyStop) {
-
-            alreadyStop = true;
-
-            manager.stopExecutorAnimationRect();
-            dataLoad.client.stop();
-          //  dataLoad.clientThread.interrupt();
-            try {
-              //  dataLoad.clientThread.join();
-                shutdownExecutors();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    private void shutdownExecutors() throws InterruptedException {
-        if(executor != null && !executor.isShutdown()) {
-            executor.shutdownNow();
-            executor.awaitTermination(10,TimeUnit.MINUTES);
-        }
-        if(executorPopup != null && !executorPopup.isShutdown()) {
-            executorPopup.shutdownNow();
-            executorPopup.awaitTermination(10,TimeUnit.MINUTES);
-        }
-    }
 
 
     private void loadWebWheel() {

@@ -18,6 +18,9 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
         public override void onExecute()
         {
+
+            Context.stateLoop = EnumStateGameLoop.FINAL;
+
             e = Context.gameEnigmaPool.Values.ToList<Enigme>()[0];
             Context.CurrentEnigma = e;
             Context.gameEnigmaPool.Remove(e.category);

@@ -21,9 +21,7 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 
 public class ControllerSceneRectancle implements Initializable {
@@ -46,6 +44,8 @@ public class ControllerSceneRectancle implements Initializable {
     private HandlerEnigma handlerEnigma;
 
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(15);
+    public Future tempoDisplayLetters;
+    public Future tempoAnimColor;
 
     public ControllerSceneRectancle(HandlerEnigma handlerEnigma){
         initScene();
@@ -76,82 +76,74 @@ public class ControllerSceneRectancle implements Initializable {
     public void displayLetter(char l){
         List<Integer> posRecurrenceLetter = new ArrayList<>();
         nbrOccurence = 0;
-        List<Rect> rectUpdate = new ArrayList<>();
+    //    List<Rect> rectUpdate = new ArrayList<>();
+        List<Rect> listDrawLetter = new ArrayList<>();
 
         this.mapRect.forEach((idR, r) ->{
             if(r.getLetter() == l) {
-                nbrOccurence++;
                 this.mapRect.get(idR).setColor(Color.BLUE);
                 this.mapRect.get(idR).setStat(StateOfRect.LETTRE_BLOCKED);
-                drawLetter(this.mapRect.get(idR),listCharEnigm);
-              //  this.mapRect.get(idR).drawLetter(listCharEnigm);
+                listDrawLetter.add(this.mapRect.get(idR));
             }
         });
-        if(nbrOccurence == 0){
+
+        drawLetter(listDrawLetter);
+  //      drawLetters(listDrawLetter);
+       /* if(drawLetter.isEmpty()){
             this.mapRect.forEach((idR, r) ->{
                 if(r.getStat() == StateOfRect.NULL || r.getStat() == StateOfRect.SPACE) {
                     this.mapRect.get(idR).setColor(Color.RED);
                     rectUpdate.add(this.mapRect.get(idR));
-                 //   resetColorRect(this.mapRect.get(idR));
-               //     .resetColor();
                 }
             });
-        }
-        triggerThreadColorRect(rectUpdate);
-    }
+        }*/
 
-    /**This function set animation
-     * depending on the résult of compare
-     * clientProp and enigm
-     *
-     * @param clientProp s the proposition of player
-     */
-    public void compareProp(String clientProp) {
-        List<Rect> rectUpdate = new ArrayList<>();
-            this.mapRect.forEach((id, r) ->{
-                if(r.getStat() == StateOfRect.NULL || r.getStat() == StateOfRect.SPACE) {
-                    if (handlerEnigma.getCurrentEnigmeLabel().equals(clientProp)) {
-                        r.setColor(Color.GREEN);
-                      //  r.resetColor();
-                    } else {
-                        r.setColor(Color.RED);
-                      //  r.resetColor();
-                    }
-                    rectUpdate.add(r);
-                }
-            });
-            triggerThreadColorRect(rectUpdate);
-    }
-
-    private void triggerThreadColorRect(List<Rect> rlist){
-        Runnable task1 = new Runnable() {
-            @Override
-            public void run() {
-                for(Rect r : rlist) r.setColor(Color.AQUAMARINE);
-            }
-        };
-        executor.schedule(task1,  1500, TimeUnit.MILLISECONDS);
+    //    triggerThreadColorRect(rectUpdate);
     }
 
     /**
      * Appel la méthode qui affiche les lettres
      */
-    private void drawLetter(Rect r, Map<Integer, Label> listCharEnigm){
+    private void drawLetter(List<Rect> listRect){
+
+        List<Rect> listRectBlocked = new ArrayList<>();
+        for(Rect rect : listRect){
+            if(rect.state == StateOfRect.LETTRE_BLOCKED){
+                listRectBlocked.add(rect);
+            }
+            else if(rect.state == StateOfRect.LETTRE_SHOW){
+                displayLetter(rect,listCharEnigm);
+            }
+        }
+
         Runnable task1 = new Runnable() {
             @Override
             public void run() {
-                displayLetter(r,listCharEnigm);
+                for(Rect rectBlocked : listRectBlocked) displayLetter(rectBlocked,listCharEnigm);
             }
         };
-        if(r.state == StateOfRect.LETTRE_BLOCKED){
-         /*   Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.millis(1500),
-                    ae -> displayLetter(r,listCharEnigm)));
-            timeline.play();*/
-            executor.schedule(task1,  1500, TimeUnit.MILLISECONDS);
+
+        tempoDisplayLetters = executor.schedule(task1,  1500, TimeUnit.MILLISECONDS);
+
+    }
+
+    public void waitDisplayLetter(){
+        try {
+            tempoDisplayLetters.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-        else if(r.state == StateOfRect.LETTRE_SHOW){
-            displayLetter(r,listCharEnigm);
+    }
+
+    public void waitAnimColor(){
+        try {
+            tempoAnimColor.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
     }
 
@@ -170,23 +162,64 @@ public class ControllerSceneRectancle implements Initializable {
         }
     }
 
+    /**This function set animation
+     * depending on the résult of compare
+     * clientProp and enigm
+     *
+     * @param clientProp s the proposition of player
+     */
+    public void compareProp(String clientProp) {
+
+        List<Rect> rectUpdate = new ArrayList<>();
+            this.mapRect.forEach((id, r) ->{
+                if(r.getStat() == StateOfRect.NULL || r.getStat() == StateOfRect.SPACE) {
+                    if (handlerEnigma.getCurrentEnigmeLabel().equals(clientProp)) {
+                        r.setColor(Color.GREEN);
+
+                    } else {
+                        r.setColor(Color.RED);
+                    }
+                    rectUpdate.add(r);
+                }
+            });
+            triggerThreadColorRect(rectUpdate);
+    }
+
+    private void triggerThreadColorRect(List<Rect> rlist){
+
+        Runnable task1 = new Runnable() {
+            @Override
+            public void run() {
+                for(Rect r : rlist) {
+                        r.setColor(Color.AQUAMARINE);
+                }
+            }
+        };
+        tempoAnimColor = executor.schedule(task1,  1500, TimeUnit.MILLISECONDS);
+    }
+
     /**This function show all
      * letters of the enigm
      *
      */
     public void displayEnigm(){
+
+        List<Rect> rectToDisplay = new ArrayList<>();
+
         this.mapRect.forEach((id, r) ->{
             r.setStat(StateOfRect.LETTRE_SHOW);
-            drawLetter(r,listCharEnigm);
-          //  r.drawLetter(listCharEnigm);
+            rectToDisplay.add(r);
         });
+
+        drawLetter(rectToDisplay);
+
     }
 
     /**This function set new enigm
      *
      * @param enigm
      */
-    public void setEnigm(String enigm){
+    private void setEnigm(String enigm){
 
         String actualLigneW = "";
         int sizeLine = 0;
@@ -261,19 +294,12 @@ public class ControllerSceneRectancle implements Initializable {
         }
     }
 
-    public void resetPanneau(){
+    public void resetPanneau(String str){
         pane.getChildren().clear();
         initScene();
         setPanneau(0, 51);
-/*
-        this.mapRect.forEach((idR, r)->{
-            r.setColor(Color.AQUAMARINE);
-            listCharEnigm.clear();
-            r.setLetter('~', listCharEnigm);
-            //listCharEnigm.get(idR).
-        });
-
-        initScene();*/
+        setEnigm(str);
+        setRectWithLetter();
     }
 
     /**This function set up the enigm board case
@@ -311,7 +337,7 @@ public class ControllerSceneRectancle implements Initializable {
      * a letter of enigm is put;
      *
      */
-    public void setRectWithLetter(){
+    private void setRectWithLetter(){
         this.mapRect.forEach((id, rect) ->{
             if(this.mapRect.get(id).getLetter() != ' ' && this.mapRect.get(id).getLetter() != '~'){
                 this.mapRect.get(id).setColor(Color.WHITE);

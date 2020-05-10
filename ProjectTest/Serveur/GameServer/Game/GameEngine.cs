@@ -51,6 +51,7 @@ namespace Serveur.GameServer.Game
 
         public Boolean endTurn = false;
 
+        public EnumStateGameLoop stateLoop;
 
         public GameEngine(ISenderAtClient sender, ref ManualResetEvent allDone)
         {
@@ -122,6 +123,12 @@ namespace Serveur.GameServer.Game
                 listPlayers.Add(id, new Joueur(id, name));
                 callbackJoin(id, GetListOfPlayerLobbies());
             }
+        }
+
+        public void NotifyReceivePlayerProposal<T>(T obj, string id)
+        {
+            if (stateLoop == EnumStateGameLoop.QUICKROUND) CM.NotifyLastCommandIsSetPlayerActif(obj, id);
+            else CM.NotifyLastCommandReceivePlayer(obj, id);
         }
 
         public void RemovePlayer(string id)

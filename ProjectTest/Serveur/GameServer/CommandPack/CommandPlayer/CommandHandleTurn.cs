@@ -21,6 +21,10 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
         
         public override void onExecute()
         {
+
+            Context.stateLoop = EnumStateGameLoop.TURN;
+
+
             Context.endTurn = false;
             while (!Context.endTurn)
             {

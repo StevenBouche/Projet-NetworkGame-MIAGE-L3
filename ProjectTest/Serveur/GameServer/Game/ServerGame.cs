@@ -112,7 +112,7 @@ namespace Serveur.GameServer.Game
 
         private void OnProposalResponse(String obj, String id)
         {
-            gameManager.NotifyReceivePlayer(obj, id);
+            gameManager.NotifyReceivePlayerProposal(obj, id);
         }
 
         public void Run()

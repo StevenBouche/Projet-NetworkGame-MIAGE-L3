@@ -123,12 +123,28 @@ namespace Serveur.GameServer.CommandPack
 
         public void NotifyLastCommandReceivePlayer<T>(T obj, string id)
         {
-            stack.TryPop(out Command<GameEngine> cmd);
+            stack.TryPeek(out Command<GameEngine> cmd);
+            
             if(cmd != null)
             {
                 CommandReceiverClient<T> cmdSafeCast = cmd as CommandReceiverClient<T>;
                 cmdSafeCast.NotifyReceiveClient(obj, id);
-                stack.Push(cmd);
+            }
+            else
+            {
+                Console.WriteLine("reponse but stack have not cmd actually");
+            }
+
+        }
+
+        public void NotifyLastCommandIsSetPlayerActif<T>(T obj, String id)
+        {
+            stack.TryPeek(out Command<GameEngine> cmd);
+            if (cmd != null)
+            {
+                CommandSetPlayerActif cmdSafeCast = cmd as CommandSetPlayerActif;
+                String str = obj as String;
+                if(cmdSafeCast != null && str !=null) cmdSafeCast.NotifyReceiveClient(str, id);
             }
             else
             {
