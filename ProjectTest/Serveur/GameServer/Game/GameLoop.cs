@@ -11,7 +11,7 @@ namespace Serveur.GameServer.Game
         private readonly CommandManager commandManager;
 
         private Boolean isEnignaDiscovered = false;
-        public int roundsNb = 0;
+        public int roundsNb = 3;
         private Boolean isFinal = false;
 
         public GameLoop(CommandManager commandManager)
@@ -44,6 +44,7 @@ namespace Serveur.GameServer.Game
             {
                 //TODO REMOVE
                 roundsNb++;
+                commandManager.TriggerChangeWheel();
                 return;
             }
 

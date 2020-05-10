@@ -81,7 +81,14 @@ namespace Serveur.GameServer.GameModel
             if (C.type.Equals(TypeCase.MYSTERE))
             {
                 if (r.Next(2) == 1)
+                {
                     C.valeur = (int)Cash.CASH_500;
+                    C.type = TypeCase.CASH;
+                }
+                else
+                {
+                    C.type = TypeCase.PASSE;
+                }
             }
         }
 
