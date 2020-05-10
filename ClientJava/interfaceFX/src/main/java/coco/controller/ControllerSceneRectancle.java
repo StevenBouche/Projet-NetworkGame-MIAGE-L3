@@ -172,7 +172,6 @@ public class ControllerSceneRectancle implements Initializable {
 
         List<Rect> rectUpdate = new ArrayList<>();
             this.mapRect.forEach((id, r) ->{
-                System.out.println(r.getLetter() + " : char id -> " + id + " / state : " + r.getStat());
                 if(r.getStat() == StateOfRect.NULL || r.getStat() == StateOfRect.SPACE) {
                     if (handlerEnigma.getCurrentEnigmeLabel().equals(clientProp)) {
                         r.setColor(Color.GREEN);
@@ -235,6 +234,7 @@ public class ControllerSceneRectancle implements Initializable {
                 sizeLine = 0;
                 nbrLigne++;
                 actualLigneW = word;
+                sizeLine = word.length();
             }
             else{
                 actualLigneW += " " + word;
@@ -259,14 +259,13 @@ public class ControllerSceneRectancle implements Initializable {
     public void setLigne(String ligne, int numLigne, int nbrLigne){
         /** If == 2 we draw in the 2 center lines */
         int centrageLigne = 0;
-        System.out.println(ligne.length());
         if(ligne.length()-1 > 10) centrageLigne = 1;
         else if(ligne.length()-1 <= 10 && ligne.length()-1 > 8) centrageLigne = 1;
         else if(ligne.length()-1 <= 8 && ligne.length()-1 > 6) centrageLigne = 2;
         else if(ligne.length()-1 <= 6 && ligne.length()-1 > 4) centrageLigne = 3;
         else if(ligne.length()-1 <= 4 && ligne.length()-1 > 2) centrageLigne = 4;
         else if(ligne.length()-1 <= 2) centrageLigne = 5;
-        if(nbrLigne <= 2) {
+        if(nbrLigne < 2) {
             if(numLigne == 0) {
                 for (int i = 0; i < ligne.length(); i++) {
                     this.mapRect.get(12 + i + centrageLigne).setLetter(ligne.charAt(i), listCharEnigm);

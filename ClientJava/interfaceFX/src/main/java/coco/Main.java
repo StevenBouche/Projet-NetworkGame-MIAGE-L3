@@ -35,7 +35,7 @@ public class Main extends Application {
         //test
 
         Enigme var = new Enigme();
-        var.label = "ENIGME RAPIDO !";
+        var.label = "OFFRIR DES CHOCOLATS A NOEL";
         var.category = Category.CELEBRITES;
         var.order = new ArrayList<>();
         var.order.add('E');
