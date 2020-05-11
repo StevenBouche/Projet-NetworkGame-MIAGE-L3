@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="69b8fb82-f892-46b3-a484-b376292a7486" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/interfaceFX.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/coco/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/coco/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/coco/controller/ControllerGameUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/coco/controller/ControllerGameUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/coco/controller/ControllerLetterFinal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/coco/controller/ControllerLetterFinal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/coco/controller/ControllerSceneRectancle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/coco/controller/ControllerSceneRectancle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/coco/controller/handle/HandlerRound.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/coco/controller/handle/HandlerRound.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/coco/state/StateFinalRound.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/coco/state/StateFinalRound.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/gameUI.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/gameUI.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../network/src/main/java/network/client/ClientTCP.java" beforeDir="false" afterPath="$PROJECT_DIR$/../network/src/main/java/network/client/ClientTCP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../network/src/main/java/network/client/INotifyPlayersGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/../network/src/main/java/network/client/INotifyPlayersGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../network/src/main/java/network/tcp/ProtocolEventsTCP.java" beforeDir="false" afterPath="$PROJECT_DIR$/../network/src/main/java/network/tcp/ProtocolEventsTCP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectTest/Serveur/GameServer/CommandPack/CommandPlayer/CommandHandleTurn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectTest/Serveur/GameServer/CommandPack/CommandPlayer/CommandHandleTurn.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectTest/Serveur/GameServer/CommandPack/CommandPlayer/CommandSetCurrentEnigma.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectTest/Serveur/GameServer/CommandPack/CommandPlayer/CommandSetCurrentEnigma.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectTest/share/Network/TCP/NetworkManagerTCP.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectTest/share/Network/TCP/NetworkManagerTCP.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ProjectTest/share/Network/TCP/ProtocolEventsTCP.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../ProjectTest/share/Network/TCP/ProtocolEventsTCP.cs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="A:\-WheelOfFortune\ClientJava\interfaceFX\.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1bjtF2DxJ3RJ0FXoOhZXvjQIa5g" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="69b8fb82-f892-46b3-a484-b376292a7486" name="Default Changelist" comment="" />
+      <created>1589157222356</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589157222356</updated>
+      <workItem from="1589157225946" duration="5000" />
+      <workItem from="1589157242253" duration="3000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+</project>

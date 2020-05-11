@@ -21,10 +21,12 @@ public class NetworkManagerUDP {
     public EventNetworkManager evtManager;
     ObjectMapper mapper = new ObjectMapper();
     ListenerState listener;
+    String defaultServer;
 
-    public NetworkManagerUDP(ListenerState listener) throws SocketException, UnknownHostException {
+    public NetworkManagerUDP(String ip, ListenerState listener) throws SocketException, UnknownHostException {
         this.listener = listener;
-        addr = InetAddress.getByName("127.0.0.1");
+        this.defaultServer = ip;
+        addr = InetAddress.getByName(defaultServer);
         portClient = new Random().nextInt(11100 - 11001 + 1) + 11001;
         client = new DatagramSocket();
         evtManager = new EventNetworkManager();
@@ -88,4 +90,7 @@ public class NetworkManagerUDP {
         System.err.println(str);
     }
 
+    public String ipAddrDefault() {
+        return defaultServer;
+    }
 }

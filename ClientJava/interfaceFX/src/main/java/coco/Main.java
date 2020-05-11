@@ -56,7 +56,7 @@ public class Main extends Application {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
+          /*      try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -66,10 +66,10 @@ public class Main extends Application {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
 
-                managerGameUI.receiveFromServeurEnigmaOfRound(var);
-/*
+          //      managerGameUI.receiveFromServeurEnigmaOfRound(var);
+
                 managerGameUI.receiveFromServeurActionFinal("1", var);
                 try {
                     Thread.sleep(2000);
@@ -86,9 +86,9 @@ public class Main extends Application {
                     e.printStackTrace();
                 }
 
-                managerGameUI.notifyDisconnect();
+             //   managerGameUI.notifyDisconnect();
 
- */
+
            /*     managerGameUI.receiveFromServeurNotifyCurrentPlayerRound("1");
                 try {
                     Thread.sleep(5000);

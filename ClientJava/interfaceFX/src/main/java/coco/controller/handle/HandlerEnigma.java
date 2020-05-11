@@ -1,6 +1,7 @@
 package coco.controller.handle;
 
 import coco.controller.ControllerSceneRectancle;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -54,7 +55,9 @@ public class HandlerEnigma {
     private void updateThemeEnigmaUI(){
         if(currentEnigme.category != null) {
             displayTheme.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-            displayTheme.setText(currentEnigme.category.name());
+            Platform.runLater(()->{
+                displayTheme.setText(currentEnigme.category.name());
+            });
         }
     }
 

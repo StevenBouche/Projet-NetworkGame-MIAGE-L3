@@ -66,6 +66,27 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
           
         }
 
+        private void SendClientBadResponse(Proposal p)
+        {
+            PacketMessage<Proposal> msg = new PacketMessage<Proposal>()
+            {
+                evt = ProtocolEventsTCP<Proposal>.BADPROPOSALRESPONSE.eventName,
+                data = p
+            };
+            Context.SendAllClient(msg);
+            idClient = null;
+        }
+
+        private void SendClientGoodResponse(Proposal p)
+        {
+            PacketMessage<Proposal> msg = new PacketMessage<Proposal>()
+            {
+                evt = ProtocolEventsTCP<Proposal>.GOODPROPOSALRESPONSE.eventName,
+                data = p
+            };
+            Context.SendAllClient(msg);
+        }
+
         private void SendNotifyNoMoreConsonnant()
         {
             String str = "Il n'y a plus de consonnes";
@@ -93,8 +114,13 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
             Enigme e = Context.CurrentEnigma;
             if (e.label.Equals(Data.proposal))
             {
+
+                SendClientGoodResponse(new Proposal(idClient, Data.proposal));
                 UpdateMontantEndRound();
                 Context.NotifyPlayerHaveWinRound(idClient); // notify player win round
+            } else
+            {
+                SendClientBadResponse(new Proposal(idClient, Data.proposal));
             }
             EndTurn(); // end turn meme si win round pour break le recursif
         }

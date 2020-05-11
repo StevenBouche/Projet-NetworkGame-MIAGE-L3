@@ -8,5 +8,7 @@ namespace Serveur.MainProgram
     public interface IHandlerGame
     {
         DataServerGame GetDataServerGame();
+        void createNewGame();
+        void removeGame(string obj);
     }
 }

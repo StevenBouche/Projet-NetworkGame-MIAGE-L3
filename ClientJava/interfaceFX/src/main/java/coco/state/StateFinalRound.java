@@ -58,6 +58,7 @@ public class StateFinalRound extends StateGameUI {
                 me.consume();
             }
         });
+
     }
 
     private void loadRootPanePopUp(JFXPopup popup){
@@ -78,6 +79,7 @@ public class StateFinalRound extends StateGameUI {
     }
 
     public void askForAFinalLetter(FinalLetters var){
+        System.out.println("Ask for a number popup");
         popUp();
     }
 

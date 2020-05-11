@@ -10,27 +10,64 @@ namespace Serveur.MainProgram
 {
     class Launcher : IHandlerGame
     {
-        Dictionary<String, GameServer.Game.ServerGame> gamesList;
+        Dictionary<String, ServerGame> gamesList;
         Dictionary<String, Thread> gamesListThread;
 
         Lobby gameLobby;
         Thread lobby;
 
+        int port = 11000;
+        String ipAddr;
+
         public Launcher()
         {
-            gamesList = new Dictionary<string, GameServer.Game.ServerGame>();
+            ipAddr = "51.210.12.245";
+            gamesList = new Dictionary<string, ServerGame>();
             gamesListThread = new Dictionary<string, Thread>();
             gameLobby = new Lobby(this);
         }
 
+        public void createNewGame()
+        {
+            lock (this)
+            {
+                Console.WriteLine("Create and start game on port " + port);
+                String id = ShortId.Generate(true, true, 12);
+                ServerGame sg = new ServerGame(id, port,ipAddr);
+                Thread t = new Thread(new ThreadStart(sg.Run));
+                gamesList.Add(id, sg);
+                gamesListThread.Add(id, t);
+                t.Start();
+                port++;
+            }
+        }
+
+        public void removeGame(string obj)
+        {
+            lock (this)
+            {
+                gamesListThread.TryGetValue(obj, out Thread t);
+                if (t != null)
+                {
+                    if (t.IsAlive) t.Interrupt(); // to cancel thread
+                    t.Join();
+                    gamesListThread.Remove(obj);
+                    gamesList.Remove(obj);
+                }
+            }
+        }
+
         public DataServerGame GetDataServerGame()
         {
-            DataServerGame data = new DataServerGame();
-            foreach (KeyValuePair<String, ServerGame> pair in gamesList)
+            lock (this)
             {
-                data.listServer.Add(pair.Value.GetInfo());
+                DataServerGame data = new DataServerGame();
+                foreach (KeyValuePair<String, ServerGame> pair in gamesList)
+                {
+                    data.listServer.Add(pair.Value.GetInfo());
+                }
+                return data;
             }
-            return data;
         }
 
         public void Run()
@@ -48,17 +85,14 @@ namespace Serveur.MainProgram
 
         private void StartGames()
         {
-            int port = 11000;
-            for (int i = 0; i < 1; i++)
-            {
-                Console.WriteLine("Create and start game on port "+port+i);
-                String id = ShortId.Generate(true, true, 12);
-                ServerGame sg = new ServerGame(id,port + i);
-                Thread t = new Thread(new ThreadStart(sg.Run));
-                gamesList.Add(id, sg);
-                gamesListThread.Add(id, t);
-                t.Start();
-            }
+            Console.WriteLine("Create and start game on port "+port);
+            String id = ShortId.Generate(true, true, 12);
+            ServerGame sg = new ServerGame(id,port, ipAddr);
+            Thread t = new Thread(new ThreadStart(sg.Run));
+            gamesList.Add(id, sg);
+            gamesListThread.Add(id, t);
+            t.Start();
+            port++;
         }
 
         private void StartLobby()

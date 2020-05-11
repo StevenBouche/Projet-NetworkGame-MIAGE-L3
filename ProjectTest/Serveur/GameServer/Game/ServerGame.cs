@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 
@@ -31,8 +32,9 @@ namespace Serveur.GameServer.Game
         HelperLobby helperLobby;
 
         Boolean firstExec = true;
+        String ip;
 
-        public ServerGame(String id, int port) 
+        public ServerGame(String id, int port, String ip) 
         {
             this.id = id;
             network = new ServerTCP(port,this);
@@ -40,13 +42,15 @@ namespace Serveur.GameServer.Game
             helperLobby = new HelperLobby(ref gameManager,ref network,ref allDone);
             InitEventAndStartServerTCP();
             StartThreadNetwork();
+            this.ip = ip;
         }
 
         public ServerGameInfo GetInfo()
         {
+
             ServerGameInfo srv = new ServerGameInfo()
             {
-                addr = "127.0.0.1", //todo change
+                addr = ip, //todo change
                 port = this.network.Port,
                 name = this.id,
                 nbPlayerMax = 3,
@@ -118,22 +122,40 @@ namespace Serveur.GameServer.Game
         public void Run()
         {
 
+            try
+            {
+                Execute();
+            }
+            catch (ThreadInterruptedException)
+            {
+                interrupt = true;
+                gameManager.gameState = GameState.STOP;
+                allDone.Set();
+
+            }
+            
+        }
+
+        private void Execute()
+        {
             if (interrupt) return;
 
             resetServer();
 
             gameManager.gameState = GameState.WAITING_PLAYER;
 
-            while(gameManager.gameState != GameState.STARTED)
+            while (gameManager.gameState != GameState.STARTED)
             {
                 allDone.Reset();
                 allDone.WaitOne();
+                if (gameManager.gameState == GameState.STOP) return;
             }
 
+            
             notifyGameIsReady();
 
             //execute game in other thread to cancel game if we want
-            executeGame = new Thread(new ThreadStart(gameManager.Play)); 
+            executeGame = new Thread(new ThreadStart(gameManager.Play));
             executeGame.Start(); //start play
 
             // reveiller par le threaD game quand fini ou stop
@@ -168,8 +190,7 @@ namespace Serveur.GameServer.Game
             //reset gameManager ?
 
             //STOP SERVER or RESET SERVER or WANT REPLAY GAME WITH SAME PLAYER ?
-            Run(); // RUN ALORS ?
-            
+            Execute(); // RUN ALORS ?
         }
 
         private void resetServer()

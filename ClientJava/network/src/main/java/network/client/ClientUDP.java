@@ -1,5 +1,6 @@
 package network.client;
 
+import network.message.Packet;
 import network.message.PacketMessage;
 import network.share.DataListener;
 import network.share.ListenerState;
@@ -14,8 +15,8 @@ public class ClientUDP implements Runnable {
 
     NetworkManagerUDP manager;
 
-    public ClientUDP(ListenerState listener) throws SocketException, UnknownHostException {
-        manager = new NetworkManagerUDP(listener);
+    public ClientUDP(String defaultS, ListenerState listener) throws SocketException, UnknownHostException {
+        manager = new NetworkManagerUDP(defaultS,listener);
     }
 
     public <T> void OnEvent(Class<T> co, ProtocolEventsUDP<T> proto, DataListener<T> listener){
@@ -33,5 +34,31 @@ public class ClientUDP implements Runnable {
 
     public void stop() {
         manager.stopListening();
+    }
+
+    public String getIpAddressDefault() {
+        return manager.ipAddrDefault();
+    }
+
+    public void createNewGame() {
+        PacketMessage<String> msg = new PacketMessage<>();
+        msg.evt = ProtocolEventsUDP.NEWGAME.eventName;
+        msg.data = "create";
+        try {
+            send(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeGame(String name) {
+        PacketMessage<String> msg = new PacketMessage<>();
+        msg.evt = ProtocolEventsUDP.REMOVEGAME.eventName;
+        msg.data = name;
+        try {
+            send(msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

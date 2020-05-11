@@ -11,7 +11,7 @@ namespace Serveur.GameServer.Game
         private readonly CommandManager commandManager;
 
         private Boolean isEnignaDiscovered = false;
-        public int roundsNb = 3;
+        public int roundsNb = 0;
         private Boolean isFinal = false;
 
         public GameLoop(CommandManager commandManager)
@@ -61,7 +61,6 @@ namespace Serveur.GameServer.Game
 
         public void ExecuteFinalRound()
         {
-
             commandManager.TriggerSetFinalEnigma(); //Sends a FinalInfo with the winner and the final enigma
             commandManager.TriggerWheelTurnFinal(); //Sets the current case 
             commandManager.TriggerAskForFinalLetters(); //Sends askForFinalLetters and askForFinalProposition

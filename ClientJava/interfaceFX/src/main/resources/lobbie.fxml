@@ -17,6 +17,8 @@
       <Button fx:id="buttonRefresh" disable="true" layoutX="282.0" layoutY="12.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Refresh" />
       <TextField fx:id="name" layoutX="13.0" layoutY="12.0" />
       <Button fx:id="createGame" layoutX="15.0" layoutY="360.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Create game" />
-      <Button disable="true" layoutX="122.0" layoutY="360.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Remove Game" />
+      <Button fx:id="removeGame" disable="true" layoutX="122.0" layoutY="360.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Remove Game" />
+      <TextField fx:id="ipAddr" layoutX="271.0" layoutY="360.0" />
+      <Button fx:id="switchL" layoutX="430.0" layoutY="360.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="SwitchServer" />
    </children>
 </AnchorPane>

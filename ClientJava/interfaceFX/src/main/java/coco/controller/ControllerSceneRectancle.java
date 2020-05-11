@@ -46,14 +46,16 @@ public class ControllerSceneRectancle implements Initializable {
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(15);
     public Future tempoDisplayLetters;
     public Future tempoAnimColor;
+    ControllerGameUI gui;
 
-    public ControllerSceneRectancle(HandlerEnigma handlerEnigma){
+    public ControllerSceneRectancle(HandlerEnigma handlerEnigma, ControllerGameUI gui){
         initScene();
         this.mapRect = new HashMap<>();
         mapEnigm = new HashMap<>();
         mapVisibilityEnigm = new HashMap<>();
         listCharEnigm = new HashMap<>();
         this.handlerEnigma = handlerEnigma;
+        this.gui = gui;
     }
 
     private void initScene() {
@@ -265,7 +267,7 @@ public class ControllerSceneRectancle implements Initializable {
         else if(ligne.length()-1 <= 6 && ligne.length()-1 > 4) centrageLigne = 3;
         else if(ligne.length()-1 <= 4 && ligne.length()-1 > 2) centrageLigne = 4;
         else if(ligne.length()-1 <= 2) centrageLigne = 5;
-        if(nbrLigne < 2) {
+        if(nbrLigne <= 2) {
             if(numLigne == 0) {
                 for (int i = 0; i < ligne.length(); i++) {
                     this.mapRect.get(12 + i + centrageLigne).setLetter(ligne.charAt(i), listCharEnigm);
@@ -303,11 +305,16 @@ public class ControllerSceneRectancle implements Initializable {
     }
 
     public void resetPanneau(String str){
-        pane.getChildren().clear();
-        initScene();
-        setPanneau(0, 51);
-        setEnigm(str);
-        setRectWithLetter();
+        Platform.runLater(()->{
+            pane.getChildren().clear();
+            initScene();
+            setPanneau(0, 51);
+            setEnigm(str);
+            setRectWithLetter();
+            gui.lock.lock();
+            gui.animLetter.signal();
+            gui.lock.unlock();
+        });
     }
 
     /**This function set up the enigm board case
@@ -354,6 +361,8 @@ public class ControllerSceneRectancle implements Initializable {
     }
 
     public void stopExecutorAnimationRect(){
+        if(tempoAnimColor!= null) tempoAnimColor.cancel(false);
+        if(tempoDisplayLetters!= null) tempoDisplayLetters.cancel(false);
         executor.shutdownNow();
         try {
             executor.awaitTermination(10,TimeUnit.SECONDS);

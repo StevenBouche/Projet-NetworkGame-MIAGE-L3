@@ -54,7 +54,7 @@ namespace Serveur.GameServer.CommandPack.CommandPlayer
 
             foreach (KeyValuePair<String, Joueur> entry in Context.listPlayers)
             {
-                if (entry.Value.cagnotte.Montant_Total > max)
+                if (entry.Value.cagnotte.Montant_Total >= max)
                 {
                     max = entry.Value.cagnotte.Montant_Total;
                     j = entry.Value;

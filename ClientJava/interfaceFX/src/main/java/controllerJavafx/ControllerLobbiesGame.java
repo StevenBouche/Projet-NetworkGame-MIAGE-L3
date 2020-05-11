@@ -176,7 +176,9 @@ public class ControllerLobbiesGame implements Initializable, INotifyPlayersLobby
 
     @Override
     public synchronized void notifyDisconnect() {
-        onCancelAction();
+        Platform.runLater(() -> {
+            onCancelAction();
+        });
     }
 
     @Override

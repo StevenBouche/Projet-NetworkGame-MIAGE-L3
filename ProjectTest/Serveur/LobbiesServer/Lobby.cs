@@ -21,6 +21,32 @@ namespace Serveur.LobbiesServer
             this.handlerGame = handlerGame;
             myLobby = new ServerUDP();
             myLobby.OnEvent(ProtocolEventsUDP<DataServerGame>.GETLISTSERVERGAME, OnDataServerGame);
+            myLobby.OnEvent(ProtocolEventsUDP<String>.NEWGAME, OnNewGame);
+            myLobby.OnEvent(ProtocolEventsUDP<String>.REMOVEGAME, OnRemoveGame);
+        }
+
+        private void OnRemoveGame(string obj, EndPoint endPoint)
+        {
+            handlerGame.removeGame(obj);
+            DataServerGame dataServ = handlerGame.GetDataServerGame();
+            PacketMessage<DataServerGame> packet = new PacketMessage<DataServerGame>()
+            {
+                evt = ProtocolEventsUDP<DataServerGame>.GETLISTSERVERGAME.eventName,
+                data = dataServ
+            };
+            myLobby.Send(packet, endPoint);
+        }
+
+        private void OnNewGame(string obj, EndPoint endPoint)
+        {
+            handlerGame.createNewGame();
+            DataServerGame dataServ = handlerGame.GetDataServerGame();
+            PacketMessage<DataServerGame> packet = new PacketMessage<DataServerGame>()
+            {
+                evt = ProtocolEventsUDP<DataServerGame>.GETLISTSERVERGAME.eventName,
+                data = dataServ
+            };
+            myLobby.Send(packet, endPoint);
         }
 
         public void Run()
@@ -31,22 +57,7 @@ namespace Serveur.LobbiesServer
 
         private void OnDataServerGame(DataServerGame dataServ, EndPoint ep)
         {
-            dataServ.listServer.Add(new ServerGameInfo()
-            {
-                addr = "127.0.0.1",
-                port = 10000,
-                name = "TEST",
-                nbPlayerMax = 3,
-                nbPlayerCurrent = 0
-            });
-            dataServ.listServer.Add(new ServerGameInfo()
-            {
-                addr = "127.0.0.1",
-                port = 10000,
-                name = "TEST2",
-                nbPlayerMax = 3,
-                nbPlayerCurrent = 3
-            });
+
             dataServ = handlerGame.GetDataServerGame();
             PacketMessage<DataServerGame> packet = new PacketMessage<DataServerGame>()
             {

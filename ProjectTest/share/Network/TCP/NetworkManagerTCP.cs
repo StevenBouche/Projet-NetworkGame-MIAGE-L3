@@ -116,6 +116,8 @@ namespace Share.Network.NetworkManager
 
         public void Send<T>(PacketMessage<T> data, String id)
         {
+
+            
             if (myClients.ContainsKey(id))
             {
                 StateObjectTCP state = myClients[id];
@@ -206,6 +208,7 @@ namespace Share.Network.NetworkManager
                 workSocket = handler
             };
             state.workSocket.NoDelay = true;
+
             myClients.Add(state.id, state);
             observerStateSocket.OnConnect(state.id);
         }
@@ -228,7 +231,7 @@ namespace Share.Network.NetworkManager
 
                 // Complete sending the data to the remote device.  
                 int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
+            //    Console.WriteLine("Sent {0} bytes to client.", bytesSent);
 
             //    handler.Shutdown(SocketShutdown.Both);
             //    handler.Close();

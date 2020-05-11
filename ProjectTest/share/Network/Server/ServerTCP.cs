@@ -32,6 +32,7 @@ namespace Share.Network.Server
             foreach(String id in ids)
             {
                 managerTCP.Send(data, id);
+                Thread.Sleep(50);
             } 
         }
 

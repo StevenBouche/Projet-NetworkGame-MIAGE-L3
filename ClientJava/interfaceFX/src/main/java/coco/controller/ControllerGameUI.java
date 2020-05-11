@@ -69,15 +69,13 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @FXML
     public Label labelCase;
 
+    boolean finish = false;
+
  //   final WebView browser = new WebView();
     // public WebEngine webEngine;
 
     public Boolean switchActive; //switchActive = true -> voyelle switchActive = false -> consonne
-
-    public Label displayManche;
-
     public int nbrRectWithLetter; // ?
-
     public StackPane rootpopup;
 
     /** Sub Scene Element **/
@@ -88,8 +86,6 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
  //   TimerTask taskTimer;
     ExecutorService executor = Executors.newSingleThreadExecutor();
     Thread taskQuickRound;
-    FutureTask taskProposalResponse;
-    //Thread taskQuickRound;
     ScheduledExecutorService executorPopup;
 
     /** Data comming from lobby**/
@@ -106,9 +102,11 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     IMain main;
     boolean alreadyStop;
 
-    public final Lock lock = new ReentrantLock();
-    public final Condition condition = this.lock.newCondition();
-    public final Condition conditionHaveFinishCompareProp = this.lock.newCondition();
+    @FXML
+    public Label nbManche;
+
+    public Lock lock = new ReentrantLock();
+    public Condition animLetter = lock.newCondition();
 
     public ControllerGameUI(ClientTCP client, Thread clientThread, List<PlayerData> data, String myId, IMain main) {
         alreadyStop = false;
@@ -149,7 +147,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         handlerEnigme.setCallbackForEnigmaChange(manager);
         handlerPlayerDataTable = new HandlerPlayerDataTable(tableView,dataLoad.listPlayerData);
         handlerIdentity = new HandlerMyIdentity(dataLoad.myId);
-        handlerRound = new HandlerRound(displayManche);
+        handlerRound = new HandlerRound(nbManche);
     }
 
     private void loadTextField() {
@@ -171,7 +169,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
      */
     private void loadSubScene() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("panneau.fxml"));
-        manager = new ControllerSceneRectancle(handlerEnigme);
+        manager = new ControllerSceneRectancle(handlerEnigme,this);
         fxmlLoader.setController(manager);
         root = fxmlLoader.load();
         subScene.setRoot(root);
@@ -252,48 +250,40 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     public void animShowLetter(){
 
-        executor = Executors.newScheduledThreadPool(1);
-
         Runnable quickRound = new Runnable() {
             @Override
             public void run() {
-                    tryshowRandomLetter();
+                Thread.currentThread().setName("tryshowRandomLetter");
+                try{
+                    while(!Thread.currentThread().isInterrupted()){
+                        Enigme e = handlerEnigme.getCurrentEnigme();
+                        if(e == null) Thread.currentThread().interrupt();
+                        System.out.println("TASK");
+                        if(!e.order.isEmpty()){
+                            char c = e.order.remove(0);
+                            manager.displayLetter(c);
+                            Thread.sleep(2000);
+                        } else {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                } catch (InterruptedException e){
+                    e.printStackTrace();
+                    if(manager.tempoAnimColor!= null)manager.tempoAnimColor.cancel(true);
+                    if(manager.tempoDisplayLetters!= null)manager.tempoDisplayLetters.cancel(true);
+                    Thread.currentThread().interrupt();
+                }
             }
         };
 
         taskQuickRound = new Thread(quickRound);
         taskQuickRound.start();
 
-     //   taskQuickRound = new Thread(quickRound);
-     //   taskQuickRound.start();
-     //   executor.schedule(taskQuickRound,0, TimeUnit.SECONDS);
-
     }
 
     public void tryshowRandomLetter() {
 
-        try{
-            while(!Thread.currentThread().isInterrupted()){
-                Enigme e = handlerEnigme.getCurrentEnigme();
-                if(e == null) Thread.currentThread().interrupt(); //todo bug quand on recois l'enigme d'apres currentEnigme = null a test
-                System.out.println("TASK");
-                if(!e.order.isEmpty()){
-                    char c = e.order.remove(0);
-                    manager.displayLetter(c);
-                    Thread.sleep(2000);
-                } else {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
 
-        try {
-            manager.tempoDisplayLetters.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -322,23 +312,32 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                Platform.runLater(()->{
-                    handlerEnigme.setCurrentEnigme(varE);
-                    manager.resetPanneau(handlerEnigme.getCurrentEnigmeLabel());
-                    setAndExecuteState(new StateEnigmeRapide(controller));
-                    animEnigmRapide();
-                });
+                Thread.currentThread().setName("startActionEnigmeRapide");
+                handlerEnigme.setCurrentEnigme(varE);
+                setAndExecuteState(new StateEnigmeRapide(controller));
+                handlerRound.incManche();
+                manager.resetPanneau(handlerEnigme.getCurrentEnigmeLabel());
+                lock.lock();
+                try {
+                    animLetter.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                lock.unlock();
+                animShowLetter();
             }
         };
         executor.submit(r);
+
+
     }
 
     int cpt;
     @Override
     public void receiveFromServeurBadProposalResponse(String var, String badReponse) {
+        handlerRound.setIdPlayerHaveProposal(var);
+        PlayerData p = handlerPlayerDataTable.getPlayerData(var);
         Platform.runLater(() -> {
-            handlerRound.setIdPlayerHaveProposal(var);
-            PlayerData p = handlerPlayerDataTable.getPlayerData(var);
             manager.compareProp(badReponse);
             log("Bad response from "+p.namePlayer+" : "+badReponse);
         });
@@ -346,23 +345,24 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     private void waitAnimationQuickRound(){
 
-        if(taskQuickRound == null || taskQuickRound.isInterrupted()) return;
-
-        taskQuickRound.interrupt();
-
-        try {
-            taskQuickRound.join();
-        } catch (InterruptedException e ) {
-            e.printStackTrace();
+        if(taskQuickRound != null){
+            taskQuickRound.interrupt();
+            try {
+                taskQuickRound.join();
+            } catch (InterruptedException e ) {
+                e.printStackTrace();
+            }
         }
 
     }
 
     @Override
     public void receiveFromServeurGoodProposalResponse(String id, String proposal) {
+        ControllerGameUI ui = this;
         Runnable r = new Runnable() {
             @Override
             public void run() {
+                Thread.currentThread().setName("receiveFromServeurGoodProposalResponse");
                 waitAnimationQuickRound();
                 PlayerData p = handlerPlayerDataTable.getPlayerData(id);
                 handlerRound.setIdPlayerHaveProposal(id);
@@ -371,6 +371,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
                 log("Good response from "+p.namePlayer+" : "+proposal);
                 manager.waitDisplayLetter();
                 manager.waitAnimColor();
+                setAndExecuteState(new StateRound(ui,id)); //todo rename
             }
         };
         executor.submit(r);
@@ -378,17 +379,15 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     @Override
     public void receiveFromServeurNotifyCurrentPlayerRound(String var) {
-        ControllerGameUI contr = this;
+        ControllerGameUI ui = this;
         Runnable r = new Runnable() {
             @Override
             public void run() {
+                Thread.currentThread().setName("receiveFromServeurNotifyCurrentPlayerRound");
                 handlerRound.setCurrentPlayerId(var);
                 PlayerData p = handlerPlayerDataTable.getPlayerData(var);
                 log("Current player is "+p.namePlayer);
-                setAndExecuteState(new StateRound(contr,var)); //todo rename
-               /* Platform.runLater(() -> {
-
-                });*/
+                setAndExecuteState(new StateRound(ui,var)); //todo rename
             }
         };
         executor.submit(r);
@@ -399,6 +398,7 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         Runnable r = new Runnable() {
             @Override
             public void run() {
+                Thread.currentThread().setName("receiveFromServeurChoiceStep");
                 log("You need to choice between buy vowel, turn wheel or proposal enigma");
             }
         };
@@ -410,11 +410,10 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                Platform.runLater(() -> {
-                    handlerEnigme.setCurrentEnigme(var);
-                    manager.resetPanneau(handlerEnigme.getCurrentEnigmeLabel());
-                    log("SET NEW ENIGME");
-                });
+                Thread.currentThread().setName("receiveFromServeurEnigmaOfRound");
+                handlerEnigme.setCurrentEnigme(var);
+                manager.resetPanneau(handlerEnigme.getCurrentEnigmeLabel());
+                log("SET NEW ENIGME");
             }
         };
         executor.submit(r);
@@ -476,13 +475,23 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         Runnable r = new Runnable() {
             @Override
             public void run() {
+                handlerRound.setCurrentPlayerId(idPlayer);
+                Thread.currentThread().setName("receiveFromServeurActionFinal");
+                handlerEnigme.setCurrentEnigme(e); // set enigma of final round
+                manager.resetPanneau(handlerEnigme.getCurrentEnigmeLabel());
+                lock.lock();
+                try {
+                    animLetter.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                lock.unlock();
+                loadPreSetLetterOfFinalEnigma();
+                log("SET NEW ENIGME FINAL");
                 Platform.runLater(()->{
-                    handlerEnigme.setCurrentEnigme(e); // set enigma of final round
-                    manager.resetPanneau(handlerEnigme.getCurrentEnigmeLabel());
-                    loadPreSetLetterOfFinalEnigma();
-                    log("SET NEW ENIGME FINAL");
                     setAndExecuteState(new StateFinalRound(controller,idPlayer,e)); //execute final round
                 });
+
             }
         };
         executor.submit(r);
@@ -497,11 +506,19 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     @Override
     public void receiveFromServeurAskForAFinalLetter(FinalLetters var) {
-        Platform.runLater(() -> {
-            if(stateUI instanceof StateFinalRound){
-                ((StateFinalRound)stateUI).askForAFinalLetter(var);
+
+
+        ControllerGameUI controller = this;
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                Platform.runLater(()->{
+                    ((StateFinalRound)stateUI).askForAFinalLetter(var);
+                });
             }
-        });
+        };
+        executor.submit(r);
+
     }
 
     @Override
@@ -517,25 +534,36 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
     @Override
     public void receiveFromServeurAskForAFinalProposition(Proposal var) {
         Platform.runLater(() -> {
-            if(stateUI instanceof StateFinalRound){ //HERE HERE
-                ((StateFinalRound)stateUI).switchToPropositionFinal(var);
-            }
+            Platform.runLater(()->{
+                if(stateUI instanceof StateFinalRound){ //HERE HERE
+                    ((StateFinalRound)stateUI).switchToPropositionFinal(var);
+                }
+            });
         });
     }
 
     @Override
     public void receiveFromServeurFinalResultMoney(Integer var) {
-        Platform.runLater(() -> {
-            setAndExecuteState(new StateEndGame(this)); //execute final round
-            labelCase.setText(""+var);
-        });
+        finish = true;
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("gamefinish.fxml"));
+        PlayerData p = handlerPlayerDataTable.getPlayerData(handlerRound.getCurrentIdPlayer());
+        ControllerGameFinish c = new ControllerGameFinish(main,p,var);
+        fxmlLoader.setController(c);
+        try {
+            Parent pa = fxmlLoader.load();
+            Platform.runLater(()->{
+                main.switchScene(pa);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public synchronized void notifyDisconnect() {
+        stop();
         Platform.runLater(() -> {
-            if(!alreadyStop){
-                stop();
+            if(!alreadyStop && !finish){
                 main.backToMainLobbies();
             }
         });
@@ -546,29 +574,23 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
         if(!alreadyStop) {
 
             alreadyStop = true;
-
-            manager.stopExecutorAnimationRect();
+            waitAnimationQuickRound();
             dataLoad.client.stop();
-          //  dataLoad.clientThread.interrupt();
+            dataLoad.clientThread.interrupt();
             try {
-              //  dataLoad.clientThread.join();
                 shutdownExecutors();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+            manager.stopExecutorAnimationRect();
         }
     }
 
     private void shutdownExecutors() throws InterruptedException {
-        if(executor != null && !executor.isShutdown()) {
-            executor.shutdownNow();
-            executor.awaitTermination(10,TimeUnit.MINUTES);
-        }
-        if(executorPopup != null && !executorPopup.isShutdown()) {
-            executorPopup.shutdownNow();
-            executorPopup.awaitTermination(10,TimeUnit.MINUTES);
-        }
+        executor.shutdownNow();
+        executor.awaitTermination(10,TimeUnit.MINUTES);
+    //    executorPopup.shutdownNow();
+   //     executorPopup.awaitTermination(10,TimeUnit.MINUTES);
     }
 
     public void actionPopup(){

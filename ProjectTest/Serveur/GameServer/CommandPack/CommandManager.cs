@@ -128,7 +128,7 @@ namespace Serveur.GameServer.CommandPack
             if(cmd != null)
             {
                 CommandReceiverClient<T> cmdSafeCast = cmd as CommandReceiverClient<T>;
-                cmdSafeCast.NotifyReceiveClient(obj, id);
+                if(cmdSafeCast != null) cmdSafeCast.NotifyReceiveClient(obj, id);
             }
             else
             {

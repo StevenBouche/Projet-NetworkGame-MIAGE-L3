@@ -51,6 +51,12 @@ public class ControllerLobbies implements Initializable {
     public AnchorPane mainPane;
     @FXML
     public Button createGame;
+    @FXML
+    public Button removeGame;
+    @FXML
+    public TextField ipAddr;
+    @FXML
+    public Button switchL;
 
     ClientUDP server;
     Thread threadServer;
@@ -69,9 +75,8 @@ public class ControllerLobbies implements Initializable {
         initTable();
         initButton();
         initNameField();
-        popUp();
         try {
-            loadServerUDP();
+            loadServerUDP("127.0.0.1");
         } catch (SocketException | UnknownHostException e) {
             e.printStackTrace();
         }
@@ -164,6 +169,8 @@ public class ControllerLobbies implements Initializable {
 
             System.out.println(this.srcGame);
             buttonConnect.setDisable(this.srcGame == null || nameField == null || nameField.length() < 3 );
+            removeGame.setDisable(this.srcGame == null);
+
         });
     }
 
@@ -202,6 +209,33 @@ public class ControllerLobbies implements Initializable {
                 actionEvent.consume();
             }
         });
+
+        switchL.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                tableView.getItems().clear();
+                stop();
+                try {
+                    loadServerUDP(ipAddr.getText());
+                } catch (SocketException | UnknownHostException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        createGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                server.createNewGame();
+            }
+        });
+
+        removeGame.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                server.removeGame(srcGame.name);
+            }
+        });
     }
 
     private void initTable() {
@@ -233,9 +267,9 @@ public class ControllerLobbies implements Initializable {
         tableView.getColumns().addAll(nameColumn, addrColumn, portColumn, currentColumn,maxColumn);
     }
 
-    private void loadServerUDP() throws SocketException, UnknownHostException {
+    private void loadServerUDP(String str) throws SocketException, UnknownHostException {
 
-        server = new ClientUDP(new ListenerState() {
+        server = new ClientUDP(str,new ListenerState() {
             @Override
             public void onRunning(String str) {
                 stateConnected(str);
@@ -246,6 +280,8 @@ public class ControllerLobbies implements Initializable {
                // stateDisconnected();
             }
         });
+
+        ipAddr.setText(server.getIpAddressDefault());
 
         server.OnEvent(DataServerGame.class, ProtocolEventsUDP.GETLISTSERVERGAME, new DataListener<DataServerGame>() {
             @Override
@@ -258,35 +294,6 @@ public class ControllerLobbies implements Initializable {
         threadServer = new Thread(server);
         threadServer.setName("Thread Client UDP");
         threadServer.start();
-
-    }
-
-    public void popUp(){
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("dialogTest.fxml"));
-
-        try {
-
-           // https://stackoverflow.com/questions/12935953/javafx-class-controller-scene-reference
-            StackPane root = fxmlLoader.load();
-            JFXPopup popup = new JFXPopup(root);
-            createGame.setOnMouseClicked(e -> popup.show(mainPane, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT,
-                    (mainPane.getWidth() - root.getPrefWidth()) / 2,
-                    (mainPane.getHeight() - root.getPrefHeight()) / 2));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-
-
-    //    createGame.setOnMouseClicked(e -> popup.show(createGame, JFXPopup.PopupVPosition.TOP, JFXPopup.PopupHPosition.LEFT));
-
-
-
 
     }
 

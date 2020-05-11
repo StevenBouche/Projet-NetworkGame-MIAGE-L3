@@ -33,9 +33,10 @@ public class EventNetworkManager {
         try {
             ObjectNode actualObj = (ObjectNode) objectMapper.readTree(obj);
             actualObj.put("endpoint",objectMapper.writeValueAsString(endPoint));
-//            queue.offer(actualObj);
+           // queue.offer(actualObj);
             if(actualObj.get("data")!= null && actualObj.get("evt")!= null && actualObj.get("endpoint") != null){
                 Protocol<?> p = mapEvents.get(actualObj.get("evt").textValue());
+
                 p.onReceive(actualObj.get("data").toString(),endPoint);
             }
         } catch (IOException e) {
@@ -49,6 +50,7 @@ public class EventNetworkManager {
         try {
             ObjectNode actualObj = (ObjectNode) objectMapper.readTree(obj);
             if(actualObj.get("data")!= null && actualObj.get("evt")!= null){
+                System.out.println(actualObj.get("evt").textValue());
                 Protocol<?> p = mapEvents.get(actualObj.get("evt").textValue());
                 if(p!=null) p.onReceive(actualObj.get("data").toString());
             }

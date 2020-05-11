@@ -1,6 +1,7 @@
 package coco.controller.handle;
 
 import coco.controller.PlayerData;
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
@@ -14,15 +15,16 @@ public class HandlerRound {
 
     public HandlerRound(Label display){
         this.displayManche = display;
+        manche=0;
     }
-    /**
-     * This function set the number of the round
-     *
-     * @param numM is the number of the round
-     */
-    public void setManche(int numM){
-        manche = numM;
-        displayManche.setText("Manche n°" + manche);
+
+    public void incManche(){
+        manche++;
+        Platform.runLater(()->{
+            if(manche > 4){
+                displayManche.setText("Final");
+            } else displayManche.setText("Manche " + manche);
+        });
     }
 
     public void setIdPlayerHaveProposal(String idPlayerHaveProposal){
