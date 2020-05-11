@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "a3antCalD8wWORO1V1mX8BAWrfoH368f7tXLWQZBO4JpmXyPpqc3PLE8qRfWr0t6e34xqisUvS27mdo8hFJ1wA==",
+  "dgSpecHash": "lgqktspXhNI7o73zVNHruv7auOWGwTLuwcklimthg7BbLdOulU6/HXp3JJISBCAsjPrhXRpZl9TuTkpRZn2xZg==",
   "success": true,
-  "projectFilePath": "A:\\-WheelOfFortune\\ProjectTest\\Serveur\\Serveur.csproj",
+  "projectFilePath": "A:\\-WheelOfFortune\\ServeurWheelOfFortune\\Serveur\\Serveur.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Steven\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\Steven\\.nuget\\packages\\newtonsoft.json.schema\\3.0.13\\newtonsoft.json.schema.3.0.13.nupkg.sha512",

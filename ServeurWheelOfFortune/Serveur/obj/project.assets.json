@@ -136,11 +136,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "A:\\-WheelOfFortune\\ProjectTest\\Serveur\\Serveur.csproj",
+      "projectUniqueName": "A:\\-WheelOfFortune\\ServeurWheelOfFortune\\Serveur\\Serveur.csproj",
       "projectName": "Serveur",
-      "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\Serveur\\Serveur.csproj",
+      "projectPath": "A:\\-WheelOfFortune\\ServeurWheelOfFortune\\Serveur\\Serveur.csproj",
       "packagesPath": "C:\\Users\\Steven\\.nuget\\packages\\",
-      "outputPath": "A:\\-WheelOfFortune\\ProjectTest\\Serveur\\obj\\",
+      "outputPath": "A:\\-WheelOfFortune\\ServeurWheelOfFortune\\Serveur\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Steven\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -156,8 +156,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj": {
-              "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj"
+            "A:\\-WheelOfFortune\\ServeurWheelOfFortune\\share\\Share.csproj": {
+              "projectPath": "A:\\-WheelOfFortune\\ServeurWheelOfFortune\\share\\Share.csproj"
             }
           }
         }

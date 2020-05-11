@@ -21,7 +21,7 @@ namespace Serveur.MainProgram
 
         public Launcher()
         {
-            ipAddr = "127.0.0.1";
+            ipAddr = "51.210.12.245";
             gamesList = new Dictionary<string, ServerGame>();
             gamesListThread = new Dictionary<string, Thread>();
             gameLobby = new Lobby(this);

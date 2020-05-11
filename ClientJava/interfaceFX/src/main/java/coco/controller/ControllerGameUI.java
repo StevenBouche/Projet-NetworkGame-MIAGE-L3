@@ -561,12 +561,14 @@ public class ControllerGameUI implements Initializable, INotifyPlayersGame {
 
     @Override
     public synchronized void notifyDisconnect() {
-        stop();
-        Platform.runLater(() -> {
-            if(!alreadyStop && !finish){
-                main.backToMainLobbies();
+        if(!alreadyStop){
+            stop();
+            if(!finish){
+                Platform.runLater(() -> {
+                    main.backToMainLobbies();
+                });
             }
-        });
+        }
     }
 
     public synchronized void stop() {

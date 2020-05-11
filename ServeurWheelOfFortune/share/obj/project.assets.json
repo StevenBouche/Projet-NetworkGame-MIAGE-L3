@@ -82,11 +82,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
+      "projectUniqueName": "A:\\-WheelOfFortune\\ServeurWheelOfFortune\\share\\Share.csproj",
       "projectName": "Share",
-      "projectPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
+      "projectPath": "A:\\-WheelOfFortune\\ServeurWheelOfFortune\\share\\Share.csproj",
       "packagesPath": "C:\\Users\\Steven\\.nuget\\packages\\",
-      "outputPath": "A:\\-WheelOfFortune\\ProjectTest\\share\\obj\\",
+      "outputPath": "A:\\-WheelOfFortune\\ServeurWheelOfFortune\\share\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Steven\\AppData\\Roaming\\NuGet\\NuGet.Config",
