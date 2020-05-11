@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "wOhhzmI7dY01Z5G3dCjVpn1G+RTqaacAVrJS0IKkRU15dExUoIJWIn5+moqvWlhibbsfI9W1+rPNsLdAZ6MgPw==",
+  "success": true,
+  "projectFilePath": "A:\\-WheelOfFortune\\ProjectTest\\share\\Share.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Steven\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\Steven\\.nuget\\packages\\shortid\\2.0.1\\shortid.2.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
