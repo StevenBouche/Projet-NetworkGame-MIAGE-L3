@@ -12,6 +12,7 @@ Pour s'y connecter switch avec le client java a l'adresse ci dessus. Explication
 
 Attention besoin de Java 11 comme JDK obligatoire /!\  
 Documentation : FonctionnementClientJava.pdf  
+Executable du client dans : ClientJava
 Pour executer : java -jar interfaceFX-1.0-Linux.jar OU java -jar interfaceFX-1.0-Windows.jar  
 
 # Server
