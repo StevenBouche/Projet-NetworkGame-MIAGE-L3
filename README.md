@@ -1,9 +1,9 @@
 # WheelOfFortune
 
-Armand Prevot 
-Pierre Griseri
-Corentin Bailet
-StevenBouche
+Armand Prevot  
+Pierre Griseri  
+Corentin Bailet  
+Steven Bouche  
 
 Un serveur deployer à l'adresse IP : 51.210.12.245  
 Pour s'y connecter switch avec le client java a l'adresse ci dessus. Explication dans la doc technique PDF du client  
@@ -11,8 +11,8 @@ Pour s'y connecter switch avec le client java a l'adresse ci dessus. Explication
 # Client
 
 Attention besoin de Java 11 comme JDK obligatoire /!\  
-Documentation : FonctionnementClientJava.pdf
-Pour executer : java -jar interfaceFX-1.0-Linux.jar OU java -jar interfaceFX-1.0-Windows.jar
+Documentation : FonctionnementClientJava.pdf  
+Pour executer : java -jar interfaceFX-1.0-Linux.jar OU java -jar interfaceFX-1.0-Windows.jar  
 
 # Server
 
